@@ -14,14 +14,13 @@ public class Hex3DMapNode: SCNNode {
     public let dungeon:DungeonModel
     public let size:vector_int2
     public var terrain:[SCNNode] = []
-    public let blockHeight:Float
+    public let blockHeight:ASFloat
     
     public init(dungeon:DungeonModel,gen:HexGeometry) {
         self.dungeon = dungeon
         self.size = dungeon.size
         
-        blockHeight = Float(gen.height())
-        
+        blockHeight = ASFloat(gen.height())
         
         super.init()
         
@@ -66,7 +65,7 @@ public class Hex3DMapNode: SCNNode {
     //Returns the coordinates of the top of the tile
     public func topPosition(at:vector_int2) -> SCNVector3 {
         let mid = localPosition(at: at)
-        return SCNVector3(mid.x,mid.y+CGFloat(blockHeight/2),mid.z)
+        return SCNVector3(mid.x,mid.y+blockHeight/2,mid.z)
     }
     
     public func buildTerrain() {

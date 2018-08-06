@@ -6,7 +6,11 @@ import SceneKit
 
 import simd
 
-
+#if os(iOS)
+public typealias ASFloat = Float
+#elseif os (OSX)
+public typealias ASFloat = CGFloat
+#endif
 
 // MARK: Type Conversions
 
@@ -38,21 +42,16 @@ extension GLKVector3 {
 }
 
 extension SCNQuaternion {
-	public var q:(Float,Float,Float,Float) {
-        return (Float(self.x), Float(self.y), Float(self.z), Float(self.w))
+	public var q:(ASFloat,ASFloat,ASFloat,ASFloat) {
+		return (self.x, self.y, self.z, self.w)
 	}
-	public init(q:(Float,Float,Float,Float)) {
-        self.init(x: CGFloat(q.0), y: CGFloat(q.1), z: CGFloat(q.2), w: CGFloat(q.3))
+	public init(q:(ASFloat,ASFloat,ASFloat,ASFloat)) {
+		self.init(x: q.0, y: q.1, z: q.2, w: q.3)
 	}
 	
-	public func toGLK() -> GLKQuaternion {
-		return GLKQuaternion(q: self.q)
-	}
 }
 extension GLKQuaternion {
-	public func toSCN() -> SCNQuaternion {
-		return SCNQuaternion(q: self.q)
-	}
+	
 }
 
 extension SCNMatrix4 {
@@ -217,16 +216,16 @@ extension SCNVector3
 		self = self.refracted(normal: normal, refractiveIndex: refractiveIndex)
 	}
 	
-	public mutating func replace(x:Float?=nil, y:Float?=nil, z:Float?=nil) {
-		if let xValue = x { self.x = CGFloat(xValue) }
-		if let yValue = y { self.y = CGFloat(yValue) }
-		if let zValue = z { self.z = CGFloat(zValue) }
+	public mutating func replace(x:ASFloat?=nil, y:ASFloat?=nil, z:ASFloat?=nil) {
+		if let xValue = x { self.x = xValue }
+		if let yValue = y { self.y = yValue }
+		if let zValue = z { self.z = zValue }
 	}
-	public func replacing(x:Float?=nil, y:Float?=nil, z:Float?=nil) -> SCNVector3 {
+	public func replacing(x:ASFloat?=nil, y:ASFloat?=nil, z:ASFloat?=nil) -> SCNVector3 {
 		return SCNVector3(
-            x ?? Float(self.x),
-			y ?? Float(self.y),
-			z ?? Float(self.z)
+			x ?? self.x,
+			y ?? self.y,
+			z ?? self.z
 		)
 	}
 	
@@ -248,81 +247,6 @@ extension SCNVector3 : Equatable
 	}
 }
 
-
-
-// MARK: SCNQuaternion Extensions
-
-extension SCNQuaternion
-{
-	public static let identity:SCNQuaternion = GLKQuaternionIdentity.toSCN()
-	public static let identityFacingVector:SCNVector3 = SCNVector3(0, 0, -1)
-	public static let identityUpVector:SCNVector3 = SCNVector3(0, 1, 0)
-	
-	
-	public init(from a:SCNVector3, to b:SCNVector3, opposing180Axis:SCNVector3=identityUpVector) {
-		let aNormal = a.normalized(), bNormal = b.normalized()
-		let dotProduct = aNormal.dotProduct(bNormal)
-		if dotProduct >= 1.0 {
-			self = GLKQuaternionIdentity.toSCN()
-		}
-		else if dotProduct < (-1.0 + Float.leastNormalMagnitude) {
-			self = GLKQuaternionMakeWithAngleAndVector3Axis(Float.pi, opposing180Axis.toGLK()).toSCN()
-		}
-		else {
-			// from: https://bitbucket.org/sinbad/ogre/src/9db75e3ba05c/OgreMain/include/OgreVector3.h?fileviewer=file-view-default#OgreVector3.h-651
-			// looks to be explained at: http://lolengine.net/blog/2013/09/18/beautiful-maths-quaternion-from-vectors
-			let s = sqrt((1.0 + dotProduct) * 2.0)
-			let xyz = aNormal.crossProduct(bNormal) / s
-			(self.x, self.y, self.z, self.w) = (xyz.x, xyz.y, xyz.z, CGFloat(s * 0.5))
-		}
-	}
-	
-	
-	public init(angle angle_rad:Float, axis axisVector:SCNVector3) {
-		self = GLKQuaternionMakeWithAngleAndVector3Axis(angle_rad, axisVector.toGLK()).toSCN()
-	}
-	
-	
-	public func angleAxis() -> (Float, SCNVector3) {
-		let self_glk = self.toGLK()
-		let angle = GLKQuaternionAngle(self_glk)
-		let axis = SCNVector3FromGLKVector3(GLKQuaternionAxis(self_glk))
-		return (angle, axis)
-	}
-	
-	public func delta(_ other:SCNQuaternion) -> SCNQuaternion {
-		return -self * other
-	}
-	
-	public static prefix func - (q:SCNQuaternion) -> SCNQuaternion { return q.inverted() }
-	public func inverted() -> SCNQuaternion {
-		return GLKQuaternionInvert(self.toGLK()).toSCN()
-	}
-	public mutating func invert() {
-		self = self.inverted()
-	}
-	
-	public static func * (a:SCNQuaternion, b:SCNQuaternion) -> SCNQuaternion { return a.multiplied(by: b) }
-	public func multiplied(by other:SCNQuaternion) -> SCNQuaternion {
-		return GLKQuaternionMultiply(self.toGLK(), other.toGLK()).toSCN()
-	}
-	public static func *= (q:inout SCNQuaternion, o:SCNQuaternion) { q.multiply(by: o) }
-	public mutating func multiply(by other:SCNQuaternion) {
-		self = self.multiplied(by: other)
-	}
-	
-	public mutating func normalize() {
-		self = GLKQuaternionNormalize(self.toGLK()).toSCN()
-	}
-	
-	public static func * (q:SCNQuaternion, v:SCNVector3) -> SCNVector3 { return q.rotate(vector: v) }
-	public func rotate(vector:SCNVector3) -> SCNVector3 {
-		return GLKQuaternionRotateVector3(self.toGLK(), vector.toGLK()).toSCN()
-	}
-}
-
-
-
 // MARK: SCNMatrix4 Extensions
 
 extension SCNMatrix4
@@ -338,8 +262,8 @@ extension SCNMatrix4
 		self = SCNMatrix4MakeTranslation(translation.x, translation.y, translation.z)
 	}
 	
-	public init(rotationAngle angle:Float, axis:SCNVector3) {
-		self = SCNMatrix4MakeRotation(CGFloat(angle), axis.x, axis.y, axis.z)
+	public init(rotationAngle angle:ASFloat, axis:SCNVector3) {
+		self = SCNMatrix4MakeRotation(angle, axis.x, axis.y, axis.z)
 	}
 	
 	public init(scale:SCNVector3) {
@@ -382,10 +306,10 @@ extension SCNMatrix4
 		self = self.scaled(scale)
 	}
 	
-	public func rotated(angle:Float, axis:SCNVector3) -> SCNMatrix4 {
-		return SCNMatrix4Rotate(self, CGFloat(angle), axis.x, axis.y, axis.z)
+	public func rotated(angle:ASFloat, axis:SCNVector3) -> SCNMatrix4 {
+		return SCNMatrix4Rotate(self, angle, axis.x, axis.y, axis.z)
 	}
-	public mutating func rotate(angle:Float, axis:SCNVector3) {
+	public mutating func rotate(angle:ASFloat, axis:SCNVector3) {
 		self = self.rotated(angle: angle, axis: axis)
 	}
 }

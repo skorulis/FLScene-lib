@@ -456,6 +456,7 @@
 				CODE_SIGN_ENTITLEMENTS = FLScene/FLScene.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X4S6MUZL2D;
 				INFOPLIST_FILE = FLScene/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -473,6 +474,7 @@
 				CODE_SIGN_ENTITLEMENTS = FLScene/FLScene.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = X4S6MUZL2D;
 				INFOPLIST_FILE = FLScene/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
