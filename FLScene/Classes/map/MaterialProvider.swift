@@ -19,9 +19,9 @@ class MaterialProvider: NSObject {
         
         switch ref.type {
         case .redRock:
-            material.diffuse.contents = UIImage(named:"montagne_albedo")
-            material.normal.contents = UIImage(named: "montagne_normal")
-            material.roughness.contents = UIImage(named:"montagne_roughness")
+            material.diffuse.contents = UIImage.sceneImage(named:"montagne_albedo")
+            material.normal.contents = UIImage.sceneImage(named: "montagne_normal")
+            material.roughness.contents = UIImage.sceneImage(named:"montagne_roughness")
         default:
             let imageGen = HexTextureGenerator()
             material.diffuse.contents = imageGen.spikeySide(ref.baseColor)
@@ -38,16 +38,15 @@ class MaterialProvider: NSObject {
         
         switch ref.type {
         case .redRock:
-            material.diffuse.contents = UIImage(named: "montagne_top_albedo")
-            material.normal.contents = UIImage(named: "montagne_top_normal")
-            material.roughness.contents = UIImage(named: "montagne_top_roughness")
+            material.diffuse.contents = UIImage.sceneImage(named: "montagne_top_albedo")
+            material.normal.contents = UIImage.sceneImage(named: "montagne_top_normal")
+            material.roughness.contents = UIImage.sceneImage(named: "montagne_top_roughness")
         case .water:
             material.diffuse.contents = imageGen.topHex(ref.baseColor)
-            material.normal.contents = UIImage(named: "terrasses_water_normal")
+            material.normal.contents = UIImage.sceneImage(named: "terrasses_water_normal")
         default:
             material.diffuse.contents = imageGen.topHex(ref.baseColor)
-            material.normal.contents = UIImage(named: "scuffed-plastic-normal")
-            material.metalness.contents = UIImage(named: "scuffed-plastic-metal")
+            material.normal.contents = UIImage.sceneImage(named: "scuffed-plastic-normal")
         }
         
         return material
@@ -56,7 +55,7 @@ class MaterialProvider: NSObject {
     class func floorMaterial() -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.blue
-        material.normal.contents = UIImage(named: "terrasses_water_normal")
+        material.normal.contents = UIImage.sceneImage(named: "terrasses_water_normal")
         material.lightingModel = .physicallyBased
         material.diffuse.contentsTransform = SCNMatrix4MakeScale(256, 256, 0)
         
