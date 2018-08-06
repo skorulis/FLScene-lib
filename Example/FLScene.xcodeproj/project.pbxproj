@@ -27,11 +27,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0C38B981963F963B34866980 /* FLScene.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = FLScene.podspec; path = ../FLScene.podspec; sourceTree = "<group>"; };
+		0C38B981963F963B34866980 /* FLScene.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FLScene.podspec; path = ../FLScene.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		27FBA9F44F25A01577DAD5BC /* Pods-FLScene_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FLScene_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FLScene_Tests/Pods-FLScene_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		3080D3395644045B9493F161 /* Pods-FLScene_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FLScene_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FLScene_Tests/Pods-FLScene_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		52899B7F073FC7679EE8FA68 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		8951E4F213CC50F6B0DCB443 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		52899B7F073FC7679EE8FA68 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		8951E4F213CC50F6B0DCB443 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		A4065F419D4808526094EC71 /* Pods-FLScene_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FLScene_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FLScene_Example/Pods-FLScene_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B4D96EA1CE80744CA295E4A9 /* Pods-FLScene_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FLScene_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-FLScene_Example/Pods-FLScene_Example.release.xcconfig"; sourceTree = "<group>"; };
 		BD1C3DE446ABB708B824DD90 /* Pods_FLScene_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FLScene_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,11 +285,15 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FLScene_Example/Pods-FLScene_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/FLGame/FLGame.framework",
 				"${BUILT_PRODUCTS_DIR}/FLScene/FLScene.framework",
+				"${BUILT_PRODUCTS_DIR}/SKSwiftLib/SKSwiftLib.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLGame.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FLScene.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SKSwiftLib.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

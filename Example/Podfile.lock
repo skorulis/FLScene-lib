@@ -1,0 +1,29 @@
+PODS:
+  - FLGame (0.1.0):
+    - SKSwiftLib
+  - FLScene (0.1.0):
+    - FLGame
+    - SKSwiftLib
+  - SKSwiftLib (1.0.0)
+
+DEPENDENCIES:
+  - FLGame (from `~/dev/floats/FLGame`)
+  - FLScene (from `../`)
+  - SKSwiftLib (from `~/dev/ios/SKLibs/SKSwiftLib`)
+
+EXTERNAL SOURCES:
+  FLGame:
+    :path: "~/dev/floats/FLGame"
+  FLScene:
+    :path: "../"
+  SKSwiftLib:
+    :path: "~/dev/ios/SKLibs/SKSwiftLib"
+
+SPEC CHECKSUMS:
+  FLGame: f43ca21779283557b181dc67220f07647ef0d27c
+  FLScene: db621242b11fe1475363e5b05bd49bdaf1dea7cc
+  SKSwiftLib: f986f6eaac1d30faccc50509ec83d7358f4567e0
+
+PODFILE CHECKSUM: 97643f1b697000996943938a0b4f58765150e33d
+
+COCOAPODS: 1.5.0
