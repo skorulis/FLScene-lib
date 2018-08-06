@@ -31,6 +31,7 @@ TODO: Add long description of the pod here.
   s.platforms = { :ios => "10.0", :osx => "10.12" }
 
   s.source_files = 'FLScene/Classes/**/*'
+  s.resources = ['FLScene/Resources/*']
 
   # s.resource_bundles = {
   #   'FLScene' => ['FLScene/Assets/*.png']

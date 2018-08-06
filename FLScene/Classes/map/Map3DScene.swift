@@ -65,7 +65,7 @@ public class Map3DScene: SCNScene {
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
         let plane = SCNPlane(width: 1, height: 2)
-        plane.firstMaterial?.diffuse.contents = UIImage(named: "alienPink")
+        plane.firstMaterial?.diffuse.contents = UIImage.sceneImage(named: "alienPink")
         
         let planeNode = SCNNode(geometry:plane)
         let constraint = SCNBillboardConstraint()
