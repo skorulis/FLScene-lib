@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'FLScene_Example' do
+  pod 'FLScene', :path => '../'
+
+  target 'FLScene_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
