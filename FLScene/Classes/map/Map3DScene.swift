@@ -64,16 +64,9 @@ public class Map3DScene: SCNScene {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 5)
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        let plane = SCNPlane(width: 1, height: 2)
-        plane.firstMaterial?.diffuse.contents = UIImage.sceneImage(named: "alienPink")
-        
-        let planeNode = SCNNode(geometry:plane)
-        let constraint = SCNBillboardConstraint()
-        constraint.freeAxes = SCNBillboardAxis.Y
-        planeNode.constraints = [constraint]
-        
-        planeNode.position = mapGrid.topPosition(at: vector2(2,2)) + SCNVector3(0,1,0)
-        mapGrid.addChildNode(planeNode)
+        let spriteNode = ASMapSprite(image: UIImage.sceneImage(named: "alienPink")!,mapScene:self)
+        spriteNode.position = mapGrid.topPosition(at: vector2(2,2)) + SCNVector3(0,1,0)
+        mapGrid.addChildNode(spriteNode)
         
         buildWater()
         
