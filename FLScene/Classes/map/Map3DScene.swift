@@ -65,7 +65,8 @@ public class Map3DScene: SCNScene {
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
         let spriteNode = ASMapSprite(image: UIImage.sceneImage(named: "alienPink")!,mapScene:self)
-        spriteNode.position = mapGrid.topPosition(at: vector2(2,2)) + SCNVector3(0,1,0)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        spriteComponent.placeAt(position: vector2(10, 10))
         mapGrid.addChildNode(spriteNode)
         
         buildWater()
@@ -119,6 +120,10 @@ public class Map3DScene: SCNScene {
         let sphere = mapGrid.boundingSphere
         mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z)
         return mapGrid
+    }
+    
+    func pointFor(position:vector_int2) -> SCNVector3 {
+        return mapGrid.topPosition(at: position)
     }
     
 }

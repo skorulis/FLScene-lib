@@ -44,6 +44,13 @@ class MaterialProvider: NSObject {
         case .water:
             material.diffuse.contents = imageGen.topHex(ref.baseColor)
             material.normal.contents = UIImage.sceneImage(named: "terrasses_water_normal")
+        case .dirt:
+            material.diffuse.contents = UIImage.sceneImage(named: "dry-dirt2-albedo")
+            material.normal.contents = UIImage.sceneImage(named: "dry-dirt2-normal")
+        case .grass:
+            material.diffuse.contents = UIImage.sceneImage(named: "mossy-ground1-albedo")
+            material.normal.contents = UIImage.sceneImage(named: "mossy-ground1-normal")
+            material.roughness.contents = UIImage.sceneImage(named: "mossy-ground1-roughness")
         default:
             material.diffuse.contents = imageGen.topHex(ref.baseColor)
             material.normal.contents = UIImage.sceneImage(named: "scuffed-plastic-normal")
