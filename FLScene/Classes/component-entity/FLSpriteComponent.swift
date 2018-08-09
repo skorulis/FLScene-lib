@@ -8,16 +8,16 @@
 import GameplayKit
 import FLGame
 
-class FLSpriteComponent: GKComponent {
+public class FLSpriteComponent: GKComponent {
 
-    var sprite:FLMapSprite
+    public var sprite:FLMapSprite
     
     init(sprite:FLMapSprite) {
         self.sprite = sprite
         super.init()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -25,7 +25,7 @@ class FLSpriteComponent: GKComponent {
         return self.entity! as! GridEntity
     }
     
-    func moveTo(position:vector_int2) {
+    public func moveTo(position:vector_int2) {
         guard let scene = self.sprite.mapScene else {return}
         let point = scene.pointFor(position: position) + SCNVector3(0,yOffset(),0)
         let action = SCNAction.move(to: point, duration: 1)
@@ -37,7 +37,7 @@ class FLSpriteComponent: GKComponent {
         self.sprite.runAction(action)
     }
     
-    func placeAt(position:vector_int2) {
+    public func placeAt(position:vector_int2) {
         guard let scene = self.sprite.mapScene else {return}
         let point = scene.pointFor(position: position) + SCNVector3(0,yOffset(),0)
         self.sprite.position = point

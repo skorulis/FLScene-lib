@@ -8,11 +8,11 @@
 import SceneKit
 import SKSwiftLib
 
-class FLMapSprite: SCNNode {
+public class FLMapSprite: SCNNode {
 
     weak var mapScene:Map3DScene?
     
-    init(image:UIImage,mapScene:Map3DScene) {
+    public init(image:UIImage,mapScene:Map3DScene) {
         self.mapScene = mapScene
         let plane = SCNPlane(width: 1, height: 2)
         plane.firstMaterial?.diffuse.contents = UIImage.sceneImage(named: "alienPink")
@@ -25,7 +25,7 @@ class FLMapSprite: SCNNode {
         self.constraints = [constraint]
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

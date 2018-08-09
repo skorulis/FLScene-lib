@@ -19,6 +19,8 @@ public class Map3DScene: SCNScene {
     
     private let floorY:Float = -10
     
+    public var playerSprite:FLSpriteComponent!
+    
     public init(dungeon:DungeonModel) {
         self.dungeon = dungeon
         let store = GeometryStore()
@@ -64,7 +66,7 @@ public class Map3DScene: SCNScene {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 5)
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        _ = addSprite(entity: self.dungeon.playerNode, imageNamed: "alienPink")
+        self.playerSprite = addSprite(entity: self.dungeon.playerNode, imageNamed: "alienPink")
         
         buildWater()
         
@@ -123,14 +125,14 @@ public class Map3DScene: SCNScene {
         return mapGrid.topPosition(at: position)
     }
     
-    func addSprite(entity:GridEntity,imageNamed:String) -> FLMapSprite {
+    func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneImage(named: imageNamed)!,mapScene:self)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
         entity.addComponent(spriteComponent)
         mapGrid.addChildNode(spriteNode)
         
         spriteComponent.placeAt(position: entity.gridPosition)
-        return spriteNode
+        return spriteComponent
     }
     
 }

@@ -30,18 +30,9 @@ public class Hex3DMapNode: SCNNode {
                 if dungeonNode.terrain.type == .void {
                     continue
                 }
-                let terrain = dungeonNode.terrain
-                let hexGeometry = gen.bevelHex(ref: terrain)
-                let sides = gen.sideGeometry(height:gen.height(),ref:terrain)
                 
-                let parentNode = SCNNode()
-                
+                let parentNode = LandPieceNode(dungeonNode: dungeonNode, gen: gen)
                 parentNode.position = localPosition(at: vector_int2(x,y))
-                let n1 = SCNNode(geometry: hexGeometry)
-                let n2 = SCNNode(geometry: sides)
-                parentNode.addChildNode(n1)
-                parentNode.addChildNode(n2)
-                
                 self.addChildNode(parentNode)
             }
         }
