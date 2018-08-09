@@ -11,10 +11,19 @@ public class SceneInputHandler {
 
     let sceneView:SCNView
     let scene:Map3DScene
+    let camera:SCNCamera
     
-    public init(sceneView:SCNView,scene:Map3DScene) {
+    public init(sceneView:SCNView,scene:Map3DScene,cameraNode:SCNNode) {
         self.sceneView = sceneView
         self.scene = scene;
+        self.camera = cameraNode.camera!
+        
+        let lookAt = SCNLookAtConstraint(target: self.scene.playerSprite.sprite)
+        let distance = SCNDistanceConstraint(target: self.scene.playerSprite.sprite)
+        let acceleration = SCNAccelerationConstraint()
+        distance.minimumDistance = 12
+        distance.maximumDistance = 18
+        cameraNode.constraints = [distance,lookAt,acceleration]
     }
     
     public func tapped(point:CGPoint) {
