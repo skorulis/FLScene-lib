@@ -68,6 +68,8 @@ public class Map3DScene: SCNScene {
         
         self.playerSprite = addSprite(entity: self.dungeon.playerNode, imageNamed: "alienPink")
         
+
+        
         buildWater()
         
         for _ in 0...15 {

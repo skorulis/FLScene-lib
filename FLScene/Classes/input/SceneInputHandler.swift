@@ -24,9 +24,15 @@ public class SceneInputHandler {
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
         
-        print("Hit \(square)")
-        let position = square.dungeonNode.gridPosition
-        self.scene.playerSprite.moveTo(position: position)
+        let fromPoint = scene.playerSprite.gridEntity().gridPosition
+        
+        let path = scene.mapGrid.dungeon.path(to: square.dungeonNode.gridPosition, from: fromPoint)
+        if path.count < 2 {
+            return
+        }
+        
+        let firstPoint = path[1]
+        self.scene.playerSprite.moveTo(position: firstPoint.gridPosition)
     }
     
 }
