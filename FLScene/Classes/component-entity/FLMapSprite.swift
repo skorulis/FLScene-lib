@@ -1,5 +1,5 @@
 //
-//  ASMapSprite.swift
+//  FLMapSprite.swift
 //  Pods
 //
 //  Created by Alexander Skorulis on 7/8/18.
@@ -8,7 +8,7 @@
 import SceneKit
 import SKSwiftLib
 
-class ASMapSprite: SCNNode {
+class FLMapSprite: SCNNode {
 
     weak var mapScene:Map3DScene?
     

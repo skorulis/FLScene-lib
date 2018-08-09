@@ -64,10 +64,7 @@ public class Map3DScene: SCNScene {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 5)
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        let spriteNode = ASMapSprite(image: UIImage.sceneImage(named: "alienPink")!,mapScene:self)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
-        spriteComponent.placeAt(position: vector2(10, 10))
-        mapGrid.addChildNode(spriteNode)
+        _ = addSprite(entity: self.dungeon.playerNode, imageNamed: "alienPink")
         
         buildWater()
         
@@ -124,6 +121,16 @@ public class Map3DScene: SCNScene {
     
     func pointFor(position:vector_int2) -> SCNVector3 {
         return mapGrid.topPosition(at: position)
+    }
+    
+    func addSprite(entity:GridEntity,imageNamed:String) -> FLMapSprite {
+        let spriteNode = FLMapSprite(image: UIImage.sceneImage(named: imageNamed)!,mapScene:self)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        entity.addComponent(spriteComponent)
+        mapGrid.addChildNode(spriteNode)
+        
+        spriteComponent.placeAt(position: entity.gridPosition)
+        return spriteNode
     }
     
 }

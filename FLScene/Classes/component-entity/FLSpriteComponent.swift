@@ -6,12 +6,13 @@
 //
 
 import GameplayKit
+import FLGame
 
 class FLSpriteComponent: GKComponent {
 
-    var sprite:ASMapSprite
+    var sprite:FLMapSprite
     
-    init(sprite:ASMapSprite) {
+    init(sprite:FLMapSprite) {
         self.sprite = sprite
         super.init()
     }
@@ -20,9 +21,9 @@ class FLSpriteComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /*func gridEntity() -> GridEntity {
+    func gridEntity() -> GridEntity {
         return self.entity! as! GridEntity
-    }*/
+    }
     
     func moveTo(position:vector_int2) {
         guard let scene = self.sprite.mapScene else {return}
@@ -31,7 +32,7 @@ class FLSpriteComponent: GKComponent {
         action.timingMode = .easeInEaseOut
         
         
-//        self.gridEntity().gridPosition = position
+        self.gridEntity().gridPosition = position
         
         self.sprite.runAction(action)
     }
@@ -40,7 +41,7 @@ class FLSpriteComponent: GKComponent {
         guard let scene = self.sprite.mapScene else {return}
         let point = scene.pointFor(position: position) + SCNVector3(0,yOffset(),0)
         self.sprite.position = point
-//        self.gridEntity().gridPosition = position
+        self.gridEntity().gridPosition = position
     }
     
     private func yOffset() -> CGFloat {
