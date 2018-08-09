@@ -32,13 +32,13 @@ public class FLSpriteComponent: GKComponent {
         let action = SCNAction.move(to: point, duration: duration)
         action.timingMode = .easeInEaseOut
         
-        let upAction = SCNAction.move(by: SCNVector3(0,1,0), duration: duration/2)
-        let downAction = SCNAction.move(by: SCNVector3(0,-1,0), duration: duration/2)
+        //let upAction = SCNAction.move(by: SCNVector3(0,1,0), duration: duration/2)
+        //let downAction = SCNAction.move(by: SCNVector3(0,-1,0), duration: duration/2)
         
         self.gridEntity().gridPosition = position
         
         self.sprite.runAction(action)
-        self.sprite.runAction(SCNAction.sequence([upAction,downAction]))
+        //self.sprite.runAction(SCNAction.sequence([upAction,downAction]))
     }
     
     public func placeAt(position:vector_int2) {

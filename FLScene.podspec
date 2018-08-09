@@ -28,7 +28,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/skorulis/FLScene.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.platforms = { :ios => "11.0", :osx => "10.12" }
+  s.platforms = { :ios => "11.0", :osx => "10.13" }
 
   s.source_files = 'FLScene/Classes/**/*'
   s.resources = ['FLScene/Resources/*']

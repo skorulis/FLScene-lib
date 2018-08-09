@@ -7,7 +7,7 @@
 
 import SceneKit
 
-public enum PathElement {
+/*public enum PathElement {
     
     case moveToPoint(CGPoint)
     case addLineToPoint(CGPoint)
@@ -85,5 +85,5 @@ public extension SCNAction {
         }
         return SCNAction.sequence(actions)
     }
-}
+}*/
 

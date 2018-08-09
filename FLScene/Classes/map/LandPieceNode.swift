@@ -22,6 +22,12 @@ public class LandPieceNode: SCNNode {
         let n2 = SCNNode(geometry: sides)
         self.addChildNode(n1)
         self.addChildNode(n2)
+        
+        if let fixture = dungeonNode.fixture {
+            let trail = SCNParticleSystem()
+            trail.emitterShape = hexGeometry
+            self.addParticleSystem(trail)
+        }
     }
     
     public required init?(coder aDecoder: NSCoder) {
