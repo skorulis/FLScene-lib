@@ -12,17 +12,29 @@ import SKSwiftLib
 
 public class Map3DScene: SCNScene {
 
+    public var overland:FullOverlandModel
+    
     public var mapGrid:Hex3DMapNode!
     
-    public let dungeon:DungeonModel
     public let hexGeometry:HexGeometry
     
     private let floorY:Float = -10
     
     public var playerSprite:FLSpriteComponent!
+    private let game:GameController
     
-    public init(dungeon:DungeonModel) {
-        self.dungeon = dungeon
+    public override init() {
+        self.game = GameController.instance
+        self.overland = FullOverlandModel(player:game.player.player)
+        
+        let gen1 = DungeonGenerator(size: 7, ref: game.reference, player: game.player.player)
+        let gen2 = DungeonGenerator(size: 7, ref: game.reference, player: nil)
+        
+        let dun1 = gen1.generateDungeon(type: .outdoors)
+        let dun2 = gen2.generateDungeon(type: .outdoors)
+        dun2.overlandOffset = SCNVector3(15,0,15)
+        self.overland.dungeons = [dun1,dun2]
+
         let store = GeometryStore()
         hexGeometry = HexGeometry(store:store)
         super.init()
@@ -55,20 +67,19 @@ public class Map3DScene: SCNScene {
         self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
 
         
-        mapGrid = self.makeMap()
+        mapGrid = self.makeMap(dungeon: self.overland.dungeons[0])
         self.rootNode.addChildNode(mapGrid)
         
-        let mapGrid2 = self.makeMap()
-        mapGrid2.position = SCNVector3(22,0,15)
+        let mapGrid2 = self.makeMap(dungeon:self.overland.dungeons[1])
         self.rootNode.addChildNode(mapGrid2)
         
         let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: 5)
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 5)
         mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        self.playerSprite = addSprite(entity: self.dungeon.playerNode, imageNamed: "alienPink")
-        
-
+        if let playerNode = self.overland.playerDungeon?.playerNode {
+            self.playerSprite = addSprite(entity: playerNode, imageNamed: "alienPink")
+        }
         
         buildWater()
         
@@ -116,10 +127,10 @@ public class Map3DScene: SCNScene {
         self.rootNode.addChildNode(node)
     }
     
-    public func makeMap() -> Hex3DMapNode {
+    public func makeMap(dungeon:DungeonModel) -> Hex3DMapNode {
         let mapGrid = Hex3DMapNode(dungeon: dungeon,gen:hexGeometry)
         let sphere = mapGrid.boundingSphere
-        mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z)
+        mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
         return mapGrid
     }
     
