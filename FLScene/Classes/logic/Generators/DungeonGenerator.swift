@@ -40,7 +40,7 @@ public class DungeonGenerator {
             makeCircular()
             let centre = vector_int2(Int32(size/2), Int32(size/2))
             dungeon.playerNode?.gridPosition = centre
-            dungeon.nodeAt(vec: centre)?.fixture = ref.getDungeonTile(type: .teleporter)
+            dungeon.nodeAt(vec: centre)?.fixture = MapFixtureModel(ref:ref.getDungeonTile(type: .teleporter))
         }
         
         return dungeon
@@ -51,7 +51,7 @@ public class DungeonGenerator {
             for y in 0..<size {
                 let node = dungeon.nodeAt(x: x, y: y)
                 if (self.isEdge(x: x, y: y, size: size)) {
-                    node?.fixture = ref.getDungeonTile(type: .wall)
+                    node?.fixture = MapFixtureModel(ref:ref.getDungeonTile(type: .wall))
                     node?.terrain = ref.getTerrain(type: .dirt)
                 }
             }
@@ -114,7 +114,7 @@ public class DungeonGenerator {
                 guard let node = dungeon.nodeAt(x: Int(i), y: Int(j)) else { continue }
                 let isDoor = (i - x) != (j - y)
                 if ( (i == x || j == y || i == endX || j == endY) && isDoor) {
-                    node.fixture = ref.getDungeonTile(type: .wall)
+                    node.fixture = MapFixtureModel(ref: ref.getDungeonTile(type: .wall))
                 }
                 node.terrain = ref.getTerrain(type: .floor)
             }
@@ -124,7 +124,8 @@ public class DungeonGenerator {
     private func addStairs(up:Bool) -> vector_int2 {
         let pos = randomEmptyPoint()
         let node = dungeon.nodeAt(vec:pos)
-        node?.fixture = up ? ref.getDungeonTile(type: .stairsUp) : ref.getDungeonTile(type: .stairsDown)
+        let fixtureRef = up ? ref.getDungeonTile(type: .stairsUp) : ref.getDungeonTile(type: .stairsDown)
+        node?.fixture = MapFixtureModel(ref: fixtureRef)
         return pos
     }
     

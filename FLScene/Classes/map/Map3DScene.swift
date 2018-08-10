@@ -24,15 +24,10 @@ public class Map3DScene: SCNScene {
     
     public override init() {
         self.game = GameController.instance
-        self.overland = FullOverlandModel(player:game.player.player)
         
-        let gen1 = DungeonGenerator(size: 7, ref: game.reference, player: game.player.player)
-        let gen2 = DungeonGenerator(size: 7, ref: game.reference, player: nil)
+        let gen = OverlandGenerator()
         
-        let dun1 = gen1.generateDungeon(type: .outdoors)
-        let dun2 = gen2.generateDungeon(type: .outdoors)
-        dun2.overlandOffset = SCNVector3(15,0,15)
-        self.overland.dungeons = [dun1,dun2]
+        self.overland = gen.baseOverland()
 
         let store = GeometryStore()
         hexGeometry = HexGeometry(store:store)

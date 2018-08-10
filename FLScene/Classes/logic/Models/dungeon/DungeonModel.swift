@@ -99,7 +99,7 @@ public class DungeonModel: NSObject {
     
     public func fixture(at:CGPoint) -> DungeonTileType? {
         let node = self.nodeAt(point: at)
-        return node?.fixture?.type
+        return node?.fixture?.ref.type
     }
     
     public func path(to:vector_int2,from:vector_int2) -> [GKHexMapNode] {

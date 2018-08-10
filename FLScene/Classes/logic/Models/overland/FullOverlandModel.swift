@@ -5,6 +5,8 @@
 //  Created by Alexander Skorulis on 9/8/18.
 //
 
+import GameplayKit
+
 public class FullOverlandModel {
 
     public var dungeons:[DungeonModel] = []
@@ -18,4 +20,5 @@ public class FullOverlandModel {
     public var playerDungeon:DungeonModel? {
         return dungeons.first!
     }
+
 }

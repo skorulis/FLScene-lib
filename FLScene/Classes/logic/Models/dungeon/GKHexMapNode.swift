@@ -11,7 +11,7 @@ import GameplayKit
 public class GKHexMapNode: GKGridGraphNode {
 
     public var terrain:TerrainReferenceModel
-    public var fixture:DungeonTileReferenceModel?
+    public var fixture:MapFixtureModel?
     
     //Things that can move around from node to node, allows for multiple as battles can happen when they are in the same node
     public var beings:[GridEntity] = []
@@ -34,7 +34,7 @@ public class GKHexMapNode: GKGridGraphNode {
     
     public func canPass() -> Bool {
         if let f = fixture {
-            return f.canPass
+            return f.ref.canPass
         }
         return true
     }
