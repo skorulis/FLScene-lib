@@ -1,0 +1,26 @@
+[
+ {
+ "type":"grass",
+ "colorHex":"27ae60"
+ },
+ {
+ "type":"dirt",
+ "colorHex":"d35400"
+ },
+ {
+ "type":"floor",
+ "colorHex":"95a5a6"
+ },
+ {
+ "type":"water",
+ "colorHex":"2980b9"
+ },
+ {
+ "type":"void",
+ "colorHex":"000000"
+ },
+ {
+ "type":"redRock",
+ "colorHex":"f39c12"
+ },
+ ]

@@ -6,7 +6,6 @@
 //
 
 import SceneKit
-import FLGame
 
 public class LandPieceNode: SCNNode {
 

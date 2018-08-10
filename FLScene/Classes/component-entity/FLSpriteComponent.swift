@@ -6,7 +6,6 @@
 //
 
 import GameplayKit
-import FLGame
 
 public class FLSpriteComponent: GKComponent {
 

@@ -1,0 +1,14 @@
+[
+ {
+ "name":"Small slime",
+ "imageName":"carBlue"
+ },
+ {
+ "name":"Theif",
+ "imageName":"carGreen"
+ },
+ {
+ "name":"Large rat",
+ "imageName":"carRed"
+ }
+]

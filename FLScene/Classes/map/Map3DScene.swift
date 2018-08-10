@@ -7,7 +7,6 @@
 //
 
 import SceneKit
-import FLGame
 import SKSwiftLib
 
 public class Map3DScene: SCNScene {
