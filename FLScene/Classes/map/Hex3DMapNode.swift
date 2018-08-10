@@ -15,11 +15,13 @@ public class Hex3DMapNode: SCNNode {
     public var terrain:[SCNNode] = []
     public let blockHeight:ASFloat
     
-    public init(dungeon:DungeonModel,gen:HexGeometry) {
+    public init(dungeon:DungeonModel) {
         self.dungeon = dungeon
         self.size = dungeon.size
         
-        blockHeight = ASFloat(gen.height())
+        let hexMath = Hex3DMath(baseSize: 1)
+        
+        blockHeight = ASFloat(hexMath.height())
         
         super.init()
         
@@ -30,7 +32,7 @@ public class Hex3DMapNode: SCNNode {
                     continue
                 }
                 
-                let parentNode = LandPieceNode(dungeonNode: dungeonNode, gen: gen)
+                let parentNode = LandPieceNode(dungeonNode: dungeonNode)
                 parentNode.position = localPosition(at: vector_int2(x,y))
                 self.addChildNode(parentNode)
             }

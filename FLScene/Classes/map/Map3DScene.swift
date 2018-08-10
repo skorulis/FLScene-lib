@@ -15,8 +15,6 @@ public class Map3DScene: SCNScene {
     
     public var mapGrid:Hex3DMapNode!
     
-    public let hexGeometry:HexGeometry
-    
     private let floorY:Float = -10
     
     public var playerSprite:FLSpriteComponent!
@@ -29,8 +27,6 @@ public class Map3DScene: SCNScene {
         
         self.overland = gen.baseOverland()
 
-        let store = GeometryStore()
-        hexGeometry = HexGeometry(store:store)
         super.init()
         self.buildScene()
     }
@@ -95,8 +91,8 @@ public class Map3DScene: SCNScene {
     
     private func addRock() {
         let terrain = GameController.instance.reference.getTerrain(type: .redRock)
-        let geometry = hexGeometry.bevelHex(ref:terrain)
-        let sides = hexGeometry.sideGeometry(height: 4,ref:terrain)
+        let geometry = GeometryProvider.instance.bevelHex(ref:terrain)
+        let sides = GeometryProvider.instance.sideGeometry(height: 4,ref:terrain)
         
         sides.firstMaterial = MaterialProvider.sideMaterial(ref: terrain)
         
@@ -122,7 +118,7 @@ public class Map3DScene: SCNScene {
     }
     
     public func makeMap(dungeon:DungeonModel) -> Hex3DMapNode {
-        let mapGrid = Hex3DMapNode(dungeon: dungeon,gen:hexGeometry)
+        let mapGrid = Hex3DMapNode(dungeon: dungeon)
         let sphere = mapGrid.boundingSphere
         mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
         return mapGrid

@@ -11,12 +11,13 @@ public class LandPieceNode: SCNNode {
 
     public let dungeonNode:GKHexMapNode
     
-    init(dungeonNode:GKHexMapNode,gen:HexGeometry) {
+    init(dungeonNode:GKHexMapNode) {
         self.dungeonNode = dungeonNode
         super.init()
         let terrain = dungeonNode.terrain
-        let hexGeometry = gen.bevelHex(ref: terrain)
-        let sides = gen.sideGeometry(height:gen.height(),ref:terrain)
+        let hexMath = Hex3DMath(baseSize: 1)
+        let hexGeometry = GeometryProvider.instance.bevelHex(ref:terrain)
+        let sides = GeometryProvider.instance.sideGeometry(height:hexMath.height(),ref:terrain)
         let n1 = SCNNode(geometry: hexGeometry)
         let n2 = SCNNode(geometry: sides)
         self.addChildNode(n1)
@@ -26,7 +27,7 @@ public class LandPieceNode: SCNNode {
             let trail = SCNParticleSystem.flSystem(named: "teleporter")!
             trail.emitterShape = hexGeometry
             
-            n1.addParticleSystem(trail)   
+            n1.addParticleSystem(trail)
         }
     }
     

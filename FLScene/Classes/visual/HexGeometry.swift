@@ -40,22 +40,7 @@ public class HexGeometry: NSObject {
         self.imageGen = HexTextureGenerator()
     }
     
-    public func hexGeometry(ref:TerrainReferenceModel) -> SCNGeometry {
-        let name = "hex-\(ref.type.rawValue)"
-        return store.getGeometry(name: name, block: {return createGeometry(ref: ref)})
-    }
-    
-    public func sideGeometry(height:CGFloat,ref:TerrainReferenceModel) -> SCNGeometry {
-        let name = "hex-sides-\(height)-\(ref.type.rawValue)"
-        return store.getGeometry(name: name, block: {return createSides(height: height,ref: ref)})
-    }
-    
-    public func bevelHex(ref:TerrainReferenceModel) -> SCNGeometry {
-        let name = "hex-bevel-\(ref.type.rawValue)"
-        return store.getGeometry(name: name, block: {return createBevelHex(ref:ref)})
-    }
-    
-    private func createGeometry(ref:TerrainReferenceModel) -> SCNGeometry {
+    func createGeometry(ref:TerrainReferenceModel) -> SCNGeometry {
         let normalUp = SCNVector3(0,1,0);
         let normalDown = SCNVector3(0,-1,0);
         
@@ -84,7 +69,7 @@ public class HexGeometry: NSObject {
         return geometry
     }
     
-    private func createBevelHex(ref:TerrainReferenceModel) -> SCNGeometry {
+    func createBevelHex(ref:TerrainReferenceModel) -> SCNGeometry {
         let normalUp = SCNVector3(0,1,0);
         
         let middlePoint = CGPoint(x:0,y:0)
@@ -148,7 +133,7 @@ public class HexGeometry: NSObject {
         return geometry
     }
     
-    private func createSides(height:CGFloat,ref:TerrainReferenceModel) -> SCNGeometry {
+    func createSides(height:CGFloat,ref:TerrainReferenceModel) -> SCNGeometry {
         let setup = MeshSetup()
         
         for i in 0...6 {
@@ -180,20 +165,12 @@ public class HexGeometry: NSObject {
         return geometry
     }
     
-    public func height() -> CGFloat {
-        let p1 = math.regularHexPoint(index: 0)
-        let p2 = math.regularHexPoint(index: 1)
-        let v1 = SCNVector3(p1.x,0,p1.y)
-        let v2 = SCNVector3(p2.x,0,p2.y)
-        return CGFloat((v2 - v1).magnitude())
-    }
-    
     private func topPosition(_ point:CGPoint) -> SCNVector3 {
-        return vertexPosition(point,y: height()/2)
+        return vertexPosition(point,y: math.height()/2)
     }
     
     private func botPosition(_ point:CGPoint) -> SCNVector3 {
-        return vertexPosition(point,y: -height()/2)
+        return vertexPosition(point,y: -math.height()/2)
     }
     
     private func vertexPosition(_ point:CGPoint,y:CGFloat) -> SCNVector3 {
