@@ -13,7 +13,15 @@ public extension SCNParticleSystem {
     public class func flSystem(named:String) -> SCNParticleSystem? {
         let bundle = Bundle(for: Map3DScene.self)
         let path = bundle.path(forResource: named, ofType: "scnp")!
-        return SCNParticleSystem(named: path, inDirectory: nil)
+        do {
+            let data = try Data(contentsOf: URL.init(fileURLWithPath: path))
+            //TODO: Work out what's wrong with this, or just make it in code?
+            let coder = NSKeyedUnarchiver(forReadingWith: data)
+            return SCNParticleSystem(coder: coder)
+        } catch {
+            print("Error reading particle system \(error)")
+        }
+        return nil;
     }
     
 }

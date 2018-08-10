@@ -23,9 +23,10 @@ public class LandPieceNode: SCNNode {
         self.addChildNode(n2)
         
         if let fixture = dungeonNode.fixture {
-            let trail = SCNParticleSystem()
+            let trail = SCNParticleSystem.flSystem(named: "teleporter")!
             trail.emitterShape = hexGeometry
-            self.addParticleSystem(trail)
+            
+            n1.addParticleSystem(trail)   
         }
     }
     
