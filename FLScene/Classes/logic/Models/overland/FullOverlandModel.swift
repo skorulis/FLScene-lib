@@ -11,14 +11,14 @@ public class FullOverlandModel {
 
     public var dungeons:[DungeonModel] = []
     public var player:PlayerCharacterModel?
+    public var playerDungeon:DungeonModel?
     
     public init(player:PlayerCharacterModel) {
         self.player = player
     }
     
-    //The dungeon that the player is in
-    public var playerDungeon:DungeonModel? {
-        return dungeons.first!
+    public func changePlayerDungeon(player:PlayerCharacterModel,dungeon:DungeonModel) {
+        self.playerDungeon = dungeon
     }
 
 }

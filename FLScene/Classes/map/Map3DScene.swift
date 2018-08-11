@@ -13,12 +13,16 @@ public class Map3DScene: SCNScene {
 
     public var overland:FullOverlandModel
     
-    public var mapGrid:Hex3DMapNode!
-    
     private let floorY:Float = -10
     
     public var playerSprite:FLSpriteComponent!
+    public var playerIsland:Hex3DMapNode {
+        return self.islandFor(dungeon: overland.playerDungeon!)
+    }
+    
     private let game:GameController
+    private var islands:[Hex3DMapNode] = []
+    
     
     public override init() {
         self.game = GameController.instance
@@ -56,16 +60,15 @@ public class Map3DScene: SCNScene {
         
         self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
 
+        self.islands = self.overland.dungeons.map { self.makeMap(dungeon: $0)}
+        for i in islands {
+            let duration = Double(arc4random()) / Double(UINT32_MAX)
+            let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: duration + 5)
+            let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: duration + 5)
+            i.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
+            self.rootNode.addChildNode(i)
+        }
         
-        mapGrid = self.makeMap(dungeon: self.overland.dungeons[0])
-        self.rootNode.addChildNode(mapGrid)
-        
-        let mapGrid2 = self.makeMap(dungeon:self.overland.dungeons[1])
-        self.rootNode.addChildNode(mapGrid2)
-        
-        let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: 5)
-        let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 5)
-        mapGrid.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
         if let playerNode = self.overland.playerDungeon?.playerNode {
             self.playerSprite = addSprite(entity: playerNode, imageNamed: "alienPink")
@@ -124,18 +127,30 @@ public class Map3DScene: SCNScene {
         return mapGrid
     }
     
-    func pointFor(position:vector_int2) -> SCNVector3 {
-        return mapGrid.topPosition(at: position)
+    func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
+        let island = self.islandFor(dungeon: dungeon)
+        return island.topPosition(at: position) + dungeon.overlandOffset
     }
     
     func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneImage(named: imageNamed)!,mapScene:self)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
         entity.addComponent(spriteComponent)
-        mapGrid.addChildNode(spriteNode)
+        let island = self.islandFor(dungeon: self.overland.playerDungeon!)
+        island.addChildNode(spriteNode)
         
-        spriteComponent.placeAt(position: entity.gridPosition)
+        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: self.overland.playerDungeon!)
         return spriteComponent
+    }
+    
+    func teleportPlayer(dungeon:DungeonModel,node:GKHexMapNode) {
+        overland.changePlayerDungeon(player: game.player.player, dungeon: dungeon)
+        playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)
+        
+    }
+    
+    func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
+        return self.islands.filter { $0.dungeon == dungeon}.first!
     }
     
 }

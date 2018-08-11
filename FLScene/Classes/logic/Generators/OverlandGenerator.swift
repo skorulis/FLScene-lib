@@ -17,7 +17,6 @@ public class OverlandGenerator: NSObject {
     }
     
     public func baseOverland() -> FullOverlandModel {
-        
         let gen1 = DungeonGenerator(size: 7, ref: game.reference, player: game.player.player)
         let gen2 = DungeonGenerator(size: 7, ref: game.reference, player: nil)
         
@@ -26,7 +25,9 @@ public class OverlandGenerator: NSObject {
         dun2.overlandOffset = SCNVector3(15,0,15)
         overland.dungeons = [dun1,dun2]
         
-        connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(3,3))
+        connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
+        
+        overland.changePlayerDungeon(player: game.player.player, dungeon: dun1)
         
         return overland
     }

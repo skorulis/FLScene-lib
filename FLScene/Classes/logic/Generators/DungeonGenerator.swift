@@ -40,7 +40,6 @@ public class DungeonGenerator {
             makeCircular()
             let centre = vector_int2(Int32(size/2), Int32(size/2))
             dungeon.playerNode?.gridPosition = centre
-            dungeon.nodeAt(vec: centre)?.fixture = MapFixtureModel(ref:ref.getDungeonTile(type: .teleporter))
         }
         
         return dungeon

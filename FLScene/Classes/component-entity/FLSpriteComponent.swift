@@ -24,10 +24,10 @@ public class FLSpriteComponent: GKComponent {
         return self.entity! as! GridEntity
     }
     
-    public func moveTo(position:vector_int2) {
+    public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
         let duration:Double = 0.6
         guard let scene = self.sprite.mapScene else {return}
-        let point = scene.pointFor(position: position) + SCNVector3(0,yOffset(),0)
+        let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
         let action = SCNAction.move(to: point, duration: duration)
         action.timingMode = .easeInEaseOut
         
@@ -40,9 +40,9 @@ public class FLSpriteComponent: GKComponent {
         //self.sprite.runAction(SCNAction.sequence([upAction,downAction]))
     }
     
-    public func placeAt(position:vector_int2) {
+    public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {
         guard let scene = self.sprite.mapScene else {return}
-        let point = scene.pointFor(position: position) + SCNVector3(0,yOffset(),0)
+        let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
         self.sprite.position = point
         self.gridEntity().gridPosition = position
     }
