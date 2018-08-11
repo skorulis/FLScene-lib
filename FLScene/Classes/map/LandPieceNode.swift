@@ -27,9 +27,9 @@ public class LandPieceNode: SCNNode {
             let model = GeometryProvider.instance.fixtureGeometry(ref: fixture.ref)
             sitGeometry(geometry: model)
         
-            //let trail = SCNParticleSystem.flSystem(named: "teleporter")!
-            //trail.emitterShape = hexGeometry
-            //n1.addParticleSystem(trail)
+            let trail = SCNParticleSystem.flSystem(named: "teleporter")!
+            trail.emitterShape = hexGeometry
+            n1.addParticleSystem(trail)
         }
     }
     
