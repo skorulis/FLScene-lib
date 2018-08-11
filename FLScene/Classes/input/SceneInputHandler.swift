@@ -26,12 +26,15 @@ public class SceneInputHandler {
         self.scene = scene;
         self.camera = cameraNode.camera!
         
-        let lookAt = SCNLookAtConstraint(target: self.scene.playerSprite.sprite)
+        let target = self.scene.playerSprite.sprite
+        
+        let lookAt = SCNLookAtConstraint(target: target)
+        lookAt.isGimbalLockEnabled = true
         let distance = SCNDistanceConstraint(target: self.scene.playerSprite.sprite)
         let acceleration = SCNAccelerationConstraint()
         distance.minimumDistance = 12
         distance.maximumDistance = 18
-        cameraNode.constraints = [distance,lookAt,acceleration]
+        cameraNode.constraints = [lookAt,distance,acceleration]
     }
     
     public func tapped(point:CGPoint) {

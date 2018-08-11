@@ -60,10 +60,10 @@ class MaterialProvider: NSObject {
     
     class func floorMaterial() -> SCNMaterial {
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.blue
+        material.diffuse.contents = UIColor(displayP3Red: 0.4, green: 0.4, blue: 0.6, alpha: 1)
         material.normal.contents = UIImage.sceneImage(named: "terrasses_water_normal")
         material.lightingModel = .physicallyBased
-        material.diffuse.contentsTransform = SCNMatrix4MakeScale(256, 256, 0)
+        //material.diffuse.contentsTransform = SCNMatrix4MakeScale(256, 256, 0)
         
         return material
     }

@@ -41,7 +41,7 @@ public class Map3DScene: SCNScene {
     
     public func buildScene() {
         // create and add a light to the scene
-        let lightNode = SCNNode()
+        /*let lightNode = SCNNode()
         lightNode.light = SCNLight()
         lightNode.light!.type = .omni
         lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
@@ -52,13 +52,14 @@ public class Map3DScene: SCNScene {
         ambientLightNode.light = SCNLight()
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.darkGray
-        rootNode.addChildNode(ambientLightNode)
+        rootNode.addChildNode(ambientLightNode)*/
         
         let skyBox = MDLSkyCubeTexture(name: nil, channelEncoding: MDLTextureChannelEncoding.uInt8,
                                        textureDimensions: [Int32(160), Int32(160)], turbidity: 0.4, sunElevation: 0.7, upperAtmosphereScattering: 0.2, groundAlbedo: 2)
         skyBox.groundColor = UIColor.brown.cgColor
         
         self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
+        self.lightingEnvironment.contents = self.background.contents
 
         self.islands = self.overland.dungeons.map { self.makeMap(dungeon: $0)}
         for i in islands {
