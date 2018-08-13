@@ -23,13 +23,9 @@ public class DungeonModel: NSObject {
         return vector_int2(Int32(width),Int32(height))
     }
     
-    public init(width:Int,height:Int,baseTerrain:TerrainReferenceModel,player:PlayerCharacterModel?) {
+    public init(width:Int,height:Int,baseTerrain:TerrainReferenceModel) {
         self.width = width
         self.height = height
-        self.player = player
-        if let p = player {
-            self.playerNode = DungeonCharacterEntity(char:p.base)
-        }
         
         for y in 0..<height {
             for x in 0..<width {
@@ -38,6 +34,21 @@ public class DungeonModel: NSObject {
         }
         
         graph = GKGraph(nodes)   
+    }
+    
+    init(networkModel:IslandNetworkModel,ref:ReferenceController) {
+        self.width = networkModel.width
+        self.height = networkModel.depth
+        
+        let baseTerrain = ref.getTerrain(type: .dirt)
+        
+        for y in 0..<height {
+            for x in 0..<width {
+                
+                nodes.append(GKHexMapNode(terrain: baseTerrain,position:vector_int2(Int32(x),Int32(y))))
+            }
+        }
+        graph = GKGraph(nodes)
     }
     
     public func updateConnectionGraph() {
@@ -129,4 +140,9 @@ public class DungeonModel: NSObject {
         return all
     }
     
+    public func deflated() -> IslandNetworkModel {
+        let model = IslandNetworkModel(name: "test", width: self.width, depth: self.height, offset: self.overlandOffset)
+        
+        return model
+    }
 }

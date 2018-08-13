@@ -29,7 +29,7 @@ public class Map3DScene: SCNScene {
         
         let gen = OverlandGenerator()
         
-        self.overland = gen.baseOverland()
+        self.overland = gen.fromFile()
 
         super.init()
         self.buildScene()
@@ -145,7 +145,7 @@ public class Map3DScene: SCNScene {
     }
     
     func teleportPlayer(dungeon:DungeonModel,node:GKHexMapNode) {
-        overland.changePlayerDungeon(player: game.player.player, dungeon: dungeon)
+        overland.changePlayerDungeon(player: game.player.player, dungeon: dungeon,position:node.gridPosition)
         playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)
         
     }

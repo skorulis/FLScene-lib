@@ -17,8 +17,17 @@ public class FullOverlandModel {
         self.player = player
     }
     
-    public func changePlayerDungeon(player:PlayerCharacterModel,dungeon:DungeonModel) {
+    public func changePlayerDungeon(player:PlayerCharacterModel,dungeon:DungeonModel,position:vector_int2) {
+        playerDungeon?.playerNode = nil //Remove old player node
+        dungeon.playerNode = DungeonCharacterEntity(char: player.base)
+        dungeon.playerNode?.gridPosition = position
         self.playerDungeon = dungeon
+    }
+    
+    public func deflated() -> OverlandMetadataModel {
+        let islands = dungeons.map { $0.deflated() }
+        //let islandsMeta = islands.map { $0.meta() }
+        return OverlandMetadataModel(islands: islands)
     }
 
 }

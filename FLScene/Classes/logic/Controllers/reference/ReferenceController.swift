@@ -176,9 +176,23 @@ public class ReferenceController {
             let objects = try decoder.decode([T].self, from: data)
             return objects
         } catch {
-            
+            print("Could not read objects \(error)")
         }
         return []
+    }
+    
+    public class func readJSONFile<T: Decodable>(filename:String) -> T? {
+        do {
+            let bundle = Bundle.init(for: self)
+            let path = bundle.path(forResource: filename, ofType: "json")!
+            let data = try Data(contentsOf: URL(fileURLWithPath: path))
+            let decoder = JSONDecoder()
+            let model = try decoder.decode(T.self, from: data)
+            return model
+        } catch {
+            print("Could not read file \(error)")
+        }
+        return nil
     }
     
 }

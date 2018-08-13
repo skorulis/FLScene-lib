@@ -23,7 +23,7 @@ public class DungeonGenerator {
         self.ref = ref
         let baseTerrain = ref.getTerrain(type: .grass)
         
-        dungeon = DungeonModel(width: size, height: size, baseTerrain: baseTerrain,player:player)
+        dungeon = DungeonModel(width: size, height: size, baseTerrain: baseTerrain)
         self.size = size
     }
     
