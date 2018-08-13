@@ -8,6 +8,24 @@
 import SKSwiftLib
 import SceneKit
 
+public extension SCNNode {
+    
+    public convenience init(named name: String) {
+        self.init()
+        
+        guard let scene = SCNScene(named: name) else {
+            return
+        }
+        
+        for childNode in scene.rootNode.childNodes {
+            if childNode.camera == nil {
+                addChildNode(childNode)
+            }
+            
+        }
+    }
+}
+
 public extension SCNParticleSystem {
     
     public class func flSystem(named:String) -> SCNParticleSystem? {

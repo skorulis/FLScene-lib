@@ -24,12 +24,12 @@ public class LandPieceNode: SCNNode {
         self.addChildNode(n2)
         
         if let fixture = dungeonNode.fixture {
-            let model = GeometryProvider.instance.fixtureGeometry(ref: fixture.ref)
-            sitGeometry(geometry: model)
+            let model = NodeProvider.instance.tree()
+            sitNode(node: model)
         
-            let trail = SCNParticleSystem.flSystem(named: "teleporter")!
-            trail.emitterShape = hexGeometry
-            n1.addParticleSystem(trail)
+            //let trail = SCNParticleSystem.flSystem(named: "teleporter")!
+            //trail.emitterShape = hexGeometry
+            //n1.addParticleSystem(trail)
         }
     }
     
@@ -37,14 +37,21 @@ public class LandPieceNode: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func sitGeometry(geometry:SCNGeometry) {
+    private func sitNode(node:SCNNode) {
         let hexMath = Hex3DMath(baseSize: 1)
-        let node = SCNNode(geometry: geometry)
         self.addChildNode(node)
-        
         let minY = CGFloat(node.boundingBox.min.y)
         
-        node.position = SCNVector3(0,hexMath.height()/2 - minY,0)
+        node.position = SCNVector3(0,hexMath.height()/2 - minY,0) + node.position
+        
+        /*let constraint = SCNDistanceConstraint(target: self)
+        constraint.maximumDistance = 0.1
+        node.constraints = [constraint]*/
+    }
+    
+    private func sitGeometry(geometry:SCNGeometry) {
+        let node = SCNNode(geometry: geometry)
+        sitNode(node: node)
     }
     
 }

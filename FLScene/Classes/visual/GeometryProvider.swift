@@ -36,16 +36,4 @@ class GeometryProvider {
         return store.getGeometry(name: name, block: {return self.hexGeometry.createBevelHex(ref:ref)})
     }
     
-    public func tree() -> SCNGeometry {
-        let name = "tree1"
-        return store.getGeometry(name: name, block: {return TreeGeometry().makeTree()})
-    }
-    
-    public func fixtureGeometry(ref:DungeonTileReferenceModel) -> SCNGeometry {
-        switch ref.type {
-        default:
-            return tree()
-        }
-    }
-    
 }

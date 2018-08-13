@@ -13,6 +13,7 @@ public class GeometryStore: NSObject {
 
     private var geometries:[String:SCNGeometry] = [:]
     private var materials:[String:SCNMaterial] = [:]
+    private var scenes:[String:SCNScene] = [:]
     
     public func getGeometry(name:String,block:()->(SCNGeometry)) -> SCNGeometry {
         if let existing = geometries[name] {
@@ -30,6 +31,15 @@ public class GeometryStore: NSObject {
         let mat = block()
         materials[name] = mat
         return mat
+    }
+    
+    public func getScene(name:String) -> SCNScene {
+        if let existing = scenes[name] {
+            return existing
+        }
+        let scene = SCNScene(named: name)!
+        scenes[name] = scene
+        return scene
     }
     
 }
