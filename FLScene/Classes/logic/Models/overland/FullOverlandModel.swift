@@ -27,11 +27,5 @@ public class FullOverlandModel: Codable {
         dungeon.playerNode?.gridPosition = position
         self.playerDungeon = dungeon
     }
-    
-    public func deflated() -> OverlandMetadataModel {
-        let islands = dungeons.map { $0.deflated() }
-        //let islandsMeta = islands.map { $0.meta() }
-        return OverlandMetadataModel(islands: islands)
-    }
 
 }

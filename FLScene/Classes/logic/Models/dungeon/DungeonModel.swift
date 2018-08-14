@@ -137,9 +137,12 @@ public class DungeonModel: Codable {
         return all
     }
     
-    public func deflated() -> IslandNetworkModel {
-        let model = IslandNetworkModel(name: "test", width: self.width, depth: self.height, offset: self.overlandOffset)
-        
-        return model
+    public func metaData() -> [String:Any] {
+        var dict = [String:Any]()
+        dict[CodingKeys.name.rawValue] = name
+        dict[CodingKeys.width.rawValue] = width
+        dict[CodingKeys.height.rawValue] = height
+        dict[CodingKeys.overlandOffset.rawValue] = overlandOffset.jsonDict()
+        return dict
     }
 }

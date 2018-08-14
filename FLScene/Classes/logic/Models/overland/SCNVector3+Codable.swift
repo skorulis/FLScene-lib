@@ -29,6 +29,13 @@ extension SCNVector3: Codable {
         let z = try values.decode(Float.self, forKey: .z)
         self.init(x, y, z)
     }
+    
+    public func jsonDict() -> [String:CGFloat] {
+        return [CodingKeys.x.rawValue:x,
+                CodingKeys.y.rawValue:y,
+                CodingKeys.z.rawValue:z,
+        ]
+    }
 }
 
 extension vector_int2: Codable {
