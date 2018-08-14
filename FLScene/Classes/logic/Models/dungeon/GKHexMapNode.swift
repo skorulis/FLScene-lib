@@ -8,8 +8,13 @@
 
 import GameplayKit
 
-public class GKHexMapNode: GKGridGraphNode {
+public class GKHexMapNode: GKGridGraphNode, Codable {
 
+    enum CodingKeys: String, CodingKey {
+        case terrain
+        case gridPosition
+    }
+    
     public var terrain:TerrainReferenceModel
     public var fixture:MapFixtureModel?
     
@@ -22,6 +27,20 @@ public class GKHexMapNode: GKGridGraphNode {
     public init(terrain:TerrainReferenceModel,position:vector_int2) {
         self.terrain = terrain
         super.init(gridPosition:position)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(terrain.type.rawValue, forKey: .terrain)
+        try container.encode(gridPosition, forKey: .gridPosition)
+    }
+    
+    public convenience required init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let terrainType = try values.decode(String.self, forKey: .terrain)
+        let terrain = ReferenceController.instance.getTerrain(type: TerrainType(rawValue: terrainType)!)
+        let gridPosition = try values.decode(vector_int2.self, forKey: .gridPosition)
+        self.init(terrain: terrain, position: gridPosition)
     }
     
     public required init?(coder aDecoder: NSCoder) {

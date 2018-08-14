@@ -14,6 +14,7 @@ public class DungeonModel: Codable {
         case height
         case overlandOffset
         case name
+        case nodes
     }
     
     
