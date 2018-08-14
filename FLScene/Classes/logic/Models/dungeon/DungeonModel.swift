@@ -8,24 +8,35 @@
 
 import GameplayKit
 
-public class DungeonModel: NSObject {
+public class DungeonModel: Codable {
+    enum CodingKeys: String, CodingKey {
+        case width
+        case height
+        case overlandOffset
+        case name
+    }
+    
     
     public var player:PlayerCharacterModel?
     public var playerNode:DungeonCharacterEntity?
     
+    public let name:String
     public var nodes:[GKHexMapNode] = []
     public var width:Int
     public var height:Int
-    public var graph:GKGraph
+    public var graph:GKGraph = GKGraph([])
     public var overlandOffset:SCNVector3 = SCNVector3(0,0,0)
     
     public var size:vector_int2 {
         return vector_int2(Int32(width),Int32(height))
     }
     
-    public init(width:Int,height:Int,baseTerrain:TerrainReferenceModel) {
+    public init(width:Int,height:Int,name:String) {
         self.width = width
         self.height = height
+        self.name = name
+        
+        let baseTerrain = ReferenceController.instance.getTerrain(type: .grass)
         
         for y in 0..<height {
             for x in 0..<width {
@@ -33,22 +44,7 @@ public class DungeonModel: NSObject {
             }
         }
         
-        graph = GKGraph(nodes)   
-    }
-    
-    init(networkModel:IslandNetworkModel,ref:ReferenceController) {
-        self.width = networkModel.width
-        self.height = networkModel.depth
-        
-        let baseTerrain = ref.getTerrain(type: .dirt)
-        
-        for y in 0..<height {
-            for x in 0..<width {
-                
-                nodes.append(GKHexMapNode(terrain: baseTerrain,position:vector_int2(Int32(x),Int32(y))))
-            }
-        }
-        graph = GKGraph(nodes)
+        graph.add(nodes)
     }
     
     public func updateConnectionGraph() {

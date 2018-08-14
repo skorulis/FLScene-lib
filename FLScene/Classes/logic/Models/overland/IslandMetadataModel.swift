@@ -19,7 +19,7 @@ public class OverlandMetadataModel: Codable {
 
 public class IslandMetadataModel: Codable {
 
-    let name:String
+    public let name:String
     let width:Int
     let depth:Int
     let worldOffsetX:CGFloat
@@ -43,8 +43,24 @@ public class IslandMetadataModel: Codable {
 
 public class IslandNetworkModel: IslandMetadataModel {
     
+    var squares:[IslandSquareModel] = []
+    
+    
     func meta() -> IslandMetadataModel {
         return IslandMetadataModel(name: name, width: width, depth: depth, offset: worldOffset())
+    }
+}
+
+public class IslandSquareModel: Codable {
+    
+    let x:Int
+    let y:Int
+    let terrain:TerrainType
+    
+    init(x:Int,y:Int,terrain:TerrainType) {
+        self.x = x
+        self.y = y
+        self.terrain = terrain
     }
     
 }

@@ -19,11 +19,10 @@ public class DungeonGenerator {
     public let size:Int
     public let ref:ReferenceController
     
-    public init(size:Int,ref:ReferenceController,player:PlayerCharacterModel?) {
-        self.ref = ref
-        let baseTerrain = ref.getTerrain(type: .grass)
+    public init(size:Int,name:String) {
+        self.ref = ReferenceController.instance
         
-        dungeon = DungeonModel(width: size, height: size, baseTerrain: baseTerrain)
+        dungeon = DungeonModel(width: size, height: size, name:name)
         self.size = size
     }
     

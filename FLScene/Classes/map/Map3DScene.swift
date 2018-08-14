@@ -151,7 +151,7 @@ public class Map3DScene: SCNScene {
     }
     
     func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
-        return self.islands.filter { $0.dungeon == dungeon}.first!
+        return self.islands.filter { $0.dungeon === dungeon}.first!
     }
     
 }

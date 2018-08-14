@@ -7,8 +7,12 @@
 
 import GameplayKit
 
-public class FullOverlandModel {
+public class FullOverlandModel: Codable {
 
+    enum CodingKeys: String, CodingKey {
+        case dungeons
+    }
+    
     public var dungeons:[DungeonModel] = []
     public var player:PlayerCharacterModel?
     public var playerDungeon:DungeonModel?

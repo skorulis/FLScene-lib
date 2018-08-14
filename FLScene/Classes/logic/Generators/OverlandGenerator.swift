@@ -17,8 +17,8 @@ public class OverlandGenerator: NSObject {
     }
     
     public func baseOverland() -> FullOverlandModel {
-        let gen1 = DungeonGenerator(size: 7, ref: game.reference, player: game.player.player)
-        let gen2 = DungeonGenerator(size: 7, ref: game.reference, player: nil)
+        let gen1 = DungeonGenerator(size: 7, name:"Obl")
+        let gen2 = DungeonGenerator(size: 7, name:"Fobl")
         
         let dun1 = gen1.generateDungeon(type: .outdoors)
         let dun2 = gen2.generateDungeon(type: .outdoors)
@@ -36,7 +36,7 @@ public class OverlandGenerator: NSObject {
         let overlandMeta:OverlandMetadataModel = ReferenceController.readJSONFile(filename: "overland")!
         for islandMeta in overlandMeta.islands {
             let size = islandMeta.width
-            let gen = DungeonGenerator(size: size, ref: game.reference, player: nil)
+            let gen = DungeonGenerator(size: size, name:islandMeta.name)
             let dungeon = gen.generateDungeon(type: .outdoors)
             dungeon.overlandOffset = islandMeta.worldOffset()
             overland.dungeons.append(dungeon)

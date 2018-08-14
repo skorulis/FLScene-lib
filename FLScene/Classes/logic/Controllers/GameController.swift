@@ -19,7 +19,7 @@ public class GameController {
     public let battle:BattleController
     
     public init() {
-        reference = ReferenceController()
+        reference = ReferenceController.instance
         action = ActionController(ref:reference)
         city = CityController()
         player = PlayerCharacterController(actions: action,city:city)

@@ -34,6 +34,8 @@ extension UIColor {
 
 public class ReferenceController {
 
+    public static let instance = ReferenceController()
+    
     public let items:[String:ItemReferenceModel]
     public let story:[String:StoryReferenceModel]
     public let skills:[SkillType:SkillReferenceModel]
