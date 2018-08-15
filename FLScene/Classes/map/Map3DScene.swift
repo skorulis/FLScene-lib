@@ -16,8 +16,13 @@ public class Map3DScene: SCNScene {
     private let floorY:Float = -10
     
     public var playerSprite:FLSpriteComponent!
-    public var playerIsland:Hex3DMapNode {
-        return self.islandFor(dungeon: overland.playerDungeon!)
+    
+    public var playerIsland:DungeonModel {
+        return overland.findIsland(name: playerSprite.gridEntity().islandName!)
+    }
+    
+    public var playerIslandNode:Hex3DMapNode {
+        return islandFor(dungeon: playerIsland)
     }
     
     private let game:GameController
@@ -68,27 +73,38 @@ public class Map3DScene: SCNScene {
             self.rootNode.addChildNode(i)
         }
         
-        
-        if let playerNode = self.overland.playerDungeon?.playerNode {
-            self.playerSprite = addSprite(entity: playerNode, imageNamed: "alienPink")
-        }
-        
         buildWater()
         
         for _ in 0...15 {
             addRock()
         }
+        
+        addPlayer()
+    }
+    
+    public func addPlayer() {
+        let playerEntity = GridEntity()
+        playerEntity.islandName = "Obl"
+        playerEntity.gridPosition = vector2(3, 3)
+        self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
     }
     
     private func buildWater() {
-        let geom = SCNFloor()
+        let tileSize:CGFloat = 25
+        for x in -5...5 {
+            for z in -5...5 {
+                let geom = SCNPlane(width: tileSize, height: tileSize)
+                
+                geom.firstMaterial = MaterialProvider.floorMaterial()
+                
+                let floor = SCNNode(geometry: geom)
+                floor.rotation = SCNVector4(1,0,0,-CGFloat.pi/2)
+                floor.position = SCNVector3(tileSize * CGFloat(x),CGFloat(floorY),tileSize * CGFloat(z))
+                
+                self.rootNode.addChildNode(floor)
+            }
+        }
         
-        geom.firstMaterial = MaterialProvider.floorMaterial()
-        
-        let floor = SCNNode(geometry: geom)
-        floor.position = SCNVector3(0,floorY,0)
-        
-        self.rootNode.addChildNode(floor)
     }
     
     private func addRock() {
@@ -135,17 +151,19 @@ public class Map3DScene: SCNScene {
         let spriteNode = FLMapSprite(image: UIImage.sceneImage(named: imageNamed)!,mapScene:self)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
         entity.addComponent(spriteComponent)
-        let island = self.islandFor(dungeon: self.overland.playerDungeon!)
-        island.addChildNode(spriteNode)
+        let island = overland.findIsland(name: entity.islandName!)
+        let islandNode = islandFor(dungeon: island)
+        islandNode.addChildNode(spriteNode)
         
-        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: self.overland.playerDungeon!)
+        island.addMonster(entity: entity)
+        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
         return spriteComponent
     }
     
     func teleportPlayer(dungeon:DungeonModel,node:GKHexMapNode) {
-        overland.changePlayerDungeon(player: game.player.player, dungeon: dungeon,position:node.gridPosition)
+        let entity = self.playerSprite.gridEntity()
+        overland.changeEntityIsland(entity: entity, islandName: dungeon.name, position: node.gridPosition)
         playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)
-        
     }
     
     func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {

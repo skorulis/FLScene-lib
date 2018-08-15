@@ -38,7 +38,7 @@ public class SceneInputHandler {
     }
     
     public func tapped(point:CGPoint) {
-        let options:[SCNHitTestOption : Any] = [SCNHitTestOption.rootNode:scene.playerIsland]
+        let options:[SCNHitTestOption : Any] = [SCNHitTestOption.rootNode:scene.playerIslandNode]
         
         let hits = self.sceneView.hitTest(point, options: options)
         guard let first = hits.first else { return }
@@ -46,17 +46,17 @@ public class SceneInputHandler {
         
         let fromPoint = scene.playerSprite.gridEntity().gridPosition
         
-        let path = scene.playerIsland.dungeon.path(to: square.dungeonNode.gridPosition, from: fromPoint)
+        let path = scene.playerIsland.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         if path.count < 2 {
             return
         }
         
         let firstPoint = path[1]
-        self.scene.playerSprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.overland.playerDungeon!)
+        self.scene.playerSprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.playerIsland)
     }
     
     public func longPress(point:CGPoint) {
-        let options:[SCNHitTestOption : Any] = [SCNHitTestOption.rootNode:scene.playerIsland]
+        let options:[SCNHitTestOption : Any] = [SCNHitTestOption.rootNode:scene.playerIslandNode]
         
         let hits = self.sceneView.hitTest(point, options: options)
         guard let first = hits.first else { return }
@@ -72,8 +72,9 @@ public class SceneInputHandler {
     public func performAction(node:GKHexMapNode,action:DungeonAction) {
         if action == .teleport {
             let teleporter = node.fixture as! TeleporterFixtureModel
-            let dungeon = teleporter.otherDungeon!
-            let node = teleporter.otherNode!
+            let dungeon = scene.overland.findIsland(name: teleporter.targetIslandName)
+            let node = dungeon.nodeAt(vec: teleporter.targetPosition)!
+            
             self.scene.teleportPlayer(dungeon: dungeon, node: node)
         }
     }

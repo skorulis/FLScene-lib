@@ -17,8 +17,8 @@ public class DungeonModel: Codable {
         case nodes
     }
     
-    public var player:PlayerCharacterModel?
-    public var playerNode:DungeonCharacterEntity?
+    //public var player:PlayerCharacterModel?
+    //public var playerNode:DungeonCharacterEntity?
     
     public let name:String
     public var nodes:[GKHexMapNode] = []
@@ -137,6 +137,11 @@ public class DungeonModel: Codable {
     public func addMonster(entity:GridEntity) {
         let node = self.nodeAt(x: entity.x, y: entity.y)!
         node.beings.append(entity)
+    }
+    
+    public func removeBeing(entity:GridEntity) {
+        let node = self.nodeAt(x: entity.x, y: entity.y)!
+        node.beings = node.beings.filter { $0 !== entity }
     }
     
     public func allMonsters() -> [GridEntity] {

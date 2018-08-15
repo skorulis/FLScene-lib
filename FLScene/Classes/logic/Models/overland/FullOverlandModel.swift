@@ -15,17 +15,22 @@ public class FullOverlandModel: Codable {
     
     public var dungeons:[DungeonModel] = []
     public var player:PlayerCharacterModel?
-    public var playerDungeon:DungeonModel?
     
     public init(player:PlayerCharacterModel) {
         self.player = player
     }
     
-    public func changePlayerDungeon(player:PlayerCharacterModel,dungeon:DungeonModel,position:vector_int2) {
-        playerDungeon?.playerNode = nil //Remove old player node
-        dungeon.playerNode = DungeonCharacterEntity(char: player.base)
-        dungeon.playerNode?.gridPosition = position
-        self.playerDungeon = dungeon
+    public func changeEntityIsland(entity:GridEntity,islandName:String,position:vector_int2) {
+        if let oldIslandName = entity.islandName {
+            let oldIsland = findIsland(name: oldIslandName)
+            oldIsland.removeBeing(entity: entity)
+        }
+        
+        entity.islandName = islandName
+        entity.gridPosition = position
+        
+        let island = findIsland(name: islandName)
+        island.nodeAt(vec: position)?.beings.append(entity)
     }
     
     public func replaceIsland(island:DungeonModel) {
@@ -34,6 +39,10 @@ public class FullOverlandModel: Codable {
                 dungeons[i] = island
             }
         }
+    }
+    
+    public func findIsland(name:String) -> DungeonModel {
+        return self.dungeons.filter { $0.name == name}.first!
     }
 
 }

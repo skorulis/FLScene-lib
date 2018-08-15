@@ -27,8 +27,6 @@ public class OverlandGenerator: NSObject {
         
         OverlandGenerator.connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
         
-        overland.changePlayerDungeon(player: game.player.player, dungeon: dun1,position: vector_int2(3,3))
-        
         return overland
     }
     
@@ -46,8 +44,6 @@ public class OverlandGenerator: NSObject {
         let game = GameController.instance
         
         connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
-        
-        overland.changePlayerDungeon(player: game.player.player, dungeon: dun1,position: vector_int2(3,3))
         
         return overland
     }

@@ -37,8 +37,6 @@ public class DungeonGenerator {
         dungeon.updateConnectionGraph()
         if (type == .outdoors) {
             makeCircular()
-            let centre = vector_int2(Int32(size/2), Int32(size/2))
-            dungeon.playerNode?.gridPosition = centre
         }
         
         return dungeon
@@ -59,7 +57,7 @@ public class DungeonGenerator {
             addRoom()
         }
         for _ in 0...2 {
-            dungeon.playerNode?.gridPosition = addStairs(up: true)
+            _ = addStairs(up: true)
         }
         for _ in 0...2 {
             _ = addStairs(up: false)

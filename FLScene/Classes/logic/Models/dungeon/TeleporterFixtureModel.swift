@@ -5,14 +5,16 @@
 //  Created by Alexander Skorulis on 11/8/18.
 //
 
+import SceneKit
+
 class TeleporterFixtureModel: MapFixtureModel {
 
-    weak var otherDungeon:DungeonModel?
-    weak var otherNode:GKHexMapNode?
+    let targetIslandName:String
+    let targetPosition:vector_int2
     
     init(ref:DungeonTileReferenceModel,dungeon:DungeonModel,node:GKHexMapNode) {
-        self.otherDungeon = dungeon
-        self.otherNode = node
+        self.targetIslandName = dungeon.name
+        self.targetPosition = node.gridPosition
         super.init(ref: ref)
     }
     

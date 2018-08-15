@@ -11,6 +11,17 @@ import GameplayKit
 public class GridEntity: GKEntity {
 
     public var gridPosition:vector_int2 = vector_int2(x: 0, y: 0)
+    public let entityId:String
+    public var islandName:String?
+    
+    override init() {
+        entityId = UUID().uuidString
+        super.init()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public var x:Int {
         return Int(gridPosition.x)
