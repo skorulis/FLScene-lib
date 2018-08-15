@@ -25,26 +25,26 @@ public class OverlandGenerator: NSObject {
         dun2.overlandOffset = SCNVector3(15,0,15)
         overland.dungeons = [dun1,dun2]
         
-        connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
+        OverlandGenerator.connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
         
         overland.changePlayerDungeon(player: game.player.player, dungeon: dun1,position: vector_int2(3,3))
         
         return overland
     }
     
-    public func fromFile() -> FullOverlandModel {
-        let overlandMeta:OverlandMetadataModel = ReferenceController.readJSONFile(filename: "overland")!
-        for islandMeta in overlandMeta.islands {
-            let size = islandMeta.width
-            let gen = DungeonGenerator(size: size, name:islandMeta.name)
-            let dungeon = gen.generateDungeon(type: .outdoors)
-            dungeon.overlandOffset = islandMeta.worldOffset()
-            overland.dungeons.append(dungeon)
+    public class func fromFile() -> FullOverlandModel {
+        let overland:FullOverlandModel = ReferenceController.readJSONFile(filename: "overland")!
+        for islandMeta in overland.dungeons {
+            let fullIsland:DungeonModel = ReferenceController.readJSONFile(filename: islandMeta.name)!
+            overland.replaceIsland(island: fullIsland)
+            fullIsland.updateConnectionGraph()
         }
         
         let dun1 = overland.dungeons[0]
         let dun2 = overland.dungeons[1]
         
+        let game = GameController.instance
+        
         connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
         
         overland.changePlayerDungeon(player: game.player.player, dungeon: dun1,position: vector_int2(3,3))
@@ -52,8 +52,8 @@ public class OverlandGenerator: NSObject {
         return overland
     }
     
-    func connect(dungon1:DungeonModel,dungeon2:DungeonModel,p1:vector_int2,p2:vector_int2) {
-        let ref = game.reference.getDungeonTile(type: .teleporter)
+    class func connect(dungon1:DungeonModel,dungeon2:DungeonModel,p1:vector_int2,p2:vector_int2) {
+        let ref = ReferenceController.instance.getDungeonTile(type: .teleporter)
         
         let node1 = dungon1.nodeAt(vec: p1)!
         let node2 = dungeon2.nodeAt(vec: p2)!

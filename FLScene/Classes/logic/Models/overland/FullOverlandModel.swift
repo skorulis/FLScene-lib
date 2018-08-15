@@ -10,7 +10,7 @@ import GameplayKit
 public class FullOverlandModel: Codable {
 
     enum CodingKeys: String, CodingKey {
-        case dungeons
+        case dungeons = "islands"
     }
     
     public var dungeons:[DungeonModel] = []
@@ -26,6 +26,14 @@ public class FullOverlandModel: Codable {
         dungeon.playerNode = DungeonCharacterEntity(char: player.base)
         dungeon.playerNode?.gridPosition = position
         self.playerDungeon = dungeon
+    }
+    
+    public func replaceIsland(island:DungeonModel) {
+        for i in 0..<self.dungeons.count {
+            if dungeons[i].name == island.name {
+                dungeons[i] = island
+            }
+        }
     }
 
 }

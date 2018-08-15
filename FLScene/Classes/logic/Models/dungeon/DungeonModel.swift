@@ -17,7 +17,6 @@ public class DungeonModel: Codable {
         case nodes
     }
     
-    
     public var player:PlayerCharacterModel?
     public var playerNode:DungeonCharacterEntity?
     
@@ -44,6 +43,17 @@ public class DungeonModel: Codable {
                 nodes.append(GKHexMapNode(terrain: baseTerrain,position:vector_int2(Int32(x),Int32(y))))
             }
         }
+        
+        graph.add(nodes)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        width = try container.decode(Int.self, forKey: .width)
+        height = try container.decode(Int.self, forKey: .height)
+        overlandOffset = try container.decode(SCNVector3.self, forKey: .overlandOffset)
+        nodes = try container.decodeIfPresent([GKHexMapNode].self, forKey: .nodes) ?? []
         
         graph.add(nodes)
     }

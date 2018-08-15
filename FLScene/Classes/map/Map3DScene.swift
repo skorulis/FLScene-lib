@@ -27,9 +27,7 @@ public class Map3DScene: SCNScene {
     public override init() {
         self.game = GameController.instance
         
-        let gen = OverlandGenerator()
-        
-        self.overland = gen.fromFile()
+        self.overland = OverlandGenerator.fromFile()
 
         super.init()
         self.buildScene()

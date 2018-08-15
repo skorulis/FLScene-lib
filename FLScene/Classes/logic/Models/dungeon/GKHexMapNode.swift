@@ -13,6 +13,7 @@ public class GKHexMapNode: GKGridGraphNode, Codable {
     enum CodingKeys: String, CodingKey {
         case terrain
         case gridPosition
+        case yOffset
     }
     
     public var terrain:TerrainReferenceModel
@@ -33,6 +34,7 @@ public class GKHexMapNode: GKGridGraphNode, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(terrain.type.rawValue, forKey: .terrain)
         try container.encode(gridPosition, forKey: .gridPosition)
+        try container.encode(yOffset, forKey: .yOffset)
     }
     
     public convenience required init(from decoder: Decoder) throws {
@@ -41,6 +43,7 @@ public class GKHexMapNode: GKGridGraphNode, Codable {
         let terrain = ReferenceController.instance.getTerrain(type: TerrainType(rawValue: terrainType)!)
         let gridPosition = try values.decode(vector_int2.self, forKey: .gridPosition)
         self.init(terrain: terrain, position: gridPosition)
+        self.yOffset = try values.decodeIfPresent(Int.self, forKey: .yOffset) ?? 0
     }
     
     public required init?(coder aDecoder: NSCoder) {
