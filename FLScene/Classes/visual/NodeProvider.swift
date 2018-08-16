@@ -45,6 +45,6 @@ class NodeProvider {
         let scaleY = maxSize.y / sizeY
         let scaleZ = maxSize.z / sizeZ
         
-        return [scaleX,scaleY,scaleZ].min()!
+        return CGFloat([scaleX,scaleY,scaleZ].min()!)
     }
 }

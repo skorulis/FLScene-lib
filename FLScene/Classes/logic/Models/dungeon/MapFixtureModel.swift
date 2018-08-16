@@ -9,8 +9,8 @@ public class MapFixtureModel: Codable {
 
     enum CodingKeys: String, CodingKey {
         case type
-        case dungeon
-        case node
+        case targetIsland
+        case targetPosition
     }
     
     let ref:DungeonTileReferenceModel
@@ -26,8 +26,23 @@ public class MapFixtureModel: Codable {
     
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try values.decode(String.self, forKey: .type)
-        ref = ReferenceController.instance.getDungeonTile(type: DungeonTileType(rawValue: type)!)
+        let typeString = try values.decode(String.self, forKey: .type)
+        let type = DungeonTileType(rawValue: typeString)!
+        ref = ReferenceController.instance.getDungeonTile(type: type)
+    }
+    
+    class func decode(from parent:KeyedDecodingContainer<GKHexMapNode.CodingKeys>) throws -> MapFixtureModel? {
+        if !parent.contains(GKHexMapNode.CodingKeys.fixture) {
+            return nil
+        }
+        let values = try parent.nestedContainer(keyedBy: CodingKeys.self, forKey: .fixture)
+        let typeString = try values.decode(String.self, forKey: .type)
+        let type = DungeonTileType(rawValue: typeString)!
+        if type == .teleporter {
+            return try parent.decode(TeleporterFixtureModel.self, forKey: .fixture)
+        } else {
+            return try parent.decode(MapFixtureModel.self, forKey: .fixture)
+        }
     }
     
 }

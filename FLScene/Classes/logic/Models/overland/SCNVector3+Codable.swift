@@ -31,9 +31,9 @@ extension SCNVector3: Codable {
     }
     
     public func jsonDict() -> [String:CGFloat] {
-        return [CodingKeys.x.rawValue:x,
-                CodingKeys.y.rawValue:y,
-                CodingKeys.z.rawValue:z,
+        return [CodingKeys.x.rawValue:CGFloat(x),
+                CodingKeys.y.rawValue:CGFloat(y),
+                CodingKeys.z.rawValue:CGFloat(z),
         ]
     }
 }

@@ -20,12 +20,16 @@ class TeleporterFixtureModel: MapFixtureModel {
     
     public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
-        //TODO: Encode dungeon and node -> And think heavily about this as it causes problems
-        //var container = encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(targetIslandName, forKey: .targetIsland)
+        try container.encode(targetPosition, forKey: .targetPosition)
     }
     
     public required init(from decoder: Decoder) throws {
-        fatalError("init(from:) has not been implemented")
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.targetIslandName = try values.decode(String.self, forKey: .targetIsland)
+        self.targetPosition = try values.decode(vector_int2.self, forKey: .targetPosition)
+        try super.init(from: decoder)
     }
     
 }

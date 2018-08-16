@@ -15,7 +15,7 @@ public class FLMapSprite: SCNNode {
     public init(image:UIImage,mapScene:Map3DScene) {
         self.mapScene = mapScene
         let plane = SCNPlane(width: 1, height: 2)
-        plane.firstMaterial?.diffuse.contents = UIImage.sceneImage(named: "alienPink")
+        plane.firstMaterial?.diffuse.contents = UIImage.sceneSprite(named: "alienPink")
     
         super.init()
         self.geometry = plane

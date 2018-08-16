@@ -40,7 +40,13 @@ public extension UIImage {
  
     public class func sceneImage(named:String) -> UIImage? {
         let bundle = Bundle(for: Map3DScene.self)
-        let path = bundle.path(forResource: named, ofType: "png")!
+        let path = bundle.path(forResource: named, ofType: "png", inDirectory: "textures")!
+        return UIImage(contentsOfFile: path)
+    }
+    
+    public class func sceneSprite(named:String) -> UIImage? {
+        let bundle = Bundle(for: Map3DScene.self)
+        let path = bundle.path(forResource: named, ofType: "png", inDirectory: "sprites")!
         return UIImage(contentsOfFile: path)
     }
     

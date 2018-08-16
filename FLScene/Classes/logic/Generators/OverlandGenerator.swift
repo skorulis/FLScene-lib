@@ -38,13 +38,6 @@ public class OverlandGenerator: NSObject {
             fullIsland.updateConnectionGraph()
         }
         
-        let dun1 = overland.dungeons[0]
-        let dun2 = overland.dungeons[1]
-        
-        let game = GameController.instance
-        
-        connect(dungon1: dun1, dungeon2: dun2, p1: vector_int2(4,4), p2: vector_int2(1,3))
-        
         return overland
     }
     
