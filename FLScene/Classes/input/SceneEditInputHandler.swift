@@ -30,4 +30,12 @@ public class SceneEditInputHandler {
         print("change terrain \(nextType)")
     }
     
+    public func moveTerrain(amount:Int) {
+        guard let square = self.selectedNode else { return }
+        square.dungeonNode.yOffset += amount
+        
+        let pos = square.containingMap().localPosition(at: square.dungeonNode.gridPosition)
+        square.position = pos
+    }
+    
 }

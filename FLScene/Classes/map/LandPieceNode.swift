@@ -80,4 +80,8 @@ public class LandPieceNode: SCNNode {
         sitNode(node: node)
     }
     
+    func containingMap() -> Hex3DMapNode {
+        return self.parent! as! Hex3DMapNode
+    }
+    
 }
