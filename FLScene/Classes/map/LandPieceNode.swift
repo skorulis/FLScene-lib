@@ -6,34 +6,57 @@
 //
 
 import SceneKit
+import SKSwiftLib
 
 public class LandPieceNode: SCNNode {
 
     public let dungeonNode:GKHexMapNode
+    private var sideNode:SCNNode?
+    private var hexNode:SCNNode?
+    
+    var highlighted:Bool = false {
+        didSet {
+            let scale = highlighted ? 0.75 : 1.0
+            self.scale = SCNVector3(scale,scale,scale)
+            /*let content:Any? = highlighted ? UIColor.red : UIColor.clear
+            for node in self.childNodes {
+                node.geometry?.firstMaterial?.emission.contents = content
+            }*/
+        }
+    }
     
     init(dungeonNode:GKHexMapNode) {
         self.dungeonNode = dungeonNode
         super.init()
-        let terrain = dungeonNode.terrain
-        let hexMath = Hex3DMath(baseSize: 1)
-        let hexGeometry = GeometryProvider.instance.bevelHex(ref:terrain)
-        let sides = GeometryProvider.instance.sideGeometry(height:hexMath.height(),ref:terrain)
-        let n1 = SCNNode(geometry: hexGeometry)
-        let n2 = SCNNode(geometry: sides)
-        self.addChildNode(n1)
-        self.addChildNode(n2)
+        self.rebuildTerrainGeometry()
         
         if let fixture = dungeonNode.fixture {
             let model = NodeProvider.instance.tree()
             sitNode(node: model)
             
+            let hexGeometry = GeometryProvider.instance.bevelHex(ref:dungeonNode.terrain)
+            
             if fixture.ref.type == .teleporter {
                 if let trail = SCNParticleSystem.flSystem(named: "teleporter") {
                     trail.emitterShape = hexGeometry
-                    n1.addParticleSystem(trail)
+                    self.addParticleSystem(trail)
                 }
             }
         }
+    }
+    
+    public func rebuildTerrainGeometry() {
+        self.sideNode?.removeFromParentNode()
+        self.hexNode?.removeFromParentNode()
+        
+        let terrain = dungeonNode.terrain
+        let hexMath = Hex3DMath(baseSize: 1)
+        let hexGeometry = GeometryProvider.instance.bevelHex(ref:terrain)
+        let sides = GeometryProvider.instance.sideGeometry(height:hexMath.height(),ref:terrain)
+        self.hexNode = SCNNode(geometry: hexGeometry)
+        self.sideNode = SCNNode(geometry: sides)
+        self.addChildNode(hexNode!)
+        self.addChildNode(sideNode!)
     }
     
     public required init?(coder aDecoder: NSCoder) {

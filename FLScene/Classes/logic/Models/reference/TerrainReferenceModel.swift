@@ -8,7 +8,7 @@
 
 import SKSwiftLib
 
-public enum TerrainType: String, Codable {
+public enum TerrainType: String, Codable, Equatable {
     case grass
     case dirt
     case floor

@@ -15,16 +15,20 @@ public protocol SceneInputHandlerDelegate: class {
 
 public class SceneInputHandler {
 
-    let sceneView:SCNView
+    public let sceneView:SCNView
     let scene:Map3DScene
     let camera:SCNCamera
     let game = GameController.instance
+    public let editHandler:SceneEditInputHandler
+    
     public weak var delegate:SceneInputHandlerDelegate?
+    
     
     public init(sceneView:SCNView,scene:Map3DScene,cameraNode:SCNNode) {
         self.sceneView = sceneView
         self.scene = scene;
         self.camera = cameraNode.camera!
+        self.editHandler = SceneEditInputHandler()
         
         let target = self.scene.playerSprite.sprite
         
@@ -44,8 +48,12 @@ public class SceneInputHandler {
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
         
-        let fromPoint = scene.playerSprite.gridEntity().gridPosition
+        if editHandler.editMode {
+            self.editHandler.handleTap(square: square)
+            return
+        }
         
+        let fromPoint = scene.playerSprite.gridEntity().gridPosition
         let path = scene.playerIsland.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         if path.count < 2 {
             return
@@ -78,5 +86,6 @@ public class SceneInputHandler {
             self.scene.teleportPlayer(dungeon: dungeon, node: node)
         }
     }
+    
     
 }
