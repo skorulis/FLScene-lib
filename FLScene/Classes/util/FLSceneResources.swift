@@ -30,7 +30,7 @@ public extension SCNParticleSystem {
     
     public class func flSystem(named:String) -> SCNParticleSystem? {
         
-        let system = SCNParticleSystem(named: named, inDirectory: "FloatMac.app/Contents/Frameworks/FLScene.framework/Resources/particles")
+        let system = SCNParticleSystem(named: named, inDirectory: nil)
         system?.particleImage = UIImage.particleImage(named: "spark")
         return system
     }
