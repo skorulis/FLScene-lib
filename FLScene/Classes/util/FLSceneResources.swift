@@ -29,8 +29,9 @@ public extension SCNNode {
 public extension SCNParticleSystem {
     
     public class func flSystem(named:String) -> SCNParticleSystem? {
-        let system = SCNParticleSystem(named: named, inDirectory: "Frameworks/FLScene.framework")
-        system?.particleImage = UIImage.sceneImage(named: "spark")
+        
+        let system = SCNParticleSystem(named: named, inDirectory: "FloatMac.app/Contents/Frameworks/FLScene.framework/Resources/particles")
+        system?.particleImage = UIImage.particleImage(named: "spark")
         return system
     }
     
@@ -38,6 +39,12 @@ public extension SCNParticleSystem {
 
 public extension UIImage {
  
+    public class func particleImage(named:String) -> UIImage? {
+        let bundle = Bundle(for: Map3DScene.self)
+        let path = bundle.path(forResource: named, ofType: "png", inDirectory: "particles")!
+        return UIImage(contentsOfFile: path)
+    }
+    
     public class func sceneImage(named:String) -> UIImage? {
         let bundle = Bundle(for: Map3DScene.self)
         let path = bundle.path(forResource: named, ofType: "png", inDirectory: "textures")!
