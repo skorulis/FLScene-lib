@@ -11,6 +11,8 @@ import SKSwiftLib
 
 class MaterialProvider: NSObject {
 
+    private static let normalColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 1, alpha: 1)
+    
     class func sideMaterial(ref:TerrainReferenceModel) -> SCNMaterial {
         let material = SCNMaterial()
         material.lightingModel = .physicallyBased
@@ -21,6 +23,17 @@ class MaterialProvider: NSObject {
             material.diffuse.contents = UIImage.sceneImage(named:"montagne_albedo")
             material.normal.contents = UIImage.sceneImage(named: "montagne_normal")
             material.roughness.contents = UIImage.sceneImage(named:"montagne_roughness")
+        case .sand:
+            material.diffuse.contents = UIImage.sceneImage(named: "sandyground1_diffuse")
+            material.normal.contents = UIImage.sceneImage(named: "sandyground1_normal")
+            material.metalness.contents = UIImage.sceneImage(named: "sandyground1_metallic")
+            material.locksAmbientWithDiffuse = true
+        case .metal:
+            material.diffuse.contents = UIImage.sceneImage(named: "rustediron-streaks_diffuse")
+            material.normal.contents = UIImage.sceneImage(named: "rustediron-streaks_normal")
+            material.metalness.contents = UIImage.sceneImage(named: "rustediron-streaks_metallic")
+            material.roughness.contents = UIImage.sceneImage(named: "rustediron-streaks_roughness")
+            material.locksAmbientWithDiffuse = true
         default:
             let imageGen = HexTextureGenerator()
             material.diffuse.contents = imageGen.spikeySide(ref.baseColor)
@@ -50,6 +63,17 @@ class MaterialProvider: NSObject {
             material.diffuse.contents = UIImage.sceneImage(named: "mossy-ground1-albedo")
             material.normal.contents = UIImage.sceneImage(named: "mossy-ground1-normal")
             material.roughness.contents = UIImage.sceneImage(named: "mossy-ground1-roughness")
+        case .sand:
+            let diffuseImage = UIImage.sceneImage(named: "sandyground1_diffuse")!
+            material.diffuse.contents = imageGen.topHex(diffuseImage, lineColor: UIColor.black)
+            let normalImage = UIImage.sceneImage(named: "sandyground1_normal")!
+            material.normal.contents = imageGen.topHex(normalImage, lineColor: normalColor)
+            material.roughness.contents = 1
+        case .metal:
+            material.diffuse.contents = UIImage.sceneImage(named: "rustediron-streaks_diffuse")
+            material.normal.contents = UIImage.sceneImage(named: "rustediron-streaks_normal")
+            material.metalness.contents = UIImage.sceneImage(named: "rustediron-streaks_metallic")
+            material.roughness.contents = UIImage.sceneImage(named: "rustediron-streaks_roughness")
         default:
             material.diffuse.contents = imageGen.topHex(ref.baseColor)
             material.normal.contents = UIImage.sceneImage(named: "scuffed-plastic-normal")
@@ -66,6 +90,10 @@ class MaterialProvider: NSObject {
         //material.diffuse.contentsTransform = SCNMatrix4MakeScale(256, 256, 0)
         
         return material
+    }
+    
+    class func pbrMaterial(baseName:String)  {
+        
     }
     
 }

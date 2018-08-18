@@ -10,7 +10,12 @@ import SKSwiftLib
 
 public class SceneEditInputHandler {
 
-    public var editMode:Bool = false
+    public var editMode:Bool = false {
+        didSet {
+            selectedNode?.highlighted = false
+            selectedNode = nil
+        }
+    }
     var selectedNode:LandPieceNode?
     
     public func handleTap(square:LandPieceNode) {

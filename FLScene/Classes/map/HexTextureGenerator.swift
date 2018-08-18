@@ -31,6 +31,26 @@ public class HexTextureGenerator: ImageGen {
         return finishContext(context:ctx)
     }
     
+    public func topHex(_ texture:UIImage,lineColor:UIColor) -> UIImage {
+        let ctx = newContext(textureSize)
+        makeHexPath(ctx: ctx)
+        ctx.clip()
+        #if os(OSX)
+        let priorNsgc = NSGraphicsContext.current
+        defer { NSGraphicsContext.current = priorNsgc }
+        NSGraphicsContext.current = NSGraphicsContext(cgContext: ctx, flipped: false)
+        #endif
+        
+        texture.draw(in: CGRect(x: 0, y: 0, width: textureSize.width, height: textureSize.height))
+        
+        makeHexPath(ctx: ctx)
+        ctx.setStrokeColor(lineColor.cgColor)
+        ctx.setLineWidth(lineWidth)
+        ctx.strokePath()
+        
+        return finishContext(context:ctx)
+    }
+    
     public func spikeySide(_ color:UIColor) -> UIImage {
         let ctx = newContext(textureSize)
         let spikeCount = 3
@@ -77,6 +97,9 @@ public class HexTextureGenerator: ImageGen {
         
         gen.saveImage(name: "hex1", image: gen.topHex(UIColor.brown))
         gen.saveImage(name: "spike1", image: gen.spikeySide(UIColor.brown))
+        
+        let texture = UIImage.sceneImage(named: "sandyground1_normal")!
+        gen.saveImage(name: "texturedHex", image: gen.topHex(texture, lineColor: UIColor.brown))
     }
     
     //MARK: Helpers

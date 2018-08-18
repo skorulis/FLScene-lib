@@ -15,6 +15,8 @@ public enum TerrainType: String, Codable, Equatable {
     case water
     case redRock
     case void
+    case sand
+    case metal
 }
 
 public struct TerrainReferenceModel:Codable {

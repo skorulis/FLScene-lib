@@ -23,4 +23,12 @@
  "type":"redRock",
  "colorHex":"f39c12"
  },
+ {
+ "type":"sand",
+ "colorHex":"dbd969"
+ },
+ {
+ "type":"metal",
+ "colorHex":"999999"
+ }
  ]
