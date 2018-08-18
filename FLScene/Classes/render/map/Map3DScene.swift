@@ -9,7 +9,7 @@
 import SceneKit
 import SKSwiftLib
 
-public class Map3DScene: SCNScene {
+public class Map3DScene: SCNScene, MapSceneProtocol {
 
     public var overland:FullOverlandModel
     

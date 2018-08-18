@@ -10,12 +10,12 @@ import SKSwiftLib
 
 public class FLMapSprite: SCNNode {
 
-    weak var mapScene:Map3DScene?
+    weak var mapScene:MapSceneProtocol?
     
-    public init(image:UIImage,mapScene:Map3DScene) {
+    init(image:UIImage,mapScene:MapSceneProtocol) {
         self.mapScene = mapScene
         let plane = SCNPlane(width: 1, height: 2)
-        plane.firstMaterial?.diffuse.contents = UIImage.sceneSprite(named: "alienPink")
+        plane.firstMaterial?.diffuse.contents = image
     
         super.init()
         self.geometry = plane
