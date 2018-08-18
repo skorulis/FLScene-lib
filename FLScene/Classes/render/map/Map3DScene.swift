@@ -43,24 +43,12 @@ public class Map3DScene: SCNScene {
     }
     
     public func buildScene() {
-        // create and add a light to the scene
-        /*let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = .omni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        rootNode.addChildNode(lightNode)*/
-        
         // create and add an ambient light to the scene
         let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.temperature = 6500
-        ambientLightNode.light!.intensity = 1000
+        ambientLightNode.light = SceneElements.ambientLight()
         rootNode.addChildNode(ambientLightNode)
         
-        let skyBox = MDLSkyCubeTexture(name: nil, channelEncoding: MDLTextureChannelEncoding.uInt8,
-                                       textureDimensions: [Int32(160), Int32(160)], turbidity: 0.4, sunElevation: 0.7, upperAtmosphereScattering: 0.2, groundAlbedo: 2)
-        skyBox.groundColor = UIColor.brown.cgColor
+        let skyBox = SceneElements.skyBox()
         
         self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
         self.lightingEnvironment.contents = self.background.contents

@@ -15,9 +15,12 @@ public class Hex3DMapNode: SCNNode {
     public var terrain:[SCNNode] = []
     public let blockHeight:ASFloat
     
-    public init(dungeon:DungeonModel) {
+    private let gridMult:Float
+    
+    public init(dungeon:DungeonModel,gridSpacing:Float = 0.9) {
         self.dungeon = dungeon
         self.size = dungeon.size
+        self.gridMult = gridSpacing
         
         let hexMath = Hex3DMath(baseSize: 1)
         
@@ -42,7 +45,6 @@ public class Hex3DMapNode: SCNNode {
     //Return the 3D coordinates of the tile at the grid index
     public func localPosition(at:vector_int2) -> SCNVector3 {
         let dungeonNode = dungeon.nodeAt(vec: at)
-        let gridMult:Float = 0.9
         let yMult:Float = 1.75 * gridMult
         let xMult:Float = 2.0 * gridMult
         
