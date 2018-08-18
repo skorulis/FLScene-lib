@@ -71,6 +71,7 @@ public class HexGeometry: NSObject {
     
     func createBevelHex(ref:TerrainReferenceModel) -> SCNGeometry {
         let normalUp = SCNVector3(0,1,0);
+        let normalDown = SCNVector3(0,-1,0);
         
         let middlePoint = CGPoint(x:0,y:0)
         let middleUV = CGPoint(x: 0.5, y: 0.5)
@@ -97,7 +98,9 @@ public class HexGeometry: NSObject {
             outerUV.append(uvOuter)
         }
         
-        setup.indices = [2,1,0,  5,2,0,  5,3,2,  4,3,5]
+        let centreIndices:[UInt8] = [2,1,0,  5,2,0,  5,3,2,  4,3,5]
+        setup.indices.append(contentsOf:centreIndices)
+        
         
         for i in 0...6 {
             let i2 = (i+1)%6
@@ -123,6 +126,18 @@ public class HexGeometry: NSObject {
             let faceIndices = [i1, i1+1, i1+3, i1+3, i1+2, i1]
             setup.indices.append(contentsOf: faceIndices)
         }
+        
+        let bottomOffset = UInt8(setup.meshVertices.count)
+        
+        //Make bottom hex
+        for i in 0..<6 {
+         setup.meshVertices.insert(self.botPosition(self.math.regularHexPoint(index:i)), at: setup.meshVertices.count)
+         setup.uvPoints.insert(self.math.regularHexUV(index: i), at: setup.uvPoints.count)
+         setup.meshNormals.insert(normalDown, at: setup.meshNormals.count)
+        }
+        
+        let bottomIndices:[UInt8] = [2,1,0,  5,2,0,  5,3,2,  4,3,5].reversed().map { $0 + bottomOffset}
+        setup.indices.append(contentsOf:bottomIndices)
         
         let geometry = setup.toGeometry()
         
