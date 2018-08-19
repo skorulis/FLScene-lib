@@ -55,19 +55,26 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 6)
         islandNode.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
+        let spells = [SpellModel(),SpellModel()]
+        
         let playerEntity = GridEntity()
         playerEntity.gridPosition = vector2(1, 1)
+        let playerCharacter = BattleCharacter(spells: spells)
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
-        self.characterManager.add(character: playerEntity)
+        self.characterManager.add(character:playerCharacter, entity: playerEntity)
         
         let targetEntity = GridEntity()
         targetEntity.gridPosition = vector2(2, 1)
+        let targetCharacter = BattleCharacter(spells: spells)
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
-        self.characterManager.add(character: targetEntity)
+        self.characterManager.add(character:targetCharacter, entity: targetEntity)
     }
     
-    func fireSpell(spell:SpellModel) {
+    func fireSpell(index:Int) {
         guard let component = self.playerSprite.entity?.component(ofType: CharacterComponent.self) else { return }
+        guard index >= 0 && index < component.character.spells.count else { return }
+        let spell = component.character.spells[index]
+        
         guard component.hasMana(cost: spell.cost()) else { return }
         spellManager.addSpell(spell: spell, caster: self.playerSprite.sprite, target: self.target.sprite, inScene: self)
         component.takeMana(amount: spell.cost())

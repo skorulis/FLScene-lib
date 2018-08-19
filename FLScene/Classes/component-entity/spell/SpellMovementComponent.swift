@@ -17,7 +17,14 @@ class SpellMovementComponent: GKComponent {
         let spellNode = self.spellEntity().node()
         let geometry = spellNode.geometry!
         
-        let direction = (spellEntity().target.worldPosition - spellNode.worldPosition).normalized()
+        let spell = spellEntity().model
+        let rX = RandomHelpers.rand(min: -spell.inaccuracy(), max: spell.inaccuracy())
+        let rY = RandomHelpers.rand(min: -spell.inaccuracy(), max: spell.inaccuracy())
+        let rZ = RandomHelpers.rand(min: -spell.inaccuracy(), max: spell.inaccuracy())
+        
+        var direction = (spellEntity().target.worldPosition - spellNode.worldPosition)
+        direction = direction.normalized()
+        direction += SCNVector3(rX,rY,rZ)
         
         let shapeOptions = [SCNPhysicsShape.Option.collisionMargin:0.0]
         let physicsShape = SCNPhysicsShape(geometry: geometry, options: shapeOptions)

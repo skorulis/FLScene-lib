@@ -12,10 +12,10 @@ class CharacterManager: NSObject {
     private var characters:[GridEntity] = []
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
     
-    func add(character:GridEntity) {
-        character.addComponent(CharacterComponent())
-        self.characters.append(character)
-        characterComponentSystem.addComponent(foundIn: character)
+    func add(character:BattleCharacter, entity:GridEntity) {
+        entity.addComponent(CharacterComponent(character: character))
+        self.characters.append(entity)
+        characterComponentSystem.addComponent(foundIn: entity)
     }
     
     func update(deltaTime seconds: TimeInterval) {

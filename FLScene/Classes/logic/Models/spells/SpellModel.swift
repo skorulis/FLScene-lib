@@ -7,19 +7,24 @@
 
 import Foundation
 
+enum SpellType: String {
+    case Bolt
+    case Teleport
+}
+
 class SpellModel: Codable {
 
-    //Points allocated to various aspects
-    var maxLifePoints:Int = 1
+    //Points allocated to various aspects of the spell
     var speedPoints:Int = 1
     var damagePoints:Int = 1
     var rangePoints:Int = 1
+    var homingPoints:Int = 0
     
     static let speedMultiplier:Float = 5
     static let rangeMultiplier:Float = 5
     
     func cost() -> Int {
-        return maxLifePoints + speedPoints + damagePoints
+        return speedPoints + damagePoints + rangePoints
     }
     
     func speed() -> Float {
@@ -28,6 +33,10 @@ class SpellModel: Codable {
     
     func range() -> Float {
         return Float(rangePoints) * SpellModel.rangeMultiplier
+    }
+    
+    func inaccuracy() -> Float {
+        return 0.1
     }
     
 }

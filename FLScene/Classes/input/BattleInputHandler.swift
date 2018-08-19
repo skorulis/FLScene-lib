@@ -18,8 +18,10 @@ public class BattleInputHandler {
     }
     
     public func castSpell(name:String) {
-        let spell = SpellModel()
-        self.scene.fireSpell(spell:spell)
+        if let index = Int(name) {
+            self.scene.fireSpell(index: index - 1)
+        }
+        
     }
     
     public func tapped(point:CGPoint) {

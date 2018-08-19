@@ -9,33 +9,41 @@ import GameplayKit
 
 class CharacterComponent: GKComponent {
 
-    private var health:MaxValueField = MaxValueField(maxValue: 20)
-    private var mana:MaxValueField = MaxValueField(maxValue: 20)
+    let character:BattleCharacter
+    
+    init(character:BattleCharacter) {
+        self.character = character
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func sprite() -> FLSpriteComponent {
         return (self.entity?.component(ofType: FLSpriteComponent.self))!
     }
     
     func takeDamage(damage:Int) {
-        self.health -= damage
-        sprite().sprite.updateHealthBar(pct:self.health.fullPercentage)
+        character.health -= damage
+        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
     }
     
     func takeMana(amount:Int) {
-        self.mana -= amount
-        sprite().sprite.updateManaBar(pct: self.mana.fullPercentage)
+        character.mana -= amount
+        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
     }
     
     func hasMana(cost:Int) -> Bool {
-        return self.mana.value >= cost
+        return character.mana.value >= cost
     }
     
     override func update(deltaTime seconds: TimeInterval) {
-        let manaBefore = mana.value
-        mana += Float(seconds) * 2
+        let manaBefore = character.mana.value
+        character.mana += Float(seconds) * 2
         //Don't do an update if nothing has changed
-        if (manaBefore != mana.value) {
-            sprite().sprite.updateManaBar(pct: self.mana.fullPercentage)
+        if (manaBefore != character.mana.value) {
+            sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
         }
     }
     
