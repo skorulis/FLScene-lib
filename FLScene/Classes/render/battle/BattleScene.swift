@@ -7,18 +7,21 @@
 
 import SceneKit
 import SKSwiftLib
+import GameplayKit
 
 public class BattleScene: SCNScene, MapSceneProtocol {
 
     let island:DungeonModel
-    private let islandNode:Hex3DMapNode
+    let islandNode:Hex3DMapNode
     public var playerSprite:FLSpriteComponent!
     
     public var target:FLSpriteComponent!
+    let spellManager:SpellManager
     
     public init(island:DungeonModel) {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
+        self.spellManager = SpellManager()
         super.init()
         self.buildScene()
     }
@@ -55,22 +58,10 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         targetEntity.gridPosition = vector2(2, 1)
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
         
-        fireSpell()
     }
     
-    func fireSpell() {
-        let geometry = SCNSphere(radius: 0.25)
-        
-        geometry.firstMaterial = MaterialProvider.floorMaterial()
-        let node = SCNNode(geometry: geometry)
-        node.position = self.playerSprite.sprite.position
-        rootNode.addChildNode(node)
-        
-        let moveAction = SCNAction.move(to: target.sprite.position, duration: 0.4)
-        moveAction.timingMode = .easeIn
-        let removeAction = SCNAction.removeFromParentNode()
-        let sequence = SCNAction.sequence([moveAction,removeAction])
-        node.runAction(sequence)
+    func fireSpell(spell:SpellModel) {
+        spellManager.addSpell(spell: spell, caster: self.playerSprite.sprite, target: self.target.sprite, inScene: self)
     }
     
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
