@@ -28,12 +28,9 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
     }
     
     public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {
-        if contact.nodeA.entity != nil || contact.nodeB.entity != nil {
+        if contact.spellNode() != nil {
             scene.spellManager.handleContact(contact: contact)
         }
     }
     
-    public func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
-        print("Contact update")
-    }
 }

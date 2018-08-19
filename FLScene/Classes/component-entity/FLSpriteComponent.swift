@@ -31,13 +31,11 @@ public class FLSpriteComponent: GKComponent {
         let action = SCNAction.move(to: point, duration: duration)
         action.timingMode = .easeInEaseOut
         
-        //let upAction = SCNAction.move(by: SCNVector3(0,1,0), duration: duration/2)
-        //let downAction = SCNAction.move(by: SCNVector3(0,-1,0), duration: duration/2)
-        
+        dungeon.removeBeing(entity: self.gridEntity()) //Remove from old node
         self.gridEntity().gridPosition = position
+        dungeon.addBeing(entity: self.gridEntity()) //Add into new node
         
         self.sprite.runAction(action)
-        //self.sprite.runAction(SCNAction.sequence([upAction,downAction]))
     }
     
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {

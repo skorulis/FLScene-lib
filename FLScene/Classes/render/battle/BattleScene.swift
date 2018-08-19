@@ -93,7 +93,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         entity.addComponent(spriteComponent)
         islandNode.addChildNode(spriteNode)
         
-        island.addMonster(entity: entity)
+        island.addBeing(entity: entity)
         spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
         return spriteComponent
     }

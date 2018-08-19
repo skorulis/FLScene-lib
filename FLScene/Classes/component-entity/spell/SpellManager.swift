@@ -10,11 +10,13 @@ import GameplayKit
 
 extension SCNPhysicsContact {
     
-    func spellNode() -> SCNNode {
+    func spellNode() -> SCNNode? {
         if nodeA.entity?.isKind(of: SpellEntity.self) ?? false {
             return nodeA
+        } else if nodeB.entity?.isKind(of: SpellEntity.self) ?? false {
+            return nodeB
         }
-        return nodeB
+        return nil
     }
     
     func otherNode(node:SCNNode) -> SCNNode {
@@ -73,7 +75,7 @@ class SpellManager: NSObject {
     }
     
     func handleContact(contact:SCNPhysicsContact) {
-        let spellNode = contact.spellNode()
+        let spellNode = contact.spellNode()!
         let spellEntity = spellNode.entity as! SpellEntity
         let other = contact.otherNode(node: spellNode)
         if other === spellEntity.target {

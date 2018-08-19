@@ -134,7 +134,7 @@ public class DungeonModel: Codable {
         return graph.findPath(from: fromNode, to: node) as! [GKHexMapNode]
     }
     
-    public func addMonster(entity:GridEntity) {
+    public func addBeing(entity:GridEntity) {
         let node = self.nodeAt(x: entity.x, y: entity.y)!
         node.beings.append(entity)
     }

@@ -144,7 +144,7 @@ public class DungeonGenerator {
         let monsterRef = Array(ref.monsters.values)[index]
         let monster = MonsterEntity(ref: monsterRef)
         monster.gridPosition = self.randomEmptyPoint()
-        dungeon.addMonster(entity: monster)
+        dungeon.addBeing(entity: monster)
     }
     
     private func isEdge(x:Int,y:Int,size:Int) -> Bool {

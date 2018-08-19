@@ -31,6 +31,10 @@ public class BattleInputHandler {
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
         
+        if square.dungeonNode.beings.count > 0 {
+            return //Node is already occupied
+        }
+        
         let movementCost:Int = 5
         let component = scene.playerSprite.gridEntity().component(ofType: CharacterComponent.self)!
         if !component.hasMana(cost: movementCost) {
