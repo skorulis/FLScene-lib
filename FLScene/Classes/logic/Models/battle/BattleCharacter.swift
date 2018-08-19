@@ -13,11 +13,13 @@ class BattleCharacter: NSObject {
 
     var health:MaxValueField = MaxValueField(maxValue: 20)
     var mana:MaxValueField = MaxValueField(maxValue: 20)
+    let playerNumber:Int
     
     var spells:[SpellModel]
     
-    init(spells:[SpellModel]) {
+    init(spells:[SpellModel],playerNumber:Int) {
         self.spells = spells
+        self.playerNumber = playerNumber
     }
     
 }

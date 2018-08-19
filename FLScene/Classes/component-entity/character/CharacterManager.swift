@@ -11,15 +11,26 @@ class CharacterManager: NSObject {
 
     private var characters:[GridEntity] = []
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
+    let aiComponentSystem = GKComponentSystem(componentClass: BattleAIComponent.self)
     
-    func add(character:BattleCharacter, entity:GridEntity) {
-        entity.addComponent(CharacterComponent(character: character))
+    let spellManager:SpellManager
+    
+    init(spellManager:SpellManager) {
+        self.spellManager = spellManager
+        super.init()
+    }
+    
+    func add(entity:GridEntity) {
+        entity.addComponent(SpellCastingComponent(spellManager: spellManager))
         self.characters.append(entity)
+        
         characterComponentSystem.addComponent(foundIn: entity)
+        aiComponentSystem.addComponent(foundIn: entity)
     }
     
     func update(deltaTime seconds: TimeInterval) {
         characterComponentSystem.update(deltaTime: seconds)
+        aiComponentSystem.update(deltaTime: seconds)
     }
     
 }

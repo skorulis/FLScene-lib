@@ -32,19 +32,18 @@ class SpellManager: NSObject {
     let removalComponentSystem = GKComponentSystem(componentClass: SpellExpirationComponent.self)
     let moveComponentSystem = GKComponentSystem(componentClass: SpellMovementComponent.self)
     
-    func addSpell(spell:SpellModel,caster:SCNNode,target:SCNNode, inScene scene:SCNScene) {
+    func addSpell(spell:SpellModel,caster:SCNNode,target:SCNNode) {
         
         //Create geometry
         let geometry = SCNSphere(radius: 0.25)
         geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode(geometry: geometry)
         node.position = caster.position
-        scene.rootNode.addChildNode(node)
+        caster.parent!.addChildNode(node)
         
         //Create spell entity
         let entity = SpellEntity(model: spell,node:node, target:target)
         
-
         let trail = SCNParticleSystem.flSystem(named: "trail")!
         trail.emitterShape = geometry
         node.addParticleSystem(trail)

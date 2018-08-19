@@ -31,4 +31,13 @@ public class GridEntity: GKEntity {
         return Int(gridPosition.y)
     }
     
+    public func setTarget(entity:GridEntity) {
+        if let component = component(ofType: TargetComponent.self) {
+            component.target = entity
+        } else {
+            let component = TargetComponent(target: entity)
+            self.addComponent(component)
+        }
+    }
+    
 }

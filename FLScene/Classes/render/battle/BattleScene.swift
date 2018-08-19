@@ -23,7 +23,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager()
-        self.characterManager = CharacterManager()
+        self.characterManager = CharacterManager(spellManager: spellManager)
         super.init()
         self.buildScene()
     }
@@ -55,33 +55,39 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 6)
         islandNode.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        let spells = [SpellModel(),SpellModel()]
+        let defaultSpell = SpellModel(type:.bolt)
+        let longRangeSpell = SpellModel(type:.bolt)
+        let teleportSpell = SpellModel(type:.teleport)
+        longRangeSpell.rangePoints = 4
+        
+        let spells = [defaultSpell,longRangeSpell,teleportSpell]
         
         let playerEntity = GridEntity()
-        playerEntity.gridPosition = vector2(1, 1)
-        let playerCharacter = BattleCharacter(spells: spells)
+        playerEntity.gridPosition = vector2(0, 1)
+        playerEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
-        self.characterManager.add(character:playerCharacter, entity: playerEntity)
+        self.characterManager.add(entity: playerEntity)
         
         let targetEntity = GridEntity()
         targetEntity.gridPosition = vector2(2, 1)
-        let targetCharacter = BattleCharacter(spells: spells)
+        targetEntity.addComponent(BattleAIComponent())
+        targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
-        self.characterManager.add(character:targetCharacter, entity: targetEntity)
+        self.characterManager.add(entity: targetEntity)
+        
+        playerEntity.setTarget(entity: targetEntity)
+        targetEntity.setTarget(entity: playerEntity)
     }
     
     func fireSpell(index:Int) {
-        guard let component = self.playerSprite.entity?.component(ofType: CharacterComponent.self) else { return }
-        guard index >= 0 && index < component.character.spells.count else { return }
-        let spell = component.character.spells[index]
-        
-        guard component.hasMana(cost: spell.cost()) else { return }
-        spellManager.addSpell(spell: spell, caster: self.playerSprite.sprite, target: self.target.sprite, inScene: self)
-        component.takeMana(amount: spell.cost())
+        guard let spellComponent = self.playerSprite.entity?.component(ofType: SpellCastingComponent.self) else { return }
+        spellComponent.castSpell(index: index)
     }
     
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
-        let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,mapScene:self)
+        let spriteImage = UIImage.sceneSprite(named: imageNamed)!
+        let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
+        let spriteNode = FLMapSprite(image: spriteImage,mapScene:self,playerNumber:playerNumber)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
         spriteNode.entity = entity
         entity.addComponent(spriteComponent)
