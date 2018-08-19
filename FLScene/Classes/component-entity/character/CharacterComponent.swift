@@ -9,16 +9,34 @@ import GameplayKit
 
 class CharacterComponent: GKComponent {
 
-    private let health:MaxValueField = MaxValueField(maxValue: 20)
+    private var health:MaxValueField = MaxValueField(maxValue: 20)
+    private var mana:MaxValueField = MaxValueField(maxValue: 20)
     
-    var healthPct:CGFloat {
-        return health.fullPercentage
+    private func sprite() -> FLSpriteComponent {
+        return (self.entity?.component(ofType: FLSpriteComponent.self))!
     }
     
     func takeDamage(damage:Int) {
         self.health -= damage
-        let sprite = self.entity?.component(ofType: FLSpriteComponent.self)
-        sprite?.sprite.updateHealthBar(pct:self.health.fullPercentage)
+        sprite().sprite.updateHealthBar(pct:self.health.fullPercentage)
+    }
+    
+    func takeMana(amount:Int) {
+        self.mana -= amount
+        sprite().sprite.updateManaBar(pct: self.mana.fullPercentage)
+    }
+    
+    func hasMana(cost:Int) -> Bool {
+        return self.mana.value >= cost
+    }
+    
+    override func update(deltaTime seconds: TimeInterval) {
+        let manaBefore = mana.value
+        mana += Float(seconds) * 2
+        //Don't do an update if nothing has changed
+        if (manaBefore != mana.value) {
+            sprite().sprite.updateManaBar(pct: self.mana.fullPercentage)
+        }
     }
     
 }

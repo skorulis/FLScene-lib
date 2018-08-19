@@ -51,6 +51,9 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         cameraNode.look(at: SCNVector3())
         
         self.rootNode.addChildNode(islandNode)
+        let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: 6)
+        let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 6)
+        islandNode.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
         let playerEntity = GridEntity()
         playerEntity.gridPosition = vector2(1, 1)
@@ -64,7 +67,10 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     }
     
     func fireSpell(spell:SpellModel) {
+        guard let component = self.playerSprite.entity?.component(ofType: CharacterComponent.self) else { return }
+        guard component.hasMana(cost: spell.cost()) else { return }
         spellManager.addSpell(spell: spell, caster: self.playerSprite.sprite, target: self.target.sprite, inScene: self)
+        component.takeMana(amount: spell.cost())
     }
     
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {

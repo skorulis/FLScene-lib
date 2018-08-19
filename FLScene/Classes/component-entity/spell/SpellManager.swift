@@ -65,9 +65,6 @@ class SpellManager: NSObject {
     }
     
     func update(deltaTime seconds: TimeInterval) {
-        if (seconds > 0.1) {
-            return //Animation was probably paused
-        }
         removalComponentSystem.update(deltaTime: seconds)
         moveComponentSystem.update(deltaTime: seconds)
         let expired = livingSpells.filter { $0.component(ofType: SpellExpirationComponent.self)!.hasExpired() }
@@ -89,7 +86,7 @@ class SpellManager: NSObject {
     
     func applyDamage(spell:SpellEntity,character:GridEntity) {
         let component = character.component(ofType: CharacterComponent.self)
-        component?.takeDamage(damage: spell.model.damage)
+        component?.takeDamage(damage: spell.model.damagePoints)
     }
     
 }

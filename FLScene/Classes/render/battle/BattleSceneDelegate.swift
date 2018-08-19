@@ -18,8 +18,13 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
     
     public func renderer(_: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         let timeSincePreviousUpdate = time - previousUpdateTime
-        scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
         previousUpdateTime = time
+        if (timeSincePreviousUpdate > 0.1) {
+            return //Animation was probably paused
+        }
+        
+        scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
+        scene.characterManager.update(deltaTime: timeSincePreviousUpdate)
     }
     
     public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {

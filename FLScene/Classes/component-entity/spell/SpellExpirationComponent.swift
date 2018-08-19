@@ -9,19 +9,24 @@ import GameplayKit
 
 class SpellExpirationComponent: GKComponent {
 
-    var lifeUsed:TimeInterval = 0
     var hitTarget:Bool = false
+    var lastPoint:SCNVector3?
+    var distanceTraveled:Float = 0
     
     func spellEntity() -> SpellEntity {
         return self.entity as! SpellEntity
     }
     
     override func update(deltaTime seconds: TimeInterval) {
-        lifeUsed += seconds
+        let point = spellEntity().node().presentation.worldPosition
+        if let oldPoint = lastPoint {
+            distanceTraveled += (oldPoint - point).magnitude()
+        }
+        lastPoint = point
     }
     
     func hasExpired() -> Bool {
-        return hitTarget || lifeUsed >= TimeInterval(spellEntity().model.maxLife)
+        return hitTarget || distanceTraveled > spellEntity().model.range()
     }
     
 }

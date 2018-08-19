@@ -12,6 +12,7 @@ public class FLMapSprite: SCNNode {
 
     weak var mapScene:MapSceneProtocol?
     private var healthBar:SCNNode?
+    private var manaBar:SCNNode?
     
     init(image:UIImage,mapScene:MapSceneProtocol) {
         self.mapScene = mapScene
@@ -34,21 +35,33 @@ public class FLMapSprite: SCNNode {
         self.constraints = [constraint]
         
         updateHealthBar(pct:1)
+        updateManaBar(pct: 1)
     }
     
     func updateHealthBar(pct:CGFloat) {
         healthBar?.removeFromParentNode()
         
-        
-        
-        let healthBarGeometry = SCNCylinder(radius: 0.1, height: 1 * pct)
-        healthBarGeometry.firstMaterial = MaterialProvider.healthBarGeometry()
-        healthBar = SCNNode(geometry: healthBarGeometry)
+        let barGeometry = SCNCylinder(radius: 0.1, height: 1 * pct)
+        barGeometry.firstMaterial = MaterialProvider.healthBarMaterial()
+        healthBar = SCNNode(geometry: barGeometry)
         
         healthBar?.position = SCNVector3(0,1,0)
         healthBar?.rotation = SCNVector4(0,0,1,CGFloat.pi/2)
         
         self.addChildNode(healthBar!)
+    }
+    
+    func updateManaBar(pct:CGFloat) {
+        manaBar?.removeFromParentNode()
+        
+        let barGeometry = SCNCylinder(radius: 0.1, height: 1 * pct)
+        barGeometry.firstMaterial = MaterialProvider.manaBarMaterial()
+        manaBar = SCNNode(geometry: barGeometry)
+        
+        manaBar?.position = SCNVector3(0,1.2,0)
+        manaBar?.rotation = SCNVector4(0,0,1,CGFloat.pi/2)
+        
+        self.addChildNode(manaBar!)
     }
     
     public required init?(coder aDecoder: NSCoder) {

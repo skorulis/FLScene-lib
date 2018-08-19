@@ -29,6 +29,13 @@ public class BattleInputHandler {
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
         
+        let movementCost:Int = 5
+        let component = scene.playerSprite.gridEntity().component(ofType: CharacterComponent.self)!
+        if !component.hasMana(cost: movementCost) {
+            return //Can't move, not enough energy
+        }
+        component.takeMana(amount: movementCost)
+        
         let fromPoint = scene.playerSprite.gridEntity().gridPosition
         let path = scene.island.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         if path.count < 2 {

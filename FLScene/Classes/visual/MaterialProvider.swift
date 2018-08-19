@@ -92,9 +92,15 @@ class MaterialProvider: NSObject {
         return material
     }
     
-    class func healthBarGeometry() -> SCNMaterial {
+    class func healthBarMaterial() -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.green
+        return material
+    }
+    
+    class func manaBarMaterial() -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.blue
         return material
     }
     

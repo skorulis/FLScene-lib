@@ -9,8 +9,25 @@ import Foundation
 
 class SpellModel: Codable {
 
-    var maxLife:Int = 1
-    var speed:Int = 1
-    var damage:Int = 1
+    //Points allocated to various aspects
+    var maxLifePoints:Int = 1
+    var speedPoints:Int = 1
+    var damagePoints:Int = 1
+    var rangePoints:Int = 1
+    
+    static let speedMultiplier:Float = 5
+    static let rangeMultiplier:Float = 5
+    
+    func cost() -> Int {
+        return maxLifePoints + speedPoints + damagePoints
+    }
+    
+    func speed() -> Float {
+        return Float(speedPoints) * SpellModel.speedMultiplier
+    }
+    
+    func range() -> Float {
+        return Float(rangePoints) * SpellModel.rangeMultiplier
+    }
     
 }
