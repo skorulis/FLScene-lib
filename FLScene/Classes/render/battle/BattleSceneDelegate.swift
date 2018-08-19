@@ -7,7 +7,7 @@
 
 import SceneKit
 
-public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate {
+public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
 
     weak var scene:BattleScene!
     var previousUpdateTime: TimeInterval = 0
@@ -20,5 +20,15 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate {
         let timeSincePreviousUpdate = time - previousUpdateTime
         scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
         previousUpdateTime = time
+    }
+    
+    public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {
+        if contact.nodeA.entity != nil || contact.nodeB.entity != nil {
+            scene.spellManager.handleContact(contact: contact)
+        }
+    }
+    
+    public func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
+        print("Contact update")
     }
 }

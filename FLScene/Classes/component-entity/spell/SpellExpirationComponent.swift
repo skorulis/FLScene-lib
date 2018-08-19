@@ -10,6 +10,7 @@ import GameplayKit
 class SpellExpirationComponent: GKComponent {
 
     var lifeUsed:TimeInterval = 0
+    var hitTarget:Bool = false
     
     func spellEntity() -> SpellEntity {
         return self.entity as! SpellEntity
@@ -20,7 +21,7 @@ class SpellExpirationComponent: GKComponent {
     }
     
     func hasExpired() -> Bool {
-        return lifeUsed >= TimeInterval(spellEntity().model.maxLife)
+        return hitTarget || lifeUsed >= TimeInterval(spellEntity().model.maxLife)
     }
     
 }

@@ -8,6 +8,24 @@
 import Foundation
 import GameplayKit
 
+extension SCNPhysicsContact {
+    
+    func spellNode() -> SCNNode {
+        if nodeA.entity?.isKind(of: SpellEntity.self) ?? false {
+            return nodeA
+        }
+        return nodeB
+    }
+    
+    func otherNode(node:SCNNode) -> SCNNode {
+        if node === nodeA {
+            return nodeB
+        }
+        return nodeA
+    }
+    
+}
+
 class SpellManager: NSObject {
 
     var livingSpells:[SpellEntity] = []
@@ -55,6 +73,16 @@ class SpellManager: NSObject {
         let expired = livingSpells.filter { $0.component(ofType: SpellExpirationComponent.self)!.hasExpired() }
         expired.forEach { (spell) in
             self.removeSpell(spell: spell)
+        }
+    }
+    
+    func handleContact(contact:SCNPhysicsContact) {
+        let spellNode = contact.spellNode()
+        let spellEntity = spellNode.entity as! SpellEntity
+        let other = contact.otherNode(node: spellNode)
+        if other === spellEntity.target {
+            spellEntity.component(ofType: SpellExpirationComponent.self)!.hitTarget = true
+            print("Contact")
         }
     }
     

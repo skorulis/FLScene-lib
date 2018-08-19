@@ -20,6 +20,14 @@ public class FLMapSprite: SCNNode {
         super.init()
         self.geometry = plane
         
+        let physicsGeometry = SCNCylinder(radius: 0.5, height: 2)
+        let physicsShape = SCNPhysicsShape(geometry: physicsGeometry, options: nil)
+        let body = SCNPhysicsBody(type: .static, shape: physicsShape)
+        body.collisionBitMask = 1
+        body.categoryBitMask = 1
+        body.contactTestBitMask = 1
+        self.physicsBody = body
+        
         let constraint = SCNBillboardConstraint()
         constraint.freeAxes = SCNBillboardAxis.Y
         self.constraints = [constraint]

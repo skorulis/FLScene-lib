@@ -19,10 +19,16 @@ class SpellMovementComponent: GKComponent {
         
         let direction = (spellEntity().target.worldPosition - spellNode.worldPosition).normalized()
         
-        let physicsShape = SCNPhysicsShape(geometry: geometry, options: nil)
-        spellNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: physicsShape)
-        spellNode.physicsBody?.velocity = direction * 10
-        spellNode.physicsBody?.isAffectedByGravity = false
+        let shapeOptions = [SCNPhysicsShape.Option.collisionMargin:0.0]
+        let physicsShape = SCNPhysicsShape(geometry: geometry, options: shapeOptions)
+        let physicsBody = SCNPhysicsBody(type: .dynamic, shape: physicsShape)
+        physicsBody.velocity = direction * 10
+        physicsBody.isAffectedByGravity = false
+        physicsBody.collisionBitMask = 1
+        physicsBody.categoryBitMask = 1
+        physicsBody.contactTestBitMask = 1
+        
+        spellNode.physicsBody = physicsBody
     }
     
 }
