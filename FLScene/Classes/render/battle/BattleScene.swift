@@ -17,11 +17,13 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     
     public var target:FLSpriteComponent!
     let spellManager:SpellManager
+    let characterManager:CharacterManager
     
     public init(island:DungeonModel) {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager()
+        self.characterManager = CharacterManager()
         super.init()
         self.buildScene()
     }
@@ -53,11 +55,12 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let playerEntity = GridEntity()
         playerEntity.gridPosition = vector2(1, 1)
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
+        self.characterManager.add(character: playerEntity)
         
         let targetEntity = GridEntity()
         targetEntity.gridPosition = vector2(2, 1)
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
-        
+        self.characterManager.add(character: targetEntity)
     }
     
     func fireSpell(spell:SpellModel) {
@@ -67,6 +70,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,mapScene:self)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        spriteNode.entity = entity
         entity.addComponent(spriteComponent)
         islandNode.addChildNode(spriteNode)
         

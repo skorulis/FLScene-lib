@@ -138,6 +138,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
     
     func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,mapScene:self)
+        spriteNode.entity = entity
         let spriteComponent = FLSpriteComponent(sprite: spriteNode)
         entity.addComponent(spriteComponent)
         let island = overland.findIsland(name: entity.islandName!)

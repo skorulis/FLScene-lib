@@ -82,8 +82,14 @@ class SpellManager: NSObject {
         let other = contact.otherNode(node: spellNode)
         if other === spellEntity.target {
             spellEntity.component(ofType: SpellExpirationComponent.self)!.hitTarget = true
-            print("Contact")
+            let otherEntity = other.entity as! GridEntity
+            applyDamage(spell: spellEntity, character: otherEntity)
         }
+    }
+    
+    func applyDamage(spell:SpellEntity,character:GridEntity) {
+        let component = character.component(ofType: CharacterComponent.self)
+        component?.takeDamage(damage: spell.model.damage)
     }
     
 }

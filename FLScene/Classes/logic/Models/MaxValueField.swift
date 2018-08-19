@@ -39,5 +39,8 @@ public final class MaxValueField: Codable {
         return "\(value)/\(maxValue)"
     }
     
+    public var fullPercentage: CGFloat {
+        return CGFloat(self.value) / CGFloat(self.maxValue)
+    }
     
 }
