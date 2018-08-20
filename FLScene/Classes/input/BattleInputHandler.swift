@@ -17,9 +17,25 @@ public class BattleInputHandler {
         self.sceneView = sceneView
     }
     
-    public func castSpell(name:String) {
+    public func keyDown(name:String) {
         if let index = Int(name) {
-            self.scene.fireSpell(index: index - 1)
+            guard let spell = self.scene.playerSpell(index: index - 1) else { return }
+            if spell.isChannelSpell() {
+                scene.fireSpell(spell: spell)
+            }
+        }
+    }
+    
+    public func keyUp(name:String) {
+        if let index = Int(name) {
+            guard let spell = self.scene.playerSpell(index: index - 1) else { return }
+            if spell.isChannelSpell() {
+                self.scene.stopSpell(spell: spell)
+            } else {
+                scene.fireSpell(spell: spell)
+            }
+            
+            
         }
         
     }
@@ -35,7 +51,7 @@ public class BattleInputHandler {
             return //Node is already occupied
         }
         
-        let movementCost:Int = 5
+        let movementCost:Int = 2
         let component = scene.playerSprite.gridEntity().component(ofType: CharacterComponent.self)!
         if !component.hasMana(cost: movementCost) {
             return //Can't move, not enough energy

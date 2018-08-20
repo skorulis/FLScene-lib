@@ -7,6 +7,7 @@
 
 import Foundation
 import GameplayKit
+import SKSwiftLib
 
 extension SCNPhysicsContact {
     
@@ -33,27 +34,70 @@ class SpellManager: NSObject {
     var livingSpells:[SpellEntity] = []
     let removalComponentSystem = GKComponentSystem(componentClass: SpellExpirationComponent.self)
     let moveComponentSystem = GKComponentSystem(componentClass: SpellMovementComponent.self)
+    let effectComponentSystem = GKComponentSystem(componentClass: SpellEffectComponent.self)
     
-    func addSpell(spell:SpellModel,caster:SCNNode,target:SCNNode) {
+    func addSpell(spell:SpellModel,caster:GridEntity,target:SCNNode) -> SpellEntity {
+        
+        let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
         
         //Create geometry
         let geometry = SCNSphere(radius: 0.25)
         geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode(geometry: geometry)
-        node.position = caster.position
-        caster.parent!.addChildNode(node)
+        node.position = casterNode.position
+        casterNode.parent!.addChildNode(node)
         
         //Create spell entity
-        let entity = SpellEntity(model: spell,node:node, target:target)
+        let entity = SpellEntity(model: spell,caster:caster, node:node, target:target)
         
-        let trail = SCNParticleSystem.flSystem(named: "trail")!
+        let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
         trail.emitterShape = geometry
         node.addParticleSystem(trail)
         
+        storeEntity(entity: entity)
+        
+        return entity
+    }
+    
+    func addPersonalSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
+        let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
+        
+        let geometry = SCNSphere(radius: 2.25)
+        //geometry.firstMaterial = MaterialProvider.floorMaterial()
+        let node = SCNNode()
+        node.position = casterNode.position
+        casterNode.parent!.addChildNode(node)
+        
+        let entity = SpellEntity(model: spell,caster:caster, node:node)
         livingSpells.append(entity)
-        entity.manager = self
+        
+        let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
+        trail.emitterShape = geometry
+        trail.particleCharge = -1
+        trail.isAffectedByPhysicsFields = true
+        //trail.particleColor = UIColor.purple
+        node.addParticleSystem(trail)
+        
+        let field = SCNPhysicsField.radialGravity()
+        field.strength = 10
+        node.physicsField = field
+        
+        let fieldGeometry = SCNSphere(radius: 0.2)
+        let physicsShape = SCNPhysicsShape(geometry: fieldGeometry, options: nil)
+        node.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
+        
+        entity.addComponent(SpellEffectComponent())
+        
+        storeEntity(entity: entity)
+        
+        return entity
+    }
+    
+    private func storeEntity(entity:SpellEntity) {
+        livingSpells.append(entity)
         removalComponentSystem.addComponent(foundIn: entity)
         moveComponentSystem.addComponent(foundIn: entity)
+        effectComponentSystem.addComponent(foundIn: entity)
     }
     
     func removeSpell(spell:SpellEntity) {
@@ -68,6 +112,7 @@ class SpellManager: NSObject {
     func update(deltaTime seconds: TimeInterval) {
         removalComponentSystem.update(deltaTime: seconds)
         moveComponentSystem.update(deltaTime: seconds)
+        effectComponentSystem.update(deltaTime: seconds)
         let expired = livingSpells.filter { $0.component(ofType: SpellExpirationComponent.self)!.hasExpired() }
         expired.forEach { (spell) in
             self.removeSpell(spell: spell)
@@ -87,7 +132,7 @@ class SpellManager: NSObject {
     
     func applyDamage(spell:SpellEntity,character:GridEntity) {
         let component = character.component(ofType: CharacterComponent.self)
-        component?.takeDamage(damage: spell.model.damagePoints)
+        component?.takeDamage(damage: spell.model.damage())
     }
     
 }

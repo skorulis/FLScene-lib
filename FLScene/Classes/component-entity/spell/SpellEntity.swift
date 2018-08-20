@@ -10,11 +10,12 @@ import GameplayKit
 class SpellEntity: GKEntity {
 
     let model:SpellModel
-    let target:SCNNode
-    weak var manager:SpellManager?
+    let target:SCNNode?
+    let caster:GridEntity
     
-    init(model:SpellModel,node:SCNNode, target:SCNNode) {
+    init(model:SpellModel,caster:GridEntity,node:SCNNode, target:SCNNode? = nil) {
         self.model = model
+        self.caster = caster
         self.target = target
         super.init()
         
@@ -26,9 +27,11 @@ class SpellEntity: GKEntity {
         let nodeComponent = GKSCNNodeComponent(node: node)
         self.addComponent(nodeComponent)
         
-        let movement = SpellMovementComponent()
-        self.addComponent(movement)
-        movement.setInitialVelocity()
+        if target != nil {
+            let movement = SpellMovementComponent()
+            self.addComponent(movement)
+            movement.setInitialVelocity()
+        }
         
     }
     

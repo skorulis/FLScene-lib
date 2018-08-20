@@ -34,6 +34,16 @@ class CharacterComponent: GKComponent {
         sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
     }
     
+    func heal(amount:Float) {
+        character.health += amount
+        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
+    }
+    
+    func addMana(amount:Float) {
+        character.mana += amount
+        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
+    }
+    
     func hasMana(cost:Int) -> Bool {
         return character.mana.value >= cost
     }

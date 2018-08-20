@@ -22,7 +22,7 @@ class SpellMovementComponent: GKComponent {
         let rY = RandomHelpers.rand(min: -spell.inaccuracy(), max: spell.inaccuracy())
         let rZ = RandomHelpers.rand(min: -spell.inaccuracy(), max: spell.inaccuracy())
         
-        var direction = (spellEntity().target.worldPosition - spellNode.worldPosition)
+        var direction = (spellEntity().target!.worldPosition - spellNode.worldPosition)
         direction = direction.normalized()
         direction += SCNVector3(rX,rY,rZ)
         

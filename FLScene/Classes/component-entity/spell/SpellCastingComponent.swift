@@ -10,6 +10,7 @@ import GameplayKit
 class SpellCastingComponent: GKComponent {
 
     weak var spellManager:SpellManager!
+    var channelledSpell:SpellEntity?
     
     init(spellManager:SpellManager) {
         self.spellManager = spellManager
@@ -20,11 +21,8 @@ class SpellCastingComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func castSpell(index:Int) {
-        guard let component = self.entity?.component(ofType: CharacterComponent.self) else { return }
-        guard index >= 0 && index < component.character.spells.count else { return }
-        let spell = component.character.spells[index]
-        castSpell(spell: spell)
+    func gridEntity() -> GridEntity {
+        return self.entity as! GridEntity
     }
     
     func castSpell(spell:SpellModel) {
@@ -32,14 +30,30 @@ class SpellCastingComponent: GKComponent {
         guard component.hasMana(cost: spell.cost()) else { return }
         guard let playerSprite = self.entity?.component(ofType: FLSpriteComponent.self) else { return }
         
+        if self.channelledSpell != nil {
+            return //Can't cast while channelling
+        }
+        
+        var spellEntity:SpellEntity?
         if spell.type == .teleport {
             
         } else if spell.type == .bolt {
             guard let target = self.entity?.component(ofType: TargetComponent.self) else { return }
             
-            spellManager.addSpell(spell: spell, caster: playerSprite.sprite, target: target.node())
+            spellEntity = spellManager.addSpell(spell: spell, caster: gridEntity(), target: target.node())
             component.takeMana(amount: spell.cost())
+        } else {
+            spellEntity = spellManager.addPersonalSpell(spell: spell, caster: gridEntity())
         }
+        if spell.isChannelSpell() {
+            channelledSpell = spellEntity
+        }
+    }
+    
+    func stopSpell(spell:SpellModel) {
+        guard let channelling = channelledSpell else { return }
+        spellManager.removeSpell(spell: channelling)
+        channelledSpell = nil
     }
     
 }
