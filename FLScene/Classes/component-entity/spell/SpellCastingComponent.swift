@@ -9,8 +9,8 @@ import GameplayKit
 
 class SpellCastingComponent: GKComponent {
 
-    weak var spellManager:SpellManager!
-    var channelledSpell:SpellEntity?
+    private weak var spellManager:SpellManager!
+    private var channelledSpell:SpellEntity?
     
     init(spellManager:SpellManager) {
         self.spellManager = spellManager
@@ -28,9 +28,13 @@ class SpellCastingComponent: GKComponent {
     func castSpell(spell:SpellModel) {
         guard let component = self.entity?.component(ofType: CharacterComponent.self) else { return }
         guard component.hasMana(cost: spell.cost()) else { return }
-        guard let playerSprite = self.entity?.component(ofType: FLSpriteComponent.self) else { return }
         
-        if self.channelledSpell != nil {
+        let spriteComponent = gridEntity().component(ofType: FLSpriteComponent.self)!
+        if spriteComponent.isMoving {
+            return //Can't cast while moving
+        }
+        
+        if self.isChannelling() {
             return //Can't cast while channelling
         }
         
@@ -54,6 +58,10 @@ class SpellCastingComponent: GKComponent {
         guard let channelling = channelledSpell else { return }
         spellManager.removeSpell(spell: channelling)
         channelledSpell = nil
+    }
+    
+    func isChannelling() -> Bool {
+        return self.channelledSpell != nil
     }
     
 }
