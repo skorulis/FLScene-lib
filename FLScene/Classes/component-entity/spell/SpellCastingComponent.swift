@@ -46,6 +46,8 @@ class SpellCastingComponent: GKComponent {
             
             spellEntity = spellManager.addSpell(spell: spell, caster: gridEntity(), target: target.node())
             component.takeMana(amount: spell.cost())
+        } else if spell.type == .teleport {
+            
         } else {
             spellEntity = spellManager.addPersonalSpell(spell: spell, caster: gridEntity())
         }

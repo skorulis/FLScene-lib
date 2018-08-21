@@ -104,6 +104,7 @@ class SpellManager: NSObject {
         livingSpells = livingSpells.filter { $0 != spell}
         removalComponentSystem.removeComponent(foundIn: spell)
         moveComponentSystem.removeComponent(foundIn: spell)
+        effectComponentSystem.removeComponent(foundIn:spell)
         
         let nodeComponent = spell.component(ofType: GKSCNNodeComponent.self)
         nodeComponent?.node.removeFromParentNode()

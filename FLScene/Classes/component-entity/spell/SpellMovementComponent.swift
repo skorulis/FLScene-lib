@@ -38,4 +38,18 @@ class SpellMovementComponent: GKComponent {
         spellNode.physicsBody = physicsBody
     }
     
+    override func update(deltaTime seconds: TimeInterval) {
+        let homing = self.spellEntity().model.homingRate()
+        let node = self.spellEntity().node()
+        if homing > 0 {
+            let speed = self.spellEntity().model.speed()
+            let direction = (self.spellEntity().target!.position - node.presentation.position).normalized()
+            let change = direction * homing * Float(seconds)
+            node.physicsBody!.velocity += change
+            if (node.physicsBody!.velocity.magnitude() > speed) {
+                node.physicsBody!.velocity = node.physicsBody!.velocity.normalized() * speed
+            }
+        }
+    }
+    
 }

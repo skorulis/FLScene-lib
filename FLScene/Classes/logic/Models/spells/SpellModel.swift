@@ -25,7 +25,7 @@ class SpellModel: Codable {
     var speedPoints:Int = 1
     var powerPoints:Int = 1
     var rangePoints:Int = 1
-    var homingPoints:Int = 0
+    var homingPoints:Int = 1
     
     static let speedMultiplier:Float = 5
     static let rangeMultiplier:Float = 6
@@ -72,6 +72,10 @@ class SpellModel: Codable {
     
     func damage() -> Int {
         return self.powerPoints * 3
+    }
+    
+    func homingRate() -> Float {
+        return Float(self.homingPoints) * 15
     }
     
     func particleFileName() -> String {

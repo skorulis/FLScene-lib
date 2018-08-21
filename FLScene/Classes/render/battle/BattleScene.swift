@@ -17,6 +17,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     var playerCharacter:BattleCharacter!
     
     public var target:FLSpriteComponent!
+    var enemy2Sprite:FLSpriteComponent!
     let spellManager:SpellManager
     let characterManager:CharacterManager
     
@@ -65,7 +66,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let spells = [defaultSpell,longRangeSpell,healSpell]
         
         let playerEntity = GridEntity()
-        playerEntity.gridPosition = vector2(0, 1)
+        playerEntity.gridPosition = vector2(0, 0)
         playerCharacter = BattleCharacter(spells: spells,playerNumber:1)
         playerEntity.addComponent(CharacterComponent(character: playerCharacter))
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
@@ -76,11 +77,22 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
         
+        let enemy2 = GridEntity()
+        enemy2.gridPosition = vector2(0, 1)
+        enemy2.addComponent(BattleAIComponent())
+        enemy2.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
+        self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
+        
+        
         playerEntity.setTarget(entity: targetEntity,show: true)
-        targetEntity.setTarget(entity: playerEntity)
+        
+        
+        targetEntity.setTarget(entity: enemy2)
+        enemy2.setTarget(entity: targetEntity)
         
         self.characterManager.add(entity: playerEntity)
         self.characterManager.add(entity: targetEntity)
+        self.characterManager.add(entity: enemy2)
     }
     
     func fireSpell(spell:SpellModel) {
