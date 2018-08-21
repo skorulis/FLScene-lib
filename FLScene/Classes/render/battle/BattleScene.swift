@@ -69,17 +69,18 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         playerCharacter = BattleCharacter(spells: spells,playerNumber:1)
         playerEntity.addComponent(CharacterComponent(character: playerCharacter))
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
-        self.characterManager.add(entity: playerEntity)
         
         let targetEntity = GridEntity()
         targetEntity.gridPosition = vector2(2, 1)
         targetEntity.addComponent(BattleAIComponent())
         targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
-        self.characterManager.add(entity: targetEntity)
         
-        playerEntity.setTarget(entity: targetEntity)
+        playerEntity.setTarget(entity: targetEntity,show: true)
         targetEntity.setTarget(entity: playerEntity)
+        
+        self.characterManager.add(entity: playerEntity)
+        self.characterManager.add(entity: targetEntity)
     }
     
     func fireSpell(spell:SpellModel) {

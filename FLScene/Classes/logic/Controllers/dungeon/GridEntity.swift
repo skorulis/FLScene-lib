@@ -31,11 +31,13 @@ public class GridEntity: GKEntity {
         return Int(gridPosition.y)
     }
     
-    public func setTarget(entity:GridEntity) {
+    public func setTarget(entity:GridEntity,show:Bool = false) {
         if let component = component(ofType: TargetComponent.self) {
             component.target = entity
+            component.showTarget = show
         } else {
             let component = TargetComponent(target: entity)
+            component.showTarget = show
             self.addComponent(component)
         }
     }

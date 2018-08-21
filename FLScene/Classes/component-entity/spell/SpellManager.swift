@@ -75,7 +75,7 @@ class SpellManager: NSObject {
         trail.emitterShape = geometry
         trail.particleCharge = -1
         trail.isAffectedByPhysicsFields = true
-        //trail.particleColor = UIColor.purple
+        trail.particleColor = UIColor.purple
         node.addParticleSystem(trail)
         
         let field = SCNPhysicsField.radialGravity()

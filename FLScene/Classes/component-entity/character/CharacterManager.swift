@@ -12,6 +12,7 @@ class CharacterManager: NSObject {
     private var characters:[GridEntity] = []
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
     let aiComponentSystem = GKComponentSystem(componentClass: BattleAIComponent.self)
+    let targetSystem = GKComponentSystem(componentClass: TargetComponent.self)
     
     let spellManager:SpellManager
     
@@ -26,11 +27,13 @@ class CharacterManager: NSObject {
         
         characterComponentSystem.addComponent(foundIn: entity)
         aiComponentSystem.addComponent(foundIn: entity)
+        targetSystem.addComponent(foundIn: entity)
     }
     
     func update(deltaTime seconds: TimeInterval) {
         characterComponentSystem.update(deltaTime: seconds)
         aiComponentSystem.update(deltaTime: seconds)
+        targetSystem.update(deltaTime: seconds)
     }
     
 }

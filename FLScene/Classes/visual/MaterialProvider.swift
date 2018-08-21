@@ -92,6 +92,12 @@ class MaterialProvider: NSObject {
         return material
     }
     
+    class func targetMaterial() -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor(displayP3Red: 1.0, green: 0.2, blue: 0.2, alpha: 1)
+        return material
+    }
+    
     class func healthBarMaterial() -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.green
