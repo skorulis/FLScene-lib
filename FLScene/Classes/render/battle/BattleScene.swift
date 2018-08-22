@@ -73,13 +73,13 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         let targetEntity = GridEntity()
         targetEntity.gridPosition = vector2(2, 1)
-        targetEntity.addComponent(BattleAIComponent(island:island))
+        targetEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
         targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
         self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
         
         let enemy2 = GridEntity()
         enemy2.gridPosition = vector2(0, 1)
-        enemy2.addComponent(BattleAIComponent(island:island))
+        enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
         enemy2.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
         self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
         

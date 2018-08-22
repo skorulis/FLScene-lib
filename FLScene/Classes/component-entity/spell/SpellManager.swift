@@ -136,4 +136,11 @@ class SpellManager: NSObject {
         component?.takeDamage(damage: spell.model.damage())
     }
     
+    func spellsTargeting(entity:GridEntity) -> [SpellEntity] {
+        let entityNode = (entity.component(ofType: FLSpriteComponent.self)?.sprite)!
+        return self.livingSpells.filter { (spell) -> Bool in
+            return spell.target === entityNode
+        }
+    }
+    
 }

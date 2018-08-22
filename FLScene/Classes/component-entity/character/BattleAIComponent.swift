@@ -6,17 +6,20 @@
 //
 
 import GameplayKit
+import SKSwiftLib
 
 class BattleAIComponent: GKComponent {
 
     let island:DungeonModel
+    let spells:SpellManager
     
     func gridEntity() -> GridEntity {
         return self.entity as! GridEntity
     }
     
-    init(island:DungeonModel) {
+    init(island:DungeonModel,spells:SpellManager) {
         self.island = island
+        self.spells = spells
         super.init()
     }
     
@@ -29,6 +32,16 @@ class BattleAIComponent: GKComponent {
         guard characterComponent.hasMana(cost: 10) else { return }
         
         guard let spellCasting = self.entity?.component(ofType: SpellCastingComponent.self) else { return }
+        let sprite = self.gridEntity().component(ofType: FLSpriteComponent.self)
+        
+        let dangerSpells = self.spells.spellsTargeting(entity: self.gridEntity())
+        if dangerSpells.count > 2 {
+            let adjacent = island.adjacentNodes(position:gridEntity().gridPosition).filter { $0.canPass() }
+            if let node = adjacent.randomItem() {
+                sprite?.moveToFull(position: node.gridPosition, island: island)
+                return
+            }
+        }
         
         let ownNode:SCNNode = entity!.component(ofType: FLSpriteComponent.self)!.sprite
         let target = entity!.component(ofType: TargetComponent.self)!
@@ -40,7 +53,6 @@ class BattleAIComponent: GKComponent {
         if distance < spell.range() {
             spellCasting.castSpell(spell: spell)
         } else {
-            let sprite = self.gridEntity().component(ofType: FLSpriteComponent.self)
             sprite?.moveToFull(position: targetEntity.gridPosition, island: island)
             
         }

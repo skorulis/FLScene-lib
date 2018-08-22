@@ -69,6 +69,11 @@ public class DungeonModel: Codable {
         }
     }
     
+    func adjacentNodes(position:vector_int2) -> [GKHexMapNode] {
+        guard let node = self.nodeAt(vec: position) else { return []}
+        return adjacentNodes(node: node)
+    }
+    
     func adjacentNodes(node:GKHexMapNode) -> [GKHexMapNode] {
         let x = Int(node.gridPosition.x)
         let y = Int(node.gridPosition.y)
