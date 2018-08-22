@@ -47,7 +47,7 @@ public class BattleInputHandler {
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
         
-        scene.playerSprite.moveTo(square: square, island: scene.island)
+        scene.playerSprite.moveToFull(position: square.dungeonNode.gridPosition, island: scene.island)
     }
     
     

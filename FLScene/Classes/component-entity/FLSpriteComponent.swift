@@ -25,13 +25,11 @@ public class FLSpriteComponent: GKComponent {
         return self.entity! as! GridEntity
     }
     
-    func moveTo(square:LandPieceNode,island:DungeonModel) {
+    func moveToFull(position:vector_int2,island:DungeonModel) {
         if self.isMoving {
             return //Have to wait until you land to move again
         }
-        if square.dungeonNode.beings.count > 0 {
-            return //Node is already occupied
-        }
+        guard let dungeonNode = island.nodeAt(vec: position) else { return }
         
         let spellComponent = gridEntity().component(ofType: SpellCastingComponent.self)!
         if spellComponent.isChannelling() {
@@ -43,18 +41,27 @@ public class FLSpriteComponent: GKComponent {
         if !component.hasMana(cost: movementCost) {
             return //Can't move, not enough energy
         }
-        component.takeMana(amount: movementCost)
         
         let fromPoint = gridEntity().gridPosition
-        let path = island.path(to: square.dungeonNode.gridPosition, from: fromPoint)
+        if island.isDirectlyAdjacent(pos1: position, pos2: fromPoint) {
+            if !dungeonNode.canPass() {
+                return //Already as close as can be
+            }
+        }
+        
+        let path = island.path(to: position, from: fromPoint)
         if path.count < 2 {
             return
         }
+        
+        component.takeMana(amount: movementCost)
         
         let firstPoint = path[1]
         self.moveTo(position: firstPoint.gridPosition, inDungeon: island)
     }
     
+    
+    //Should be private
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
         isMoving = true
         let duration:Double = 0.6
@@ -70,6 +77,7 @@ public class FLSpriteComponent: GKComponent {
         self.sprite.runAction(action) {
             self.isMoving = false
         }
+        dungeon.updateConnectionGraph()
     }
     
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {
@@ -77,6 +85,7 @@ public class FLSpriteComponent: GKComponent {
         let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
         self.sprite.position = point
         self.gridEntity().gridPosition = position
+        dungeon.updateConnectionGraph()
     }
     
     private func yOffset() -> CGFloat {

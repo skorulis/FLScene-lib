@@ -66,28 +66,43 @@ public class DungeonModel: Codable {
         for y in 0..<height {
             for x in 0..<width {
                 let node = self.nodeAt(x: x, y: y)!
-                if !node.canPass() {
-                    continue //Don't connect
-                }
-                tryConnect(node: node, x: x-1, y: y)
-                tryConnect(node: node, x: x+1, y: y)
-                if y % 2 == 1 {
-                    tryConnect(node: node, x: x, y: y+1)
-                    tryConnect(node: node, x: x+1, y: y+1)
-                } else {
-                    tryConnect(node: node, x: x-1, y: y+1)
-                    tryConnect(node: node, x: x, y: y+1)
-                }
+                let adjacent = self.adjacentNodes(node: node).filter { $0.canPass()}
+                node.addConnections(to: adjacent, bidirectional: false)
             }
         }
     }
     
+    func adjacentNodes(node:GKHexMapNode) -> [GKHexMapNode] {
+        let x = Int(node.gridPosition.x)
+        let y = Int(node.gridPosition.y)
+        var nodes:[GKHexMapNode?] = [self.nodeAt(x: x+1, y: y),self.nodeAt(x: x-1, y: y)]
+        
+        nodes.append(self.nodeAt(x: x, y: y+1))
+        nodes.append(self.nodeAt(x: x, y: y-1))
+        if y % 2 == 1 {
+            nodes.append(self.nodeAt(x: x+1, y: y+1))
+            nodes.append(self.nodeAt(x: x+1, y: y-1)) //Maybe wrong
+        } else {
+            nodes.append(self.nodeAt(x: x-1, y: y+1))
+            nodes.append(self.nodeAt(x: x-1, y: y-1)) //Maybe wrong
+        }
+        
+        return nodes.filter { $0 != nil}.map { $0!}
+    }
+    
+    func isDirectlyAdjacent(pos1:vector_int2,pos2:vector_int2) -> Bool {
+        let adjacentNodes = self.adjacentNodes(node: nodeAt(vec: pos1)!)
+        return adjacentNodes.filter { $0.gridPosition == pos2}.count > 0
+    }
+    
     func tryConnect(node:GKHexMapNode,x:Int,y:Int) {
         if let other = self.nodeAt(x: x, y: y) {
-            if (!other.canPass()) {
-                return //Don't connect
+            if (other.canPass()) {
+                node.addConnections(to: [other], bidirectional: false)
             }
-            node.addConnections(to: [other], bidirectional: true)
+            if (node.canPass()) {
+                other.addConnections(to: [node], bidirectional: false)
+            }
         }
     }
     
@@ -124,14 +139,33 @@ public class DungeonModel: Codable {
         guard let node = self.nodeAt(vec: to) else { return [] }
         guard let fromNode = self.nodeAt(vec: from) else { return [] }
         
-        return graph.findPath(from: fromNode, to: node) as! [GKHexMapNode]
+        return findPath(from: fromNode, to: node)
     }
     
     public func path(to:CGPoint,from:CGPoint) -> [GKHexMapNode] {
         guard let node = self.nodeAt(point: to) else { return [] }
         guard let fromNode = self.nodeAt(point: from) else { return [] }
+        return findPath(from: fromNode, to: node)
+    }
+    
+    func findPath(from:GKHexMapNode,to:GKHexMapNode) -> [GKHexMapNode] {
+        let missingConnections = to.connectedNodes.filter { (otherNode) -> Bool in
+            return !otherNode.connectedNodes.contains(to)
+        }
         
-        return graph.findPath(from: fromNode, to: node) as! [GKHexMapNode]
+        //Add extra connections to make this node accessible
+        for node in missingConnections {
+            node.addConnections(to: [to], bidirectional: false)
+        }
+        
+        let path = graph.findPath(from: from, to: to) as! [GKHexMapNode]
+        
+        //Remove additional connections
+        for node in missingConnections {
+            node.removeConnections(to: [to], bidirectional: false)
+        }
+        
+        return path
     }
     
     public func addBeing(entity:GridEntity) {

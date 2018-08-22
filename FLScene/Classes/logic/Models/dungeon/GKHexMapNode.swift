@@ -62,8 +62,14 @@ public class GKHexMapNode: GKGridGraphNode, Codable {
     }
     
     public func canPass() -> Bool {
+        if self.terrain.type == .void {
+            return false
+        }
         if let f = fixture {
             return f.ref.canPass
+        }
+        if beings.count > 0 {
+            return false
         }
         return true
     }
