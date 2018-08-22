@@ -17,9 +17,6 @@ public class DungeonModel: Codable {
         case nodes
     }
     
-    //public var player:PlayerCharacterModel?
-    //public var playerNode:DungeonCharacterEntity?
-    
     public let name:String
     public var nodes:[GKHexMapNode] = []
     public var width:Int
@@ -193,5 +190,16 @@ public class DungeonModel: Codable {
         dict[CodingKeys.height.rawValue] = height
         dict[CodingKeys.overlandOffset.rawValue] = overlandOffset.jsonDict()
         return dict
+    }
+    
+    func randomEmptySquare() -> GKHexMapNode {
+        let x = RandomHelpers.rand(max: self.width)
+        let y = RandomHelpers.rand(max: self.height)
+        guard let node = self.nodeAt(x: x, y: y) else { return randomEmptySquare() }
+        if node.canPass() {
+            return node
+        } else {
+            return randomEmptySquare()
+        }
     }
 }

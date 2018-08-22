@@ -25,7 +25,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager()
-        self.characterManager = CharacterManager(spellManager: spellManager)
+        self.characterManager = CharacterManager(spellManager: spellManager,island:island)
         super.init()
         self.buildScene()
     }

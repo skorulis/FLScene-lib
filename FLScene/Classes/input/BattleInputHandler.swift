@@ -34,10 +34,7 @@ public class BattleInputHandler {
             } else {
                 scene.fireSpell(spell: spell)
             }
-            
-            
         }
-        
     }
     
     public func tapped(point:CGPoint) {
@@ -46,6 +43,15 @@ public class BattleInputHandler {
         let hits = self.sceneView.hitTest(point, options: options)
         guard let first = hits.first else { return }
         guard let square = first.node.parent as? LandPieceNode else { return }
+        
+        if let being = square.dungeonNode.beings.first {
+            let playerEnttiy = scene.playerSprite.gridEntity()
+            if being !== playerEnttiy {
+                let target = playerEnttiy.component(ofType: TargetComponent.self)
+                target?.target = being
+            }
+            return
+        }
         
         scene.playerSprite.moveToFull(position: square.dungeonNode.gridPosition, island: scene.island)
     }

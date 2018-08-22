@@ -84,7 +84,9 @@ public class FLSpriteComponent: GKComponent {
         guard let scene = self.sprite.mapScene else {return}
         let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
         self.sprite.position = point
+        dungeon.removeBeing(entity: self.gridEntity())
         self.gridEntity().gridPosition = position
+        dungeon.addBeing(entity: self.gridEntity())
         dungeon.updateConnectionGraph()
     }
     

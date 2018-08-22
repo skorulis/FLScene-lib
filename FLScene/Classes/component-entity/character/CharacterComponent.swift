@@ -57,4 +57,15 @@ class CharacterComponent: GKComponent {
         }
     }
     
+    func reset() {
+        character.mana.setToMax()
+        character.health.setToMax()
+        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
+        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
+    }
+    
+    func isDead() -> Bool {
+        return self.character.health.value == 0
+    }
+    
 }

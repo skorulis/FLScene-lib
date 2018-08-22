@@ -19,4 +19,8 @@ class RandomHelpers: NSObject {
         return (Float(drand48()) * gap) + min
     }
     
+    class func rand(max:Int) -> Int {
+        return Int(arc4random_uniform(UInt32(max)))
+    }
+    
 }

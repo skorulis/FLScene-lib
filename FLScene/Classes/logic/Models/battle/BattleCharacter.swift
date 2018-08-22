@@ -14,6 +14,8 @@ class BattleCharacter: NSObject {
     var health:MaxValueField = MaxValueField(maxValue: 20)
     var mana:MaxValueField = MaxValueField(maxValue: 20)
     let playerNumber:Int
+    var killCount:Int = 0
+    var deathCount:Int = 0
     
     var spells:[SpellModel]
     
