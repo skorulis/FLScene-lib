@@ -20,24 +20,26 @@ enum SpellType: String, Codable {
 class SpellModel: Codable {
 
     let type:SpellType
+    let spellId:String
     
     //Points allocated to various aspects of the spell
     var speedPoints:Int = 1
     var powerPoints:Int = 1
     var rangePoints:Int = 1
-    var homingPoints:Int = 1
+    var homingPoints:Int = 0
     
     static let speedMultiplier:Float = 5
     static let rangeMultiplier:Float = 6
     
     init(type:SpellType) {
         self.type = type
+        self.spellId = UUID().uuidString
     }
     
     func cost() -> Int {
         switch (type) {
         case .bolt:
-            return speedPoints + powerPoints + rangePoints
+            return speedPoints + powerPoints + rangePoints + homingPoints
         case .teleport:
             return rangePoints * 3
         default:
@@ -75,7 +77,11 @@ class SpellModel: Codable {
     }
     
     func homingRate() -> Float {
-        return Float(self.homingPoints) * 15
+        return Float(self.homingPoints) * 5
+    }
+    
+    func cooldown() -> TimeInterval {
+        return 0.3
     }
     
     func particleFileName() -> String {

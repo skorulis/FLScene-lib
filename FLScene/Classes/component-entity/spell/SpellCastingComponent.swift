@@ -12,6 +12,8 @@ class SpellCastingComponent: GKComponent {
     private weak var spellManager:SpellManager!
     private var channelledSpell:SpellEntity?
     
+    private var nextCastTime:[String:TimeInterval] = [:]
+    
     init(spellManager:SpellManager) {
         self.spellManager = spellManager
         super.init()
@@ -34,6 +36,10 @@ class SpellCastingComponent: GKComponent {
             return //Can't cast while moving
         }
         
+        if !self.isSpellAvailable(spell: spell) {
+            return //Have to wait for cooldown
+        }
+        
         if self.isChannelling() {
             return //Can't cast while channelling
         }
@@ -54,6 +60,7 @@ class SpellCastingComponent: GKComponent {
         if spell.isChannelSpell() {
             channelledSpell = spellEntity
         }
+        self.nextCastTime[spell.spellId] = Date().timeIntervalSince1970 + spell.cooldown()
     }
     
     func stopSpell(spell:SpellModel) {
@@ -64,6 +71,11 @@ class SpellCastingComponent: GKComponent {
     
     func isChannelling() -> Bool {
         return self.channelledSpell != nil
+    }
+    
+    func isSpellAvailable(spell:SpellModel) -> Bool {
+        guard let lastCast = self.nextCastTime[spell.spellId] else { return true }
+        return Date().timeIntervalSince1970 >= lastCast
     }
     
 }
