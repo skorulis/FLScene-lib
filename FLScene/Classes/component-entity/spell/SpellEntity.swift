@@ -44,3 +44,14 @@ class SpellEntity: GKEntity {
     }
     
 }
+
+class SpellComponent: GKComponent {
+    
+    func spellEntity() -> SpellEntity {
+        return self.entity as! SpellEntity
+    }
+    
+    func spellModel() -> SpellModel {
+        return spellEntity().model
+    }
+}

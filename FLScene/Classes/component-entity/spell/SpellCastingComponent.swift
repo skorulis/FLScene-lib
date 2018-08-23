@@ -54,6 +54,8 @@ class SpellCastingComponent: GKComponent {
             component.takeMana(amount: spell.cost())
         } else if spell.type == .teleport {
             
+        } else if spell.type == .totem {
+            spellEntity = spellManager.addLandPieceSpell(spell: spell, caster: gridEntity())
         } else {
             spellEntity = spellManager.addPersonalSpell(spell: spell, caster: gridEntity())
         }

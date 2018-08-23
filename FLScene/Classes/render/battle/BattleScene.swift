@@ -24,7 +24,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     public init(island:DungeonModel) {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
-        self.spellManager = SpellManager()
+        self.spellManager = SpellManager(islandNode: islandNode)
         self.characterManager = CharacterManager(spellManager: spellManager,island:island)
         super.init()
         self.buildScene()
@@ -60,10 +60,11 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let defaultSpell = SpellModel(type:.bolt)
         let longRangeSpell = SpellModel(type:.bolt)
         let healSpell = SpellModel(type: .heal)
+        let totemSpell = SpellModel(type: .totem)
         //let teleportSpell = SpellModel(type:.teleport)
         longRangeSpell.rangePoints = 4
         
-        let spells = [defaultSpell,longRangeSpell,healSpell]
+        let spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
         let playerEntity = GridEntity()
         playerEntity.gridPosition = vector2(0, 0)
@@ -83,9 +84,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         enemy2.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
         self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
         
-        
         playerEntity.setTarget(entity: targetEntity,show: true)
-        
         
         targetEntity.setTarget(entity: enemy2)
         enemy2.setTarget(entity: targetEntity)

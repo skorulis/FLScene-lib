@@ -9,12 +9,13 @@ import Foundation
 
 enum SpellType: String, Codable {
     case bolt
-    case beam
-    case teleport
-    case shield
     case heal
     case channelMana
-    case buff
+    case totem
+    case teleport
+    /*case buff
+    case beam
+    case shield*/
 }
 
 class SpellModel: Codable {
@@ -82,6 +83,12 @@ class SpellModel: Codable {
     
     func cooldown() -> TimeInterval {
         return 0.3
+    }
+    
+    
+    //Only relevant to totems, maybe shields
+    func maxAge() -> TimeInterval {
+        return 10
     }
     
     func particleFileName() -> String {

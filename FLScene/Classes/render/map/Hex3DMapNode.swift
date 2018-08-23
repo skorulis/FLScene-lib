@@ -12,7 +12,7 @@ public class Hex3DMapNode: SCNNode {
 
     public let dungeon:DungeonModel
     public let size:vector_int2
-    public var terrain:[SCNNode] = []
+    public var terrain:[LandPieceNode] = []
     public let blockHeight:ASFloat
     
     private let gridMult:Float
@@ -38,6 +38,7 @@ public class Hex3DMapNode: SCNNode {
                 let parentNode = LandPieceNode(dungeonNode: dungeonNode)
                 parentNode.position = localPosition(at: vector_int2(x,y))
                 self.addChildNode(parentNode)
+                terrain.append(parentNode)
             }
         }
     }
@@ -62,8 +63,8 @@ public class Hex3DMapNode: SCNNode {
         return SCNVector3(mid.x,mid.y+blockHeight/2,mid.z)
     }
     
-    public func buildTerrain() {
-        
+    func node(at:vector_int2) -> LandPieceNode {
+        return terrain.filter { $0.dungeonNode.gridPosition == at}.first!
     }
     
     public required init?(coder aDecoder: NSCoder) {

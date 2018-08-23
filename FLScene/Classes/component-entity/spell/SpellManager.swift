@@ -36,6 +36,12 @@ class SpellManager: NSObject {
     let moveComponentSystem = GKComponentSystem(componentClass: SpellMovementComponent.self)
     let effectComponentSystem = GKComponentSystem(componentClass: SpellEffectComponent.self)
     
+    let islandNode:Hex3DMapNode
+    
+    init(islandNode:Hex3DMapNode) {
+        self.islandNode = islandNode
+    }
+    
     func addSpell(spell:SpellModel,caster:GridEntity,target:SCNNode) -> SpellEntity {
         
         let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
@@ -93,6 +99,26 @@ class SpellManager: NSObject {
         return entity
     }
     
+    func addLandPieceSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
+        //Create geometry
+        let totemHeight:CGFloat = 1.5
+        let hexMath = Hex3DMath(baseSize: 1)
+        let geometry = SCNCylinder(radius: 0.2, height: CGFloat(totemHeight))
+        geometry.firstMaterial = MaterialProvider.targetMaterial()
+        let spellNode = SCNNode(geometry: geometry)
+        let point = hexMath.regularHexPoint(index: 0)
+        spellNode.position = SCNVector3(point.x,totemHeight/2+CGFloat(islandNode.blockHeight/2),point.y)
+        let centreDir = SCNVector3(-point.x,0,-point.y).normalized()
+        spellNode.position += centreDir * 0.2
+        let landNode = self.islandNode.node(at: caster.gridPosition)
+        landNode.addChildNode(spellNode)
+        
+        //Create spell entity
+        let entity = SpellEntity(model: spell,caster:caster, node:spellNode)
+        storeEntity(entity: entity)
+        return entity
+    }
+    
     private func storeEntity(entity:SpellEntity) {
         livingSpells.append(entity)
         removalComponentSystem.addComponent(foundIn: entity)
@@ -115,8 +141,8 @@ class SpellManager: NSObject {
         moveComponentSystem.update(deltaTime: seconds)
         effectComponentSystem.update(deltaTime: seconds)
         let expired = livingSpells.filter { $0.component(ofType: SpellExpirationComponent.self)!.hasExpired() }
-        expired.forEach { (spell) in
-            self.removeSpell(spell: spell)
+        for e in expired {
+            self.removeSpell(spell: e)
         }
     }
     
