@@ -100,21 +100,17 @@ class SpellManager: NSObject {
     }
     
     func addLandPieceSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
-        //Create geometry
-        let totemHeight:CGFloat = 1.5
-        let hexMath = Hex3DMath(baseSize: 1)
-        let geometry = SCNCylinder(radius: 0.2, height: CGFloat(totemHeight))
-        geometry.firstMaterial = MaterialProvider.targetMaterial()
-        let spellNode = SCNNode(geometry: geometry)
-        let point = hexMath.regularHexPoint(index: 0)
-        spellNode.position = SCNVector3(point.x,totemHeight/2+CGFloat(islandNode.blockHeight/2),point.y)
-        let centreDir = SCNVector3(-point.x,0,-point.y).normalized()
-        spellNode.position += centreDir * 0.2
+        let cornerIndex = TotemSpellComponent.nextCornerIndex(spells: livingSpells, gridPosition: caster.gridPosition)!
         let landNode = self.islandNode.node(at: caster.gridPosition)
-        landNode.addChildNode(spellNode)
         
-        //Create spell entity
+        let totemComponent = TotemSpellComponent(landNode:landNode.dungeonNode, cornerIndex: cornerIndex)
+        let spellNode = TotemSpellComponent.makeNode()
         let entity = SpellEntity(model: spell,caster:caster, node:spellNode)
+        entity.addComponent(totemComponent)
+        
+        landNode.addChildNode(spellNode)
+        totemComponent.positionAtCorner()
+        
         storeEntity(entity: entity)
         return entity
     }

@@ -150,7 +150,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         return spriteComponent
     }
     
-    func teleportPlayer(dungeon:DungeonModel,node:GKHexMapNode) {
+    func teleportPlayer(dungeon:DungeonModel,node:MapHexModel) {
         let entity = self.playerSprite.gridEntity()
         overland.changeEntityIsland(entity: entity, islandName: dungeon.name, position: node.gridPosition)
         playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)

@@ -8,7 +8,7 @@
 
 import GameplayKit
 
-public class GKHexMapNode: GKGridGraphNode, Codable {
+public class MapHexModel: GKGridGraphNode, Codable {
 
     enum CodingKeys: String, CodingKey {
         case terrain

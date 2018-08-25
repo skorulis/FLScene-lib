@@ -54,4 +54,8 @@ class SpellComponent: GKComponent {
     func spellModel() -> SpellModel {
         return spellEntity().model
     }
+    
+    func spellNode() -> SCNNode? {
+        return self.entity?.component(ofType: GKSCNNodeComponent.self)?.node
+    }
 }

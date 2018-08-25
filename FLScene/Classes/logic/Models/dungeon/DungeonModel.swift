@@ -18,7 +18,7 @@ public class DungeonModel: Codable {
     }
     
     public let name:String
-    public var nodes:[GKHexMapNode] = []
+    public var nodes:[MapHexModel] = []
     public var width:Int
     public var height:Int
     public var graph:GKGraph = GKGraph([])
@@ -37,7 +37,7 @@ public class DungeonModel: Codable {
         
         for y in 0..<height {
             for x in 0..<width {
-                nodes.append(GKHexMapNode(terrain: baseTerrain,position:vector_int2(Int32(x),Int32(y))))
+                nodes.append(MapHexModel(terrain: baseTerrain,position:vector_int2(Int32(x),Int32(y))))
             }
         }
         
@@ -50,7 +50,7 @@ public class DungeonModel: Codable {
         width = try container.decode(Int.self, forKey: .width)
         height = try container.decode(Int.self, forKey: .height)
         overlandOffset = try container.decode(SCNVector3.self, forKey: .overlandOffset)
-        nodes = try container.decodeIfPresent([GKHexMapNode].self, forKey: .nodes) ?? []
+        nodes = try container.decodeIfPresent([MapHexModel].self, forKey: .nodes) ?? []
         
         graph.add(nodes)
     }
@@ -69,15 +69,15 @@ public class DungeonModel: Codable {
         }
     }
     
-    func adjacentNodes(position:vector_int2) -> [GKHexMapNode] {
+    func adjacentNodes(position:vector_int2) -> [MapHexModel] {
         guard let node = self.nodeAt(vec: position) else { return []}
         return adjacentNodes(node: node)
     }
     
-    func adjacentNodes(node:GKHexMapNode) -> [GKHexMapNode] {
+    func adjacentNodes(node:MapHexModel) -> [MapHexModel] {
         let x = Int(node.gridPosition.x)
         let y = Int(node.gridPosition.y)
-        var nodes:[GKHexMapNode?] = [self.nodeAt(x: x+1, y: y),self.nodeAt(x: x-1, y: y)]
+        var nodes:[MapHexModel?] = [self.nodeAt(x: x+1, y: y),self.nodeAt(x: x-1, y: y)]
         
         nodes.append(self.nodeAt(x: x, y: y+1))
         nodes.append(self.nodeAt(x: x, y: y-1))
@@ -97,7 +97,7 @@ public class DungeonModel: Codable {
         return adjacentNodes.filter { $0.gridPosition == pos2}.count > 0
     }
     
-    func tryConnect(node:GKHexMapNode,x:Int,y:Int) {
+    func tryConnect(node:MapHexModel,x:Int,y:Int) {
         if let other = self.nodeAt(x: x, y: y) {
             if (other.canPass()) {
                 node.addConnections(to: [other], bidirectional: false)
@@ -108,15 +108,15 @@ public class DungeonModel: Codable {
         }
     }
     
-    public func nodeAt(point:CGPoint) -> GKHexMapNode? {
+    public func nodeAt(point:CGPoint) -> MapHexModel? {
         return nodeAt(x: Int(point.x), y: Int(point.y))
     }
     
-    public func nodeAt(vec:vector_int2) -> GKHexMapNode? {
+    public func nodeAt(vec:vector_int2) -> MapHexModel? {
         return nodeAt(x: Int(vec.x), y: Int(vec.y))
     }
     
-    public func nodeAt(x:Int,y:Int) -> GKHexMapNode? {
+    public func nodeAt(x:Int,y:Int) -> MapHexModel? {
         if (!isInMap(x: x, y: y)) {
             return nil
         }
@@ -137,20 +137,20 @@ public class DungeonModel: Codable {
         return node?.fixture?.ref.type
     }
     
-    public func path(to:vector_int2,from:vector_int2) -> [GKHexMapNode] {
+    public func path(to:vector_int2,from:vector_int2) -> [MapHexModel] {
         guard let node = self.nodeAt(vec: to) else { return [] }
         guard let fromNode = self.nodeAt(vec: from) else { return [] }
         
         return findPath(from: fromNode, to: node)
     }
     
-    public func path(to:CGPoint,from:CGPoint) -> [GKHexMapNode] {
+    public func path(to:CGPoint,from:CGPoint) -> [MapHexModel] {
         guard let node = self.nodeAt(point: to) else { return [] }
         guard let fromNode = self.nodeAt(point: from) else { return [] }
         return findPath(from: fromNode, to: node)
     }
     
-    func findPath(from:GKHexMapNode,to:GKHexMapNode) -> [GKHexMapNode] {
+    func findPath(from:MapHexModel,to:MapHexModel) -> [MapHexModel] {
         let missingConnections = to.connectedNodes.filter { (otherNode) -> Bool in
             return !otherNode.connectedNodes.contains(to)
         }
@@ -160,7 +160,7 @@ public class DungeonModel: Codable {
             node.addConnections(to: [to], bidirectional: false)
         }
         
-        let path = graph.findPath(from: from, to: to) as! [GKHexMapNode]
+        let path = graph.findPath(from: from, to: to) as! [MapHexModel]
         
         //Remove additional connections
         for node in missingConnections {
@@ -197,7 +197,7 @@ public class DungeonModel: Codable {
         return dict
     }
     
-    func randomEmptySquare() -> GKHexMapNode {
+    func randomEmptySquare() -> MapHexModel {
         let x = RandomHelpers.rand(max: self.width)
         let y = RandomHelpers.rand(max: self.height)
         guard let node = self.nodeAt(x: x, y: y) else { return randomEmptySquare() }

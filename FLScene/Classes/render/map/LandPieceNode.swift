@@ -10,7 +10,7 @@ import SKSwiftLib
 
 public class LandPieceNode: SCNNode {
 
-    public let dungeonNode:GKHexMapNode
+    public let dungeonNode:MapHexModel
     private var sideNode:SCNNode?
     private var hexNode:SCNNode?
     
@@ -25,7 +25,7 @@ public class LandPieceNode: SCNNode {
         }
     }
     
-    init(dungeonNode:GKHexMapNode) {
+    init(dungeonNode:MapHexModel) {
         self.dungeonNode = dungeonNode
         super.init()
         self.rebuildTerrainGeometry()

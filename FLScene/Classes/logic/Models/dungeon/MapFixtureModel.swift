@@ -31,8 +31,8 @@ public class MapFixtureModel: Codable {
         ref = ReferenceController.instance.getDungeonTile(type: type)
     }
     
-    class func decode(from parent:KeyedDecodingContainer<GKHexMapNode.CodingKeys>) throws -> MapFixtureModel? {
-        if !parent.contains(GKHexMapNode.CodingKeys.fixture) {
+    class func decode(from parent:KeyedDecodingContainer<MapHexModel.CodingKeys>) throws -> MapFixtureModel? {
+        if !parent.contains(MapHexModel.CodingKeys.fixture) {
             return nil
         }
         let values = try parent.nestedContainer(keyedBy: CodingKeys.self, forKey: .fixture)

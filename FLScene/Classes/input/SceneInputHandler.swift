@@ -9,7 +9,7 @@ import SceneKit
 
 public protocol SceneInputHandlerDelegate: class {
     
-    func showLandOptions(node:GKHexMapNode,actions:[DungeonAction])
+    func showLandOptions(node:MapHexModel,actions:[DungeonAction])
     
 }
 
@@ -77,7 +77,7 @@ public class SceneInputHandler {
         }
     }
     
-    public func performAction(node:GKHexMapNode,action:DungeonAction) {
+    public func performAction(node:MapHexModel,action:DungeonAction) {
         if action == .teleport {
             let teleporter = node.fixture as! TeleporterFixtureModel
             let dungeon = scene.overland.findIsland(name: teleporter.targetIslandName)

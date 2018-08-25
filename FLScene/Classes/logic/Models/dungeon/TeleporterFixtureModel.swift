@@ -12,7 +12,7 @@ class TeleporterFixtureModel: MapFixtureModel {
     let targetIslandName:String
     let targetPosition:vector_int2
     
-    init(ref:DungeonTileReferenceModel,dungeon:DungeonModel,node:GKHexMapNode) {
+    init(ref:DungeonTileReferenceModel,dungeon:DungeonModel,node:MapHexModel) {
         self.targetIslandName = dungeon.name
         self.targetPosition = node.gridPosition
         super.init(ref: ref)
