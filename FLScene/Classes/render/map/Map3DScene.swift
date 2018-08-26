@@ -13,10 +13,12 @@ import GameplayKit
 public class Map3DScene: SCNScene, MapSceneProtocol {
 
     public var overland:FullOverlandModel
-    
     private let floorY:Float = -10
+    private var playerEntity:GridEntity!
     
     public var playerSprite:FLSpriteComponent!
+    
+    private var characterManager:CharacterManager!
     
     public var playerIsland:DungeonModel {
         return overland.findIsland(name: playerSprite.gridEntity().islandName!)
@@ -34,8 +36,9 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         self.game = GameController.instance
         
         self.overland = OverlandGenerator.fromFile()
-
+        
         super.init()
+        self.characterManager = CharacterManager(spellManager: nil, scene: self)
         self.buildScene()
     }
     
@@ -69,14 +72,16 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
             addRock()
         }
         
-        addPlayer()
+        self.playerEntity = makePlayer()
     }
     
-    public func addPlayer() {
+    public func makePlayer() -> GridEntity {
         let playerEntity = GridEntity()
         playerEntity.islandName = "Obl"
         playerEntity.gridPosition = vector2(3, 3)
-        self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
+        //_ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink", islandNode: island(named: "Obl"), scene: self)
+        
+        return playerEntity
     }
     
     private func buildWater() {
@@ -132,11 +137,6 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         return mapGrid
     }
     
-    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
-        let island = self.islandFor(dungeon: dungeon)
-        return island.topPosition(at: position) + dungeon.overlandOffset
-    }
-    
     func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,playerNumber:1)
         spriteNode.entity = entity
@@ -158,8 +158,19 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)
     }
     
-    func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
+    //MARK: - MapSceneProtocol
+    
+    public func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
         return self.islands.filter { $0.dungeon === dungeon}.first!
+    }
+    
+    public func island(named:String) -> DungeonModel {
+        return self.islands.filter { $0.dungeon.name == named}.first!.dungeon
+    }
+    
+    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
+        let island = self.islandFor(dungeon: dungeon)
+        return island.topPosition(at: position) + dungeon.overlandOffset
     }
     
 }

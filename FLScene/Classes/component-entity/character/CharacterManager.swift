@@ -16,17 +16,19 @@ class CharacterManager: NSObject {
     let targetSystem = GKComponentSystem(componentClass: TargetComponent.self)
     let spellSystem = GKComponentSystem(componentClass: SpellCastingComponent.self)
     
-    let spellManager:SpellManager
-    let island:DungeonModel
+    let spellManager:SpellManager?
+    weak var scene:MapSceneProtocol?
     
-    init(spellManager:SpellManager,island:DungeonModel) {
+    init(spellManager:SpellManager?,scene:MapSceneProtocol) {
         self.spellManager = spellManager
-        self.island = island
+        self.scene = scene
         super.init()
     }
     
     func add(entity:GridEntity) {
-        entity.addComponent(SpellCastingComponent(spellManager: spellManager))
+        if let spellManager = spellManager {
+            entity.addComponent(SpellCastingComponent(spellManager: spellManager))
+        }
         self.entities.append(entity)
         
         characterComponentSystem.addComponent(foundIn: entity)
@@ -49,25 +51,28 @@ class CharacterManager: NSObject {
                 print("player \(battleComponent.character.playerNumber) has died \(battleComponent.character.deathCount) times")
                 
                 let sprite = entity.component(ofType: FLSpriteComponent.self)
+                let island = scene!.island(named: entity.islandName!)
                 let spawn = island.randomEmptySquare()
-                sprite?.placeAt(position: spawn.gridPosition, inDungeon: self.island)
+                sprite?.placeAt(position: spawn.gridPosition, inDungeon: island)
                 //TODO: Add death and rebirth effects. Maybe a slight delay
             }
         }
     }
     
-    func makeSprite(entity:GridEntity,imageNamed:String,islandNode:Hex3DMapNode,scene:MapSceneProtocol) -> FLSpriteComponent {
+    func makeSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
         let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
         let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:scene)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:scene!)
         spriteNode.entity = entity
+        let island = scene!.island(named: entity.islandName!)
+        let islandNode = scene!.islandFor(dungeon: island)
         entity.addComponent(spriteComponent)
         entity.addComponent(GKSCNNodeComponent(node: spriteNode))
         islandNode.addChildNode(spriteNode)
         
-        island.addBeing(entity: entity)
-        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
+        islandNode.dungeon.addBeing(entity: entity)
+        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: islandNode.dungeon)
         return spriteComponent
     }
     

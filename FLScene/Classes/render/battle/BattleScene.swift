@@ -17,7 +17,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     var enemy1Entity:GridEntity!
     
     let spellManager:SpellManager
-    let characterManager:CharacterManager
+    var characterManager:CharacterManager!
     
     var spells:[SpellModel] = []
     
@@ -25,8 +25,8 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         self.island = island;
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager(islandNode: islandNode)
-        self.characterManager = CharacterManager(spellManager: spellManager,island:island)
         super.init()
+        self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
         self.buildScene()
     }
     
@@ -68,12 +68,12 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
         playerEntity.gridPosition = vector2(0, 0)
-        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink", islandNode: islandNode, scene: self)
+        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
         
         enemy1Entity = makePlayerEntity(spells: spells,playerNumber: 2)
         enemy1Entity.gridPosition = vector2(2, 1)
         enemy1Entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        _ = characterManager.makeSprite(entity: enemy1Entity, imageNamed: "alienBlue", islandNode: islandNode, scene: self)
+        _ = characterManager.makeSprite(entity: enemy1Entity, imageNamed: "alienBlue")
 
         playerEntity.setTarget(entity: enemy1Entity,show: true)
         enemy1Entity.setTarget(entity: playerEntity)
@@ -85,8 +85,9 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
     }
     
-    func makePlayerEntity(spells:[SpellModel],playerNumber:Int) -> GridEntity {
+    private func makePlayerEntity(spells:[SpellModel],playerNumber:Int) -> GridEntity {
         let playerEntity = GridEntity()
+        playerEntity.islandName = "battle"
         let playerCharacter = BattleCharacter(spells: spells,playerNumber:playerNumber)
         playerEntity.addComponent(CharacterComponent(character: playerCharacter))
         
@@ -97,16 +98,12 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1)
         enemy2.gridPosition = vector2(0, 1)
         enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        _ = characterManager.makeSprite(entity: enemy2, imageNamed: "alienGreen", islandNode: islandNode, scene: self)
+        _ = characterManager.makeSprite(entity: enemy2, imageNamed: "alienGreen")
         
         enemy1Entity.setTarget(entity: enemy2)
         enemy2.setTarget(entity: enemy1Entity)
         
         self.characterManager.add(entity: enemy2)
-    }
-    
-    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
-        return islandNode.topPosition(at: position)
     }
     
     func playerCastingComponent() -> SpellCastingComponent {
@@ -120,6 +117,20 @@ public class BattleScene: SCNScene, MapSceneProtocol {
             return spells[index]
         }
         return nil;
+    }
+    
+    //MARK: - MapSceneProtocol
+    
+    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
+        return islandNode.topPosition(at: position)
+    }
+    
+    public func island(named:String) -> DungeonModel {
+        return self.island
+    }
+    
+    public func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
+        return self.islandNode
     }
     
 }
