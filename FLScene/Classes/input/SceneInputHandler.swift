@@ -6,6 +6,7 @@
 //
 
 import SceneKit
+import GameplayKit
 
 public protocol SceneInputHandlerDelegate: class {
     
@@ -30,11 +31,11 @@ public class SceneInputHandler {
         self.camera = cameraNode.camera!
         self.editHandler = SceneEditInputHandler()
         
-        let target = self.scene.playerSprite.sprite
+        let target = self.scene.playerEntity.component(ofType: GKSCNNodeComponent.self)!.node
         
         let lookAt = SCNLookAtConstraint(target: target)
         lookAt.isGimbalLockEnabled = true
-        let distance = SCNDistanceConstraint(target: self.scene.playerSprite.sprite)
+        let distance = SCNDistanceConstraint(target: target)
         let acceleration = SCNAccelerationConstraint()
         distance.minimumDistance = 12
         distance.maximumDistance = 18
@@ -53,14 +54,15 @@ public class SceneInputHandler {
             return
         }
         
-        let fromPoint = scene.playerSprite.gridEntity().gridPosition
+        let fromPoint = scene.playerEntity.gridPosition
         let path = scene.playerIsland.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         if path.count < 2 {
             return
         }
         
         let firstPoint = path[1]
-        self.scene.playerSprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.playerIsland)
+        let sprite = scene.playerEntity.component(ofType: FLSpriteComponent.self)!
+        sprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.playerIsland)
     }
     
     public func longPress(point:CGPoint) {

@@ -61,7 +61,8 @@ class CharacterManager: NSObject {
     
     func makeSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
-        let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
+        
+        let playerNumber = entity.component(ofType: CharacterComponent.self)?.character.playerNumber ?? 0
         let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
         let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:scene!)
         spriteNode.entity = entity

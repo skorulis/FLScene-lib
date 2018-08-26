@@ -14,14 +14,14 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
 
     public var overland:FullOverlandModel
     private let floorY:Float = -10
-    private var playerEntity:GridEntity!
+    var playerEntity:GridEntity!
     
-    public var playerSprite:FLSpriteComponent!
+    //public var playerSprite:FLSpriteComponent!
     
     private var characterManager:CharacterManager!
     
     public var playerIsland:DungeonModel {
-        return overland.findIsland(name: playerSprite.gridEntity().islandName!)
+        return overland.findIsland(name: playerEntity.islandName!)
     }
     
     public var playerIslandNode:Hex3DMapNode {
@@ -79,7 +79,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         let playerEntity = GridEntity()
         playerEntity.islandName = "Obl"
         playerEntity.gridPosition = vector2(3, 3)
-        //_ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink", islandNode: island(named: "Obl"), scene: self)
+        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
         
         return playerEntity
     }
@@ -137,25 +137,10 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         return mapGrid
     }
     
-    func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
-        let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,playerNumber:1)
-        spriteNode.entity = entity
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:self)
-        entity.addComponent(spriteComponent)
-        entity.addComponent(GKSCNNodeComponent(node:spriteNode))
-        let island = overland.findIsland(name: entity.islandName!)
-        let islandNode = islandFor(dungeon: island)
-        islandNode.addChildNode(spriteNode)
-        
-        island.addBeing(entity: entity)
-        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
-        return spriteComponent
-    }
-    
     func teleportPlayer(dungeon:DungeonModel,node:MapHexModel) {
-        let entity = self.playerSprite.gridEntity()
-        overland.changeEntityIsland(entity: entity, islandName: dungeon.name, position: node.gridPosition)
-        playerSprite.moveTo(position: node.gridPosition,inDungeon:dungeon)
+        overland.changeEntityIsland(entity: playerEntity, islandName: dungeon.name, position: node.gridPosition)
+        let component = playerEntity.component(ofType: FLSpriteComponent.self)
+        component?.moveTo(position: node.gridPosition,inDungeon:dungeon)
     }
     
     //MARK: - MapSceneProtocol
