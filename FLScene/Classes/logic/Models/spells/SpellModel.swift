@@ -75,7 +75,10 @@ class SpellModel: Codable {
         if isChannelSpell() {
             return 0
         }
-        return 1
+        if self.type == .totem {
+            return 2
+        }
+        return 0.3 * TimeInterval(self.powerPoints)
     }
     
     func healingRate() -> Float {

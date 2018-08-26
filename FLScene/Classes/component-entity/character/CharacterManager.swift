@@ -6,6 +6,7 @@
 //
 
 import GameplayKit
+import SKSwiftLib
 
 class CharacterManager: NSObject {
 
@@ -54,5 +55,19 @@ class CharacterManager: NSObject {
             }
         }
     }
+    
+    /*private func addSprite(entity:GridEntity,imageNamed:String,islandNode:Hex3DMapNode) -> FLSpriteComponent {
+        let spriteImage = UIImage.sceneSprite(named: imageNamed)!
+        let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
+        let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        spriteNode.entity = entity
+        entity.addComponent(spriteComponent)
+        islandNode.addChildNode(spriteNode)
+        
+        island.addBeing(entity: entity)
+        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
+        return spriteComponent
+    }*/
     
 }

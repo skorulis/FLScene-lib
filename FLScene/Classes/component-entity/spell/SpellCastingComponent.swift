@@ -13,11 +13,13 @@ class SpellCastingComponent: GKComponent {
     private var channelledSpell:SpellEntity? //Spell that is being constantly channelled
     private var castingSpell:SpellEntity? //Spell that is currently being cast
     private var remainingCastTime:TimeInterval = 0
+    private var castingParticlSystem:SCNParticleSystem
     
     private var nextCastTime:[String:TimeInterval] = [:]
     
     init(spellManager:SpellManager) {
         self.spellManager = spellManager
+        castingParticlSystem = SCNParticleSystem.flSystem(named: "trail")!
         super.init()
     }
     
@@ -67,6 +69,7 @@ class SpellCastingComponent: GKComponent {
         } else {
             self.castingSpell = spellEntity
             self.remainingCastTime = spell.castingTime()
+            spriteComponent.sprite.addParticleSystem(castingParticlSystem)
         }
         self.nextCastTime[spell.spellId] = Date().timeIntervalSince1970 + spell.cooldown()
     }
@@ -93,6 +96,8 @@ class SpellCastingComponent: GKComponent {
             if remainingCastTime <= 0 {
                 spellManager.addSpellToWorld(entity: castingSpell)
                 self.castingSpell = nil
+                let spriteComponent = gridEntity().component(ofType: FLSpriteComponent.self)!
+                spriteComponent.sprite.removeParticleSystem(castingParticlSystem)
             }
         }
     }

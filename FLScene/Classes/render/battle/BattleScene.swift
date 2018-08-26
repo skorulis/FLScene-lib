@@ -68,16 +68,13 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
-        let playerEntity = GridEntity()
+        let playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
         playerEntity.gridPosition = vector2(0, 0)
-        playerCharacter = BattleCharacter(spells: spells,playerNumber:1)
-        playerEntity.addComponent(CharacterComponent(character: playerCharacter))
         self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
         
-        let targetEntity = GridEntity()
+        let targetEntity = makePlayerEntity(spells: spells,playerNumber: 2)
         targetEntity.gridPosition = vector2(2, 1)
         targetEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
         enemy1Sprite = addSprite(entity: targetEntity, imageNamed: "alienBlue")
 
         playerEntity.setTarget(entity: targetEntity,show: true)
@@ -90,11 +87,19 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
     }
     
+    func makePlayerEntity(spells:[SpellModel],playerNumber:Int) -> GridEntity {
+        let playerEntity = GridEntity()
+        let playerCharacter = BattleCharacter(spells: spells,playerNumber:playerNumber)
+        playerEntity.addComponent(CharacterComponent(character: playerCharacter))
+        //self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
+        
+        return playerEntity
+    }
+    
     func makeSecondAI() {
-        let enemy2 = GridEntity()
+        let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1)
         enemy2.gridPosition = vector2(0, 1)
         enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        enemy2.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
         self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
         
         enemy1Sprite.gridEntity().setTarget(entity: enemy2)

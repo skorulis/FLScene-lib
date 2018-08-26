@@ -48,7 +48,8 @@ class SpellManager: NSObject {
         let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
         
         //Create geometry
-        let geometry = SCNSphere(radius: 0.25)
+        let sphereSize = CGFloat(spell.damage()) * 0.03
+        let geometry = SCNSphere(radius: sphereSize)
         geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode(geometry: geometry)
         node.position = casterNode.position

@@ -38,8 +38,8 @@ class BattleAIComponent: GKComponent {
         
         let sprite = self.gridEntity().component(ofType: FLSpriteComponent.self)
         
-        let dangerSpells = self.spells.spellsTargeting(entity: self.gridEntity())
-        if dangerSpells.count > 2 {
+        let danger = calculateDanger()
+        if danger > 5 {
             let adjacent = island.adjacentNodes(position:gridEntity().gridPosition).filter { $0.canPass() }
             if let node = adjacent.randomItem() {
                 sprite?.moveToFull(position: node.gridPosition, island: island)
@@ -60,6 +60,19 @@ class BattleAIComponent: GKComponent {
             sprite?.moveToFull(position: targetEntity.gridPosition, island: island)
             
         }
+    }
+    
+    //Calculates how dangerous the AI considers its current position
+    private func calculateDanger() -> Float {
+        let ownNode:SCNNode = entity!.component(ofType: FLSpriteComponent.self)!.sprite
+        let ownPosition = ownNode.worldPosition
+        let dangerSpells = self.spells.spellsTargeting(entity: self.gridEntity())
+        let nearbySpells = dangerSpells.filter { (spell) -> Bool in
+            let spellPos = spell.node().presentation.worldPosition
+            return (spellPos - ownPosition).magnitude() < 3
+        }
+        let spellDanger = nearbySpells.map { Float($0.model.damage()) }
+        return spellDanger.reduce(0,+)
     }
     
 }
