@@ -14,9 +14,8 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     let island:DungeonModel
     let islandNode:Hex3DMapNode
     var playerEntity:GridEntity!
+    var enemy1Entity:GridEntity!
     
-    var enemy1Sprite:FLSpriteComponent!
-    var enemy2Sprite:FLSpriteComponent!
     let spellManager:SpellManager
     let characterManager:CharacterManager
     
@@ -69,20 +68,20 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
         playerEntity.gridPosition = vector2(0, 0)
-        _ = addSprite(entity: playerEntity, imageNamed: "alienPink")
+        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink", islandNode: islandNode, scene: self)
         
-        let targetEntity = makePlayerEntity(spells: spells,playerNumber: 2)
-        targetEntity.gridPosition = vector2(2, 1)
-        targetEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        enemy1Sprite = addSprite(entity: targetEntity, imageNamed: "alienBlue")
+        enemy1Entity = makePlayerEntity(spells: spells,playerNumber: 2)
+        enemy1Entity.gridPosition = vector2(2, 1)
+        enemy1Entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
+        _ = characterManager.makeSprite(entity: enemy1Entity, imageNamed: "alienBlue", islandNode: islandNode, scene: self)
 
-        playerEntity.setTarget(entity: targetEntity,show: true)
-        targetEntity.setTarget(entity: playerEntity)
+        playerEntity.setTarget(entity: enemy1Entity,show: true)
+        enemy1Entity.setTarget(entity: playerEntity)
         
         makeSecondAI()
         
         self.characterManager.add(entity: playerEntity)
-        self.characterManager.add(entity: targetEntity)
+        self.characterManager.add(entity: enemy1Entity)
         
     }
     
@@ -90,7 +89,6 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let playerEntity = GridEntity()
         let playerCharacter = BattleCharacter(spells: spells,playerNumber:playerNumber)
         playerEntity.addComponent(CharacterComponent(character: playerCharacter))
-        //self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
         
         return playerEntity
     }
@@ -99,27 +97,12 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1)
         enemy2.gridPosition = vector2(0, 1)
         enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
+        _ = characterManager.makeSprite(entity: enemy2, imageNamed: "alienGreen", islandNode: islandNode, scene: self)
         
-        enemy1Sprite.gridEntity().setTarget(entity: enemy2)
-        enemy2.setTarget(entity: enemy1Sprite.gridEntity())
+        enemy1Entity.setTarget(entity: enemy2)
+        enemy2.setTarget(entity: enemy1Entity)
         
         self.characterManager.add(entity: enemy2)
-    }
-    
-    private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
-        let spriteImage = UIImage.sceneSprite(named: imageNamed)!
-        let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
-        let spriteNode = FLMapSprite(image: spriteImage,mapScene:self,playerNumber:playerNumber)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:self)
-        spriteNode.entity = entity
-        entity.addComponent(spriteComponent)
-        entity.addComponent(GKSCNNodeComponent(node: spriteNode))
-        islandNode.addChildNode(spriteNode)
-        
-        island.addBeing(entity: entity)
-        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
-        return spriteComponent
     }
     
     public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {

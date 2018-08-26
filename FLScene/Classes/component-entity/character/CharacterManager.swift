@@ -56,18 +56,19 @@ class CharacterManager: NSObject {
         }
     }
     
-    /*private func addSprite(entity:GridEntity,imageNamed:String,islandNode:Hex3DMapNode) -> FLSpriteComponent {
+    func makeSprite(entity:GridEntity,imageNamed:String,islandNode:Hex3DMapNode,scene:MapSceneProtocol) -> FLSpriteComponent {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
         let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
         let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:scene)
         spriteNode.entity = entity
         entity.addComponent(spriteComponent)
+        entity.addComponent(GKSCNNodeComponent(node: spriteNode))
         islandNode.addChildNode(spriteNode)
         
         island.addBeing(entity: entity)
         spriteComponent.placeAt(position: entity.gridPosition,inDungeon: island)
         return spriteComponent
-    }*/
+    }
     
 }

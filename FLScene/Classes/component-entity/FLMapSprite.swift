@@ -13,7 +13,7 @@ public class FLMapSprite: SCNNode {
     private var healthBar:SCNNode?
     private var manaBar:SCNNode?
     
-    init(image:UIImage,mapScene:MapSceneProtocol,playerNumber:Int) {
+    init(image:UIImage,playerNumber:Int) {
         let plane = SCNPlane(width: 1, height: 2)
         plane.firstMaterial?.diffuse.contents = image
     

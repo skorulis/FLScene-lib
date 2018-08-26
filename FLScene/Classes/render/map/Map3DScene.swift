@@ -138,7 +138,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
     }
     
     func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
-        let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,mapScene:self,playerNumber:1)
+        let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,playerNumber:1)
         spriteNode.entity = entity
         let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:self)
         entity.addComponent(spriteComponent)

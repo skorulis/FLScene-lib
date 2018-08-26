@@ -11,8 +11,6 @@ final public class CharacterModel: Codable {
     public var avatarIcon = "👤"
     public let satiation:MaxValueField
     public let time:MaxValueField
-    public let health:MaxValueField
-    public let mana:MaxValueField
     public var ether:Int
     public let inventory:InventoryModel
     public let skills:SkillListModel
@@ -21,8 +19,6 @@ final public class CharacterModel: Codable {
         self.name = name
         satiation = MaxValueField(maxValue: 100)
         time = MaxValueField(maxValue: 100)
-        health = MaxValueField(maxValue: 100)
-        mana = MaxValueField(maxValue: 100)
         ether = 100
         inventory = InventoryModel()
         skills = SkillListModel()
