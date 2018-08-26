@@ -139,7 +139,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
     
     func teleportPlayer(dungeon:DungeonModel,node:MapHexModel) {
         overland.changeEntityIsland(entity: playerEntity, islandName: dungeon.name, position: node.gridPosition)
-        let component = playerEntity.component(ofType: FLSpriteComponent.self)
+        let component = playerEntity.component(ofType: MovementComponent.self)
         component?.moveTo(position: node.gridPosition,inDungeon:dungeon)
     }
     

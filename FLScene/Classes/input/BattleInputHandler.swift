@@ -52,7 +52,7 @@ public class BattleInputHandler {
             }
             return
         }
-        let playerSprite = scene.playerEntity.component(ofType: FLSpriteComponent.self)
+        let playerSprite = scene.playerEntity.component(ofType: MovementComponent.self)
         playerSprite?.moveToFull(position: square.dungeonNode.gridPosition, island: scene.island)
     }
     

@@ -50,7 +50,7 @@ class CharacterManager: NSObject {
                 battleComponent.character.deathCount += 1
                 print("player \(battleComponent.character.playerNumber) has died \(battleComponent.character.deathCount) times")
                 
-                let sprite = entity.component(ofType: FLSpriteComponent.self)
+                let sprite = entity.component(ofType: MovementComponent.self)
                 let island = scene!.island(named: entity.islandName!)
                 let spawn = island.randomEmptySquare()
                 sprite?.placeAt(position: spawn.gridPosition, inDungeon: island)
@@ -59,12 +59,12 @@ class CharacterManager: NSObject {
         }
     }
     
-    func makeSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
+    func makeSprite(entity:GridEntity,imageNamed:String) -> MovementComponent {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
         
         let playerNumber = entity.component(ofType: CharacterComponent.self)?.character.playerNumber ?? 0
         let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:scene!)
+        let spriteComponent = MovementComponent(scene:scene!)
         spriteNode.entity = entity
         let island = scene!.island(named: entity.islandName!)
         let islandNode = scene!.islandFor(dungeon: island)

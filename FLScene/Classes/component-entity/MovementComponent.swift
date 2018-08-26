@@ -7,14 +7,12 @@
 
 import GameplayKit
 
-public class FLSpriteComponent: GKComponent {
+public class MovementComponent: GKComponent {
 
-    public var sprite:FLMapSprite
     private(set) var isMoving:Bool = false
     weak var mapScene:MapSceneProtocol?
     
-    init(sprite:FLMapSprite,scene:MapSceneProtocol) {
-        self.sprite = sprite
+    init(scene:MapSceneProtocol) {
         self.mapScene = scene
         super.init()
     }

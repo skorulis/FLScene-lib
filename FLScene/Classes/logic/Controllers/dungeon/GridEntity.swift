@@ -43,7 +43,7 @@ public class GridEntity: GKEntity {
     }
     
     func isBusy() -> Bool {
-        if let spriteComponent = component(ofType: FLSpriteComponent.self) {
+        if let spriteComponent = component(ofType: MovementComponent.self) {
             if (spriteComponent.isMoving) {
                 return true
             }

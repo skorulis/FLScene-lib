@@ -61,7 +61,7 @@ public class SceneInputHandler {
         }
         
         let firstPoint = path[1]
-        let sprite = scene.playerEntity.component(ofType: FLSpriteComponent.self)!
+        let sprite = scene.playerEntity.component(ofType: MovementComponent.self)!
         sprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.playerIsland)
     }
     

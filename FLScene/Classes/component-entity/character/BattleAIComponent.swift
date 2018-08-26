@@ -36,7 +36,7 @@ class BattleAIComponent: GKComponent {
             return //No point doing anything else
         }
         
-        let sprite = self.gridEntity().component(ofType: FLSpriteComponent.self)
+        let sprite = self.gridEntity().component(ofType: MovementComponent.self)
         
         let danger = calculateDanger()
         if danger > 5 {
