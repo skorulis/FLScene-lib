@@ -32,7 +32,7 @@ public class FLSpriteComponent: GKComponent {
         guard let dungeonNode = island.nodeAt(vec: position) else { return }
         
         let spellComponent = gridEntity().component(ofType: SpellCastingComponent.self)!
-        if spellComponent.isChannelling() {
+        if spellComponent.isCasting() {
             return //Can't move while channelling
         }
         

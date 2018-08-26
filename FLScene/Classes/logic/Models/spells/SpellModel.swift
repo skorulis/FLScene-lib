@@ -8,19 +8,25 @@
 import Foundation
 
 enum SpellType: String, Codable {
-    case bolt
-    case heal
-    case channelMana
-    case totem
+    case bolt //A bolt that flies straight at an enemy
+    case channel //Constant cast on the player
+    case totem //Totem that gets placed in the square
     case teleport
     /*case buff
     case beam
     case shield*/
 }
 
+enum SpellEffectType: String, Codable {
+    case heal
+    case mana
+    case damage
+}
+
 class SpellModel: Codable {
 
     let type:SpellType
+    let effects:[SpellEffectType]
     let spellId:String
     
     //Points allocated to various aspects of the spell
@@ -32,8 +38,9 @@ class SpellModel: Codable {
     static let speedMultiplier:Float = 5
     static let rangeMultiplier:Float = 6
     
-    init(type:SpellType) {
+    init(type:SpellType,effect:SpellEffectType) {
         self.type = type
+        self.effects = [effect]
         self.spellId = UUID().uuidString
     }
     
@@ -46,7 +53,6 @@ class SpellModel: Codable {
         default:
             return powerPoints //Not yet implemented
         }
-        
     }
     
     func speed() -> Float {
@@ -62,18 +68,28 @@ class SpellModel: Codable {
     }
     
     func isChannelSpell() -> Bool {
-        return self.type == .heal || self.type == .channelMana
+        return self.type == .channel
+    }
+    
+    func castingTime() -> TimeInterval {
+        if isChannelSpell() {
+            return 0
+        }
+        return 1
     }
     
     func healingRate() -> Float {
+        guard self.effects.contains(.heal) else { return 0 }
         return Float(self.powerPoints) * 3
     }
     
     func manaRate() -> Float {
+        guard self.effects.contains(.mana) else { return 0 }
         return Float(self.powerPoints) * 3
     }
     
     func damage() -> Int {
+        guard effects.contains(.damage) else { return 0 }
         return self.powerPoints * 3
     }
     
@@ -84,7 +100,6 @@ class SpellModel: Codable {
     func cooldown() -> TimeInterval {
         return 0.3
     }
-    
     
     //Only relevant to totems, maybe shields
     func maxAge() -> TimeInterval {

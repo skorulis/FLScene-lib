@@ -24,6 +24,12 @@ class TotemSpellComponent: SpellComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func update(deltaTime seconds: TimeInterval) {
+        //Make the spell effects target who is standing on the node
+        let effects = self.entity?.component(ofType: SpellEffectComponent.self)
+        effects?.targetEntity = landNode.beings.first
+    }
+    
     class func makeNode() -> SCNNode {
         let geometry = SCNCylinder(radius: 0.2, height: CGFloat(totemHeight))
         geometry.firstMaterial = MaterialProvider.targetMaterial()
@@ -41,7 +47,7 @@ class TotemSpellComponent: SpellComponent {
         return freeCorners.first
     }
     
-    func positionAtCorner() {
+    func positionAtCorner(squarePosition:SCNVector3) {
         let hexMath = Hex3DMath(baseSize: 1)
         let point = hexMath.regularHexPoint(index: cornerIndex)
         let node = self.spellNode()
@@ -49,7 +55,7 @@ class TotemSpellComponent: SpellComponent {
         let blockHeight = CGFloat(hexMath.height())
         let y = (TotemSpellComponent.totemHeight+blockHeight)/2
         
-        node?.position = SCNVector3(point.x,y,point.y)
+        node?.position = SCNVector3(point.x,y,point.y) + squarePosition
         let centreDir = SCNVector3(-point.x,0,-point.y).normalized()
         node?.position += centreDir * 0.2
     }

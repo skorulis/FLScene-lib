@@ -32,6 +32,10 @@ class BattleAIComponent: GKComponent {
         guard characterComponent.hasMana(cost: 10) else { return }
         
         guard let spellCasting = self.entity?.component(ofType: SpellCastingComponent.self) else { return }
+        if spellCasting.isCasting() {
+            return //No point doing anything else
+        }
+        
         let sprite = self.gridEntity().component(ofType: FLSpriteComponent.self)
         
         let dangerSpells = self.spells.spellsTargeting(entity: self.gridEntity())

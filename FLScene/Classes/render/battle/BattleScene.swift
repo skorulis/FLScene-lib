@@ -16,10 +16,12 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     public var playerSprite:FLSpriteComponent!
     var playerCharacter:BattleCharacter!
     
-    public var target:FLSpriteComponent!
+    var enemy1Sprite:FLSpriteComponent!
     var enemy2Sprite:FLSpriteComponent!
     let spellManager:SpellManager
     let characterManager:CharacterManager
+    
+    var spells:[SpellModel] = []
     
     public init(island:DungeonModel) {
         self.island = island;
@@ -57,14 +59,14 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 6)
         islandNode.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
         
-        let defaultSpell = SpellModel(type:.bolt)
-        let longRangeSpell = SpellModel(type:.bolt)
-        let healSpell = SpellModel(type: .heal)
-        let totemSpell = SpellModel(type: .totem)
+        let defaultSpell = SpellModel(type:.bolt,effect:.damage)
+        let longRangeSpell = SpellModel(type:.bolt,effect:.damage)
+        let healSpell = SpellModel(type: .channel,effect:.heal)
+        let totemSpell = SpellModel(type: .totem,effect:.mana)
         //let teleportSpell = SpellModel(type:.teleport)
         longRangeSpell.rangePoints = 4
         
-        let spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
+        spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
         let playerEntity = GridEntity()
         playerEntity.gridPosition = vector2(0, 0)
@@ -76,21 +78,28 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         targetEntity.gridPosition = vector2(2, 1)
         targetEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
         targetEntity.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:2)))
-        self.target = addSprite(entity: targetEntity, imageNamed: "alienBlue")
+        enemy1Sprite = addSprite(entity: targetEntity, imageNamed: "alienBlue")
+
+        playerEntity.setTarget(entity: targetEntity,show: true)
+        targetEntity.setTarget(entity: playerEntity)
         
+        makeSecondAI()
+        
+        self.characterManager.add(entity: playerEntity)
+        self.characterManager.add(entity: targetEntity)
+        
+    }
+    
+    func makeSecondAI() {
         let enemy2 = GridEntity()
         enemy2.gridPosition = vector2(0, 1)
         enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
         enemy2.addComponent(CharacterComponent(character: BattleCharacter(spells: spells,playerNumber:1)))
         self.enemy2Sprite = addSprite(entity: enemy2, imageNamed: "alienGreen")
         
-        playerEntity.setTarget(entity: targetEntity,show: true)
+        enemy1Sprite.gridEntity().setTarget(entity: enemy2)
+        enemy2.setTarget(entity: enemy1Sprite.gridEntity())
         
-        targetEntity.setTarget(entity: enemy2)
-        enemy2.setTarget(entity: targetEntity)
-        
-        self.characterManager.add(entity: playerEntity)
-        self.characterManager.add(entity: targetEntity)
         self.characterManager.add(entity: enemy2)
     }
     
@@ -100,8 +109,8 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     }
     
     func stopSpell(spell:SpellModel) {
-        guard let spellComponent = self.playerSprite.entity?.component(ofType: SpellCastingComponent.self) else { return }
-        spellComponent.stopSpell(spell: spell)
+        guard let castingComponent = self.playerSprite.entity?.component(ofType: SpellCastingComponent.self) else { return }
+        castingComponent.stopSpell()
     }
     
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {

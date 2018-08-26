@@ -7,20 +7,24 @@
 
 import GameplayKit
 
-class SpellEffectComponent: GKComponent {
+class SpellEffectComponent: SpellComponent {
 
-    func spellEntity() -> SpellEntity {
-        return self.entity as! SpellEntity
+    weak var targetEntity:GridEntity?
+    
+    init(target:GridEntity? = nil) {
+        self.targetEntity = target
+        super.init()
     }
     
-    func model() -> SpellModel {
-        return spellEntity().model
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+    
     
     override func update(deltaTime seconds: TimeInterval) {
-        let characterComponent = spellEntity().caster.component(ofType: CharacterComponent.self)
-        characterComponent?.addMana(amount: model().manaRate() * Float(seconds))
-        characterComponent?.heal(amount: model().healingRate() * Float(seconds))
+        let characterComponent = targetEntity?.component(ofType: CharacterComponent.self)
+        characterComponent?.addMana(amount: spellModel().manaRate() * Float(seconds))
+        characterComponent?.heal(amount: spellModel().healingRate() * Float(seconds))
     }
     
 }

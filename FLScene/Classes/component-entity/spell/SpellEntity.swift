@@ -30,7 +30,6 @@ class SpellEntity: GKEntity {
         if target != nil {
             let movement = SpellMovementComponent()
             self.addComponent(movement)
-            movement.setInitialVelocity()
         }
         
     }

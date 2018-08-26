@@ -13,7 +13,7 @@ class SpellExpirationComponent: SpellComponent {
     var lastPoint:SCNVector3?
     var distanceTraveled:Float = 0
     var age:TimeInterval = 0
-    
+    var castingStopped:Bool = false
     
     override func update(deltaTime seconds: TimeInterval) {
         age += seconds
@@ -25,6 +25,9 @@ class SpellExpirationComponent: SpellComponent {
     }
     
     func hasExpired() -> Bool {
+        if castingStopped {
+            return true
+        }
         if spellModel().type == .totem {
             return self.age > spellModel().maxAge()
         }

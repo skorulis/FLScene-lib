@@ -35,6 +35,7 @@ class SpellManager: NSObject {
     let removalComponentSystem = GKComponentSystem(componentClass: SpellExpirationComponent.self)
     let moveComponentSystem = GKComponentSystem(componentClass: SpellMovementComponent.self)
     let effectComponentSystem = GKComponentSystem(componentClass: SpellEffectComponent.self)
+    let totemComponentSystem = GKComponentSystem(componentClass: TotemSpellComponent.self)
     
     let islandNode:Hex3DMapNode
     
@@ -42,7 +43,7 @@ class SpellManager: NSObject {
         self.islandNode = islandNode
     }
     
-    func addSpell(spell:SpellModel,caster:GridEntity,target:SCNNode) -> SpellEntity {
+    func makeBoltSpell(spell:SpellModel,caster:GridEntity,target:SCNNode) -> SpellEntity {
         
         let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
         
@@ -51,7 +52,6 @@ class SpellManager: NSObject {
         geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode(geometry: geometry)
         node.position = casterNode.position
-        casterNode.parent!.addChildNode(node)
         
         //Create spell entity
         let entity = SpellEntity(model: spell,caster:caster, node:node, target:target)
@@ -59,20 +59,16 @@ class SpellManager: NSObject {
         let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
         trail.emitterShape = geometry
         node.addParticleSystem(trail)
-        
-        storeEntity(entity: entity)
-        
         return entity
     }
     
-    func addPersonalSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
+    func makePersonalSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
         let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
         
         let geometry = SCNSphere(radius: 2.25)
         //geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode()
         node.position = casterNode.position
-        casterNode.parent!.addChildNode(node)
         
         let entity = SpellEntity(model: spell,caster:caster, node:node)
         livingSpells.append(entity)
@@ -92,34 +88,33 @@ class SpellManager: NSObject {
         let physicsShape = SCNPhysicsShape(geometry: fieldGeometry, options: nil)
         node.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
         
-        entity.addComponent(SpellEffectComponent())
-        
-        storeEntity(entity: entity)
-        
+        entity.addComponent(SpellEffectComponent(target:caster))
         return entity
     }
     
-    func addLandPieceSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
+    func makeTotemSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
         let cornerIndex = TotemSpellComponent.nextCornerIndex(spells: livingSpells, gridPosition: caster.gridPosition)!
         let landNode = self.islandNode.node(at: caster.gridPosition)
         
         let totemComponent = TotemSpellComponent(landNode:landNode.dungeonNode, cornerIndex: cornerIndex)
         let spellNode = TotemSpellComponent.makeNode()
         let entity = SpellEntity(model: spell,caster:caster, node:spellNode)
+        entity.addComponent(SpellEffectComponent(target:nil))
         entity.addComponent(totemComponent)
         
-        landNode.addChildNode(spellNode)
-        totemComponent.positionAtCorner()
-        
-        storeEntity(entity: entity)
+        totemComponent.positionAtCorner(squarePosition: landNode.position)
         return entity
     }
     
-    private func storeEntity(entity:SpellEntity) {
+    func addSpellToWorld(entity:SpellEntity) {
         livingSpells.append(entity)
         removalComponentSystem.addComponent(foundIn: entity)
         moveComponentSystem.addComponent(foundIn: entity)
         effectComponentSystem.addComponent(foundIn: entity)
+        totemComponentSystem.addComponent(foundIn:entity)
+        
+        islandNode.addChildNode(entity.component(ofType: GKSCNNodeComponent.self)!.node)
+        entity.component(ofType: SpellMovementComponent.self)?.setInitialVelocity()
     }
     
     func removeSpell(spell:SpellEntity) {
@@ -127,6 +122,7 @@ class SpellManager: NSObject {
         removalComponentSystem.removeComponent(foundIn: spell)
         moveComponentSystem.removeComponent(foundIn: spell)
         effectComponentSystem.removeComponent(foundIn:spell)
+        totemComponentSystem.removeComponent(foundIn:spell)
         
         let nodeComponent = spell.component(ofType: GKSCNNodeComponent.self)
         nodeComponent?.node.removeFromParentNode()
@@ -135,6 +131,7 @@ class SpellManager: NSObject {
     func update(deltaTime seconds: TimeInterval) {
         removalComponentSystem.update(deltaTime: seconds)
         moveComponentSystem.update(deltaTime: seconds)
+        totemComponentSystem.update(deltaTime: seconds)
         effectComponentSystem.update(deltaTime: seconds)
         let expired = livingSpells.filter { $0.component(ofType: SpellExpirationComponent.self)!.hasExpired() }
         for e in expired {

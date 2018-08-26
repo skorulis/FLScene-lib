@@ -13,6 +13,7 @@ class CharacterManager: NSObject {
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
     let aiComponentSystem = GKComponentSystem(componentClass: BattleAIComponent.self)
     let targetSystem = GKComponentSystem(componentClass: TargetComponent.self)
+    let spellSystem = GKComponentSystem(componentClass: SpellCastingComponent.self)
     
     let spellManager:SpellManager
     let island:DungeonModel
@@ -30,12 +31,14 @@ class CharacterManager: NSObject {
         characterComponentSystem.addComponent(foundIn: entity)
         aiComponentSystem.addComponent(foundIn: entity)
         targetSystem.addComponent(foundIn: entity)
+        spellSystem.addComponent(foundIn:entity)
     }
     
     func update(deltaTime seconds: TimeInterval) {
         characterComponentSystem.update(deltaTime: seconds)
         aiComponentSystem.update(deltaTime: seconds)
         targetSystem.update(deltaTime: seconds)
+        spellSystem.update(deltaTime: seconds)
         
         self.entities.forEach { (entity) in
             let battleComponent = entity.component(ofType: CharacterComponent.self)!
