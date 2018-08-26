@@ -35,17 +35,12 @@ class SpellCastingComponent: GKComponent {
         guard let component = self.entity?.component(ofType: CharacterComponent.self) else { return }
         guard component.hasMana(cost: spell.cost()) else { return }
         
-        let spriteComponent = gridEntity().component(ofType: FLSpriteComponent.self)!
-        if spriteComponent.isMoving {
-            return //Can't cast while moving
+        if gridEntity().isBusy() {
+            return //Entity is already doing something
         }
         
         if !self.isSpellAvailable(spell: spell) {
             return //Have to wait for cooldown
-        }
-        
-        if self.isCasting() {
-            return //Can't cast multiple spells at once
         }
         
         var spellEntity:SpellEntity?
@@ -69,7 +64,8 @@ class SpellCastingComponent: GKComponent {
         } else {
             self.castingSpell = spellEntity
             self.remainingCastTime = spell.castingTime()
-            spriteComponent.sprite.addParticleSystem(castingParticlSystem)
+            let node = gridEntity().component(ofType: GKSCNNodeComponent.self)?.node
+            node?.addParticleSystem(castingParticlSystem)
         }
         self.nextCastTime[spell.spellId] = Date().timeIntervalSince1970 + spell.cooldown()
     }
@@ -96,8 +92,8 @@ class SpellCastingComponent: GKComponent {
             if remainingCastTime <= 0 {
                 spellManager.addSpellToWorld(entity: castingSpell)
                 self.castingSpell = nil
-                let spriteComponent = gridEntity().component(ofType: FLSpriteComponent.self)!
-                spriteComponent.sprite.removeParticleSystem(castingParticlSystem)
+                let spriteComponent = gridEntity().component(ofType: GKSCNNodeComponent.self)!
+                spriteComponent.node.removeParticleSystem(castingParticlSystem)
             }
         }
     }

@@ -32,7 +32,7 @@ class BattleAIComponent: GKComponent {
         guard characterComponent.hasMana(cost: 10) else { return }
         
         guard let spellCasting = self.entity?.component(ofType: SpellCastingComponent.self) else { return }
-        if spellCasting.isCasting() {
+        if gridEntity().isBusy() {
             return //No point doing anything else
         }
         
@@ -47,7 +47,7 @@ class BattleAIComponent: GKComponent {
             }
         }
         
-        let ownNode:SCNNode = entity!.component(ofType: FLSpriteComponent.self)!.sprite
+        let ownNode:SCNNode = entity!.component(ofType: GKSCNNodeComponent.self)!.node
         let target = entity!.component(ofType: TargetComponent.self)!
         guard let targetEntity = target.target else { return }
         let targetNode = target.node()
@@ -64,7 +64,7 @@ class BattleAIComponent: GKComponent {
     
     //Calculates how dangerous the AI considers its current position
     private func calculateDanger() -> Float {
-        let ownNode:SCNNode = entity!.component(ofType: FLSpriteComponent.self)!.sprite
+        let ownNode:SCNNode = entity!.component(ofType: GKSCNNodeComponent.self)!.node
         let ownPosition = ownNode.worldPosition
         let dangerSpells = self.spells.spellsTargeting(entity: self.gridEntity())
         let nearbySpells = dangerSpells.filter { (spell) -> Bool in

@@ -62,9 +62,6 @@ public class DungeonGenerator {
         for _ in 0...2 {
             _ = addStairs(up: false)
         }
-        for _ in 0...size/4 {
-            addMonster()
-        }
     }
     
     private func generateOutdoors() {
@@ -137,14 +134,6 @@ public class DungeonGenerator {
             return randomEmptyPoint()
         }
         return vector_int2(Int32(x),Int32(y))
-    }
-    
-    private func addMonster() {
-        let index: Int = Int(arc4random_uniform(UInt32(ref.monsters.count)))
-        let monsterRef = Array(ref.monsters.values)[index]
-        let monster = MonsterEntity(ref: monsterRef)
-        monster.gridPosition = self.randomEmptyPoint()
-        dungeon.addBeing(entity: monster)
     }
     
     private func isEdge(x:Int,y:Int,size:Int) -> Bool {

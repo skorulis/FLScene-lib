@@ -10,10 +10,12 @@ import GameplayKit
 public class FLSpriteComponent: GKComponent {
 
     public var sprite:FLMapSprite
-    private(set) var isMoving:Bool = false 
+    private(set) var isMoving:Bool = false
+    weak var mapScene:MapSceneProtocol?
     
-    init(sprite:FLMapSprite) {
+    init(sprite:FLMapSprite,scene:MapSceneProtocol) {
         self.sprite = sprite
+        self.mapScene = scene
         super.init()
     }
     
@@ -26,15 +28,10 @@ public class FLSpriteComponent: GKComponent {
     }
     
     func moveToFull(position:vector_int2,island:DungeonModel) {
-        if self.isMoving {
-            return //Have to wait until you land to move again
+        if gridEntity().isBusy() {
+            return //Can't move while busy
         }
         guard let dungeonNode = island.nodeAt(vec: position) else { return }
-        
-        let spellComponent = gridEntity().component(ofType: SpellCastingComponent.self)!
-        if spellComponent.isCasting() {
-            return //Can't move while channelling
-        }
         
         let movementCost:Int = 2
         let component = gridEntity().component(ofType: CharacterComponent.self)!
@@ -65,7 +62,7 @@ public class FLSpriteComponent: GKComponent {
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
         isMoving = true
         let duration:Double = 0.6
-        guard let scene = self.sprite.mapScene else {return}
+        guard let scene = self.mapScene else {return}
         let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
         let action = SCNAction.move(to: point, duration: duration)
         action.timingMode = .easeInEaseOut
@@ -74,16 +71,19 @@ public class FLSpriteComponent: GKComponent {
         self.gridEntity().gridPosition = position
         dungeon.addBeing(entity: self.gridEntity()) //Add into new node
         
-        self.sprite.runAction(action) {
+        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
+        
+        sprite?.runAction(action) {
             self.isMoving = false
         }
         dungeon.updateConnectionGraph()
     }
     
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {
-        guard let scene = self.sprite.mapScene else {return}
+        guard let scene = self.mapScene else {return}
         let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
-        self.sprite.position = point
+        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
+        sprite?.position = point
         dungeon.removeBeing(entity: self.gridEntity())
         self.gridEntity().gridPosition = position
         dungeon.addBeing(entity: self.gridEntity())

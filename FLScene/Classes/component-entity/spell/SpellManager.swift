@@ -44,8 +44,7 @@ class SpellManager: NSObject {
     }
     
     func makeBoltSpell(spell:SpellModel,caster:GridEntity,target:SCNNode) -> SpellEntity {
-        
-        let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
+        let casterNode = (caster.component(ofType: GKSCNNodeComponent.self)?.node)!
         
         //Create geometry
         let sphereSize = CGFloat(spell.damage()) * 0.03
@@ -64,7 +63,7 @@ class SpellManager: NSObject {
     }
     
     func makePersonalSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
-        let casterNode = (caster.component(ofType: FLSpriteComponent.self)?.sprite)!
+        let casterNode = (caster.component(ofType: GKSCNNodeComponent.self)?.node)!
         
         let geometry = SCNSphere(radius: 2.25)
         //geometry.firstMaterial = MaterialProvider.floorMaterial()
@@ -157,7 +156,7 @@ class SpellManager: NSObject {
     }
     
     func spellsTargeting(entity:GridEntity) -> [SpellEntity] {
-        let entityNode = (entity.component(ofType: FLSpriteComponent.self)?.sprite)!
+        let entityNode = (entity.component(ofType: GKSCNNodeComponent.self)?.node)!
         return self.livingSpells.filter { (spell) -> Bool in
             return spell.target === entityNode
         }

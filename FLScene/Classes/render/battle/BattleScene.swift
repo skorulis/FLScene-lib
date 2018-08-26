@@ -13,8 +13,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
 
     let island:DungeonModel
     let islandNode:Hex3DMapNode
-    public var playerSprite:FLSpriteComponent!
-    var playerCharacter:BattleCharacter!
+    var playerEntity:GridEntity!
     
     var enemy1Sprite:FLSpriteComponent!
     var enemy2Sprite:FLSpriteComponent!
@@ -68,9 +67,9 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
-        let playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
+        playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
         playerEntity.gridPosition = vector2(0, 0)
-        self.playerSprite = addSprite(entity: playerEntity, imageNamed: "alienPink")
+        _ = addSprite(entity: playerEntity, imageNamed: "alienPink")
         
         let targetEntity = makePlayerEntity(spells: spells,playerNumber: 2)
         targetEntity.gridPosition = vector2(2, 1)
@@ -108,23 +107,14 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         self.characterManager.add(entity: enemy2)
     }
     
-    func fireSpell(spell:SpellModel) {
-        guard let spellComponent = self.playerSprite.entity?.component(ofType: SpellCastingComponent.self) else { return }
-        spellComponent.castSpell(spell: spell)
-    }
-    
-    func stopSpell(spell:SpellModel) {
-        guard let castingComponent = self.playerSprite.entity?.component(ofType: SpellCastingComponent.self) else { return }
-        castingComponent.stopSpell()
-    }
-    
     private func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
         let playerNumber = entity.component(ofType: CharacterComponent.self)!.character.playerNumber
         let spriteNode = FLMapSprite(image: spriteImage,mapScene:self,playerNumber:playerNumber)
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:self)
         spriteNode.entity = entity
         entity.addComponent(spriteComponent)
+        entity.addComponent(GKSCNNodeComponent(node: spriteNode))
         islandNode.addChildNode(spriteNode)
         
         island.addBeing(entity: entity)
@@ -132,13 +122,19 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         return spriteComponent
     }
     
-    func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
+    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
         return islandNode.topPosition(at: position)
     }
     
+    func playerCastingComponent() -> SpellCastingComponent {
+        return playerEntity.component(ofType: SpellCastingComponent.self)!
+    }
+    
     func playerSpell(index:Int) -> SpellModel? {
-        if index >= 0 && index < playerCharacter.spells.count {
-            return playerCharacter.spells[index]
+        let component = playerEntity.component(ofType: CharacterComponent.self)!
+        let spells = component.character.spells
+        if index >= 0 && index < spells.count {
+            return spells[index]
         }
         return nil;
     }

@@ -21,7 +21,7 @@ public class BattleInputHandler {
         if let index = Int(name) {
             guard let spell = self.scene.playerSpell(index: index - 1) else { return }
             if spell.isChannelSpell() {
-                scene.fireSpell(spell: spell)
+                scene.playerCastingComponent().castSpell(spell: spell)
             }
         }
     }
@@ -30,9 +30,9 @@ public class BattleInputHandler {
         if let index = Int(name) {
             guard let spell = self.scene.playerSpell(index: index - 1) else { return }
             if spell.isChannelSpell() {
-                self.scene.stopSpell(spell: spell)
+                scene.playerCastingComponent().stopSpell()
             } else {
-                scene.fireSpell(spell: spell)
+                scene.playerCastingComponent().castSpell(spell: spell)
             }
         }
     }
@@ -45,15 +45,15 @@ public class BattleInputHandler {
         guard let square = first.node.parent as? LandPieceNode else { return }
         
         if let being = square.dungeonNode.beings.first {
-            let playerEnttiy = scene.playerSprite.gridEntity()
-            if being !== playerEnttiy {
-                let target = playerEnttiy.component(ofType: TargetComponent.self)
+            let playerEntity = scene.playerEntity
+            if being !== playerEntity {
+                let target = playerEntity!.component(ofType: TargetComponent.self)
                 target?.target = being
             }
             return
         }
-        
-        scene.playerSprite.moveToFull(position: square.dungeonNode.gridPosition, island: scene.island)
+        let playerSprite = scene.playerEntity.component(ofType: FLSpriteComponent.self)
+        playerSprite?.moveToFull(position: square.dungeonNode.gridPosition, island: scene.island)
     }
     
     

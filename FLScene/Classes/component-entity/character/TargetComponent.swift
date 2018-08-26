@@ -34,8 +34,8 @@ class TargetComponent: GKComponent {
     }
     
     func node() -> SCNNode {
-        let component = target?.component(ofType: FLSpriteComponent.self)
-        return component!.sprite
+        let component = target?.component(ofType: GKSCNNodeComponent.self)
+        return component!.node
     }
     
     func updateTargetRing() {

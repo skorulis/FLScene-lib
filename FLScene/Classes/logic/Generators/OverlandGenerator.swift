@@ -11,9 +11,11 @@ public class OverlandGenerator: NSObject {
 
     let game = GameController.instance
     let overland:FullOverlandModel
+    private weak var mapScene:MapSceneProtocol?
     
-    public override init() {
+    public init(scene:MapSceneProtocol) {
         overland = FullOverlandModel(player:game.player.player)
+        self.mapScene = scene
     }
     
     public func baseOverland() -> FullOverlandModel {

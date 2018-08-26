@@ -10,12 +10,10 @@ import SKSwiftLib
 
 public class FLMapSprite: SCNNode {
 
-    weak var mapScene:MapSceneProtocol?
     private var healthBar:SCNNode?
     private var manaBar:SCNNode?
     
     init(image:UIImage,mapScene:MapSceneProtocol,playerNumber:Int) {
-        self.mapScene = mapScene
         let plane = SCNPlane(width: 1, height: 2)
         plane.firstMaterial?.diffuse.contents = image
     

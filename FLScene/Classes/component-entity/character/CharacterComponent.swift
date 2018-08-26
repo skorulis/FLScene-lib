@@ -20,28 +20,29 @@ class CharacterComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func sprite() -> FLSpriteComponent {
-        return (self.entity?.component(ofType: FLSpriteComponent.self))!
+    private func sprite() -> FLMapSprite {
+        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node as? FLMapSprite
+        return sprite!
     }
     
     func takeDamage(damage:Int) {
         character.health -= damage
-        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
+        sprite().updateHealthBar(pct:character.health.fullPercentage)
     }
     
     func takeMana(amount:Int) {
         character.mana -= amount
-        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
+        sprite().updateManaBar(pct: character.mana.fullPercentage)
     }
     
     func heal(amount:Float) {
         character.health += amount
-        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
+        sprite().updateHealthBar(pct:character.health.fullPercentage)
     }
     
     func addMana(amount:Float) {
         character.mana += amount
-        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
+        sprite().updateManaBar(pct: character.mana.fullPercentage)
     }
     
     func hasMana(cost:Int) -> Bool {
@@ -53,15 +54,15 @@ class CharacterComponent: GKComponent {
         character.mana += Float(seconds) * 2
         //Don't do an update if nothing has changed
         if (manaBefore != character.mana.value) {
-            sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
+            sprite().updateManaBar(pct: character.mana.fullPercentage)
         }
     }
     
     func reset() {
         character.mana.setToMax()
         character.health.setToMax()
-        sprite().sprite.updateManaBar(pct: character.mana.fullPercentage)
-        sprite().sprite.updateHealthBar(pct:character.health.fullPercentage)
+        sprite().updateManaBar(pct: character.mana.fullPercentage)
+        sprite().updateHealthBar(pct:character.health.fullPercentage)
     }
     
     func isDead() -> Bool {

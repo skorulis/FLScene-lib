@@ -7,7 +7,7 @@
 
 import SceneKit
 
-protocol MapSceneProtocol: class {
+public protocol MapSceneProtocol: class {
 
     func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3
 }

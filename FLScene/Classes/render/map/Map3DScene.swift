@@ -8,6 +8,7 @@
 
 import SceneKit
 import SKSwiftLib
+import GameplayKit
 
 public class Map3DScene: SCNScene, MapSceneProtocol {
 
@@ -131,7 +132,7 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
         return mapGrid
     }
     
-    func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
+    public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
         let island = self.islandFor(dungeon: dungeon)
         return island.topPosition(at: position) + dungeon.overlandOffset
     }
@@ -139,8 +140,9 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
     func addSprite(entity:GridEntity,imageNamed:String) -> FLSpriteComponent {
         let spriteNode = FLMapSprite(image: UIImage.sceneSprite(named: imageNamed)!,mapScene:self,playerNumber:1)
         spriteNode.entity = entity
-        let spriteComponent = FLSpriteComponent(sprite: spriteNode)
+        let spriteComponent = FLSpriteComponent(sprite: spriteNode,scene:self)
         entity.addComponent(spriteComponent)
+        entity.addComponent(GKSCNNodeComponent(node:spriteNode))
         let island = overland.findIsland(name: entity.islandName!)
         let islandNode = islandFor(dungeon: island)
         islandNode.addChildNode(spriteNode)

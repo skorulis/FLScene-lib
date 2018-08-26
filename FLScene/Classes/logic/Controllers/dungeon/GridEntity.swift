@@ -42,4 +42,18 @@ public class GridEntity: GKEntity {
         }
     }
     
+    func isBusy() -> Bool {
+        if let spriteComponent = component(ofType: FLSpriteComponent.self) {
+            if (spriteComponent.isMoving) {
+                return true
+            }
+        }
+        if let casting = component(ofType: SpellCastingComponent.self) {
+            if casting.isCasting() {
+                return true
+            }
+        }
+        return false
+    }
+    
 }
