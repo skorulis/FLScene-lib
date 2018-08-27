@@ -17,7 +17,7 @@ public protocol SceneInputHandlerDelegate: class {
 public class SceneInputHandler {
 
     public let sceneView:SCNView
-    let scene:Map3DScene
+    let scene:OverlandScene
     let camera:SCNCamera
     let game = GameController.instance
     public let editHandler:SceneEditInputHandler
@@ -25,7 +25,7 @@ public class SceneInputHandler {
     public weak var delegate:SceneInputHandlerDelegate?
     
     
-    public init(sceneView:SCNView,scene:Map3DScene,cameraNode:SCNNode) {
+    public init(sceneView:SCNView,scene:OverlandScene,cameraNode:SCNNode) {
         self.sceneView = sceneView
         self.scene = scene;
         self.camera = cameraNode.camera!

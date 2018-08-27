@@ -11,10 +11,12 @@ public class FullOverlandModel: Codable {
 
     enum CodingKeys: String, CodingKey {
         case dungeons = "islands"
+        case bridges
     }
     
     public var dungeons:[DungeonModel] = []
     public var player:PlayerCharacterModel?
+    var bridges:[BridgeModel] = []
     
     public init(player:PlayerCharacterModel) {
         self.player = player

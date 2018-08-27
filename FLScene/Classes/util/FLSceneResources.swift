@@ -40,13 +40,13 @@ public extension SCNParticleSystem {
 public extension UIImage {
  
     public class func particleImage(named:String) -> UIImage? {
-        let bundle = Bundle(for: Map3DScene.self)
+        let bundle = Bundle(for: OverlandScene.self)
         let path = bundle.path(forResource: named, ofType: "png", inDirectory: "particles")!
         return UIImage(contentsOfFile: path)
     }
     
     public class func sceneImage(named:String) -> UIImage? {
-        let bundle = Bundle(for: Map3DScene.self)
+        let bundle = Bundle(for: OverlandScene.self)
         if let path = bundle.path(forResource: named, ofType: "png", inDirectory: "textures") {
             return UIImage(contentsOfFile: path)
         }
@@ -54,7 +54,7 @@ public extension UIImage {
     }
     
     public class func sceneSprite(named:String) -> UIImage? {
-        let bundle = Bundle(for: Map3DScene.self)
+        let bundle = Bundle(for: OverlandScene.self)
         let path = bundle.path(forResource: named, ofType: "png", inDirectory: "sprites")!
         return UIImage(contentsOfFile: path)
     }

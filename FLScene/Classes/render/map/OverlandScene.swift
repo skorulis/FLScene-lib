@@ -1,5 +1,5 @@
 //
-//  Map3DScene.swift
+//  OverlandScene
 //  floatios
 //
 //  Created by Alexander Skorulis on 2/8/18.
@@ -10,7 +10,7 @@ import SceneKit
 import SKSwiftLib
 import GameplayKit
 
-public class Map3DScene: SCNScene, MapSceneProtocol {
+public class OverlandScene: SCNScene, MapSceneProtocol {
 
     public var overland:FullOverlandModel
     private let floorY:Float = -10
@@ -30,16 +30,19 @@ public class Map3DScene: SCNScene, MapSceneProtocol {
     
     private let game:GameController
     private var islands:[Hex3DMapNode] = []
-    
+    private var bridges:BridgeContainerNode
     
     public override init() {
         self.game = GameController.instance
+        self.bridges = BridgeContainerNode()
         
         self.overland = OverlandGenerator.fromFile()
         
         super.init()
+        self.rootNode.addChildNode(self.bridges)
         self.characterManager = CharacterManager(spellManager: nil, scene: self)
         self.buildScene()
+        self.bridges.buildNodes(bridgeModels: self.overland.bridges, overland: self)
     }
     
     public required init?(coder aDecoder: NSCoder) {

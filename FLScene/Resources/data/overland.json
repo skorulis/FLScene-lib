@@ -1,1 +1,51 @@
-{"islands":[{"name":"Obl","height":7,"overlandOffset":{"y":0,"x":0,"z":0},"width":7},{"name":"Fobl","height":7,"overlandOffset":{"y":0,"x":15,"z":15},"width":7}]}
+{
+    "islands": [
+                {
+                "name": "Obl",
+                "height": 7,
+                "overlandOffset": {
+                "y": 0,
+                "x": 0,
+                "z": 0
+                },
+                "width": 7
+                },
+                {
+                "name": "Fobl",
+                "height": 7,
+                "overlandOffset": {
+                "y": 0,
+                "x": 15,
+                "z": 15
+                },
+                "width": 7
+                },
+                {
+                "name": "Rock1",
+                "height": 1,
+                "overlandOffset": {
+                "y": 0,
+                "x": -7,
+                "z": 0
+                },
+                "width": 1
+                }
+                ],
+    "bridges":[
+               {
+               "firstIslandName":"Obl",
+               "secondIslandName":"Rock1",
+               "fistGridPosition":{
+               "x":0,
+               "y":0
+               },
+               "secondGridPosition":{
+               "x":0,
+               "y":0
+               },
+               "firstEdge":0,
+               "secondEdge":0
+               }
+               
+               ]
+}
