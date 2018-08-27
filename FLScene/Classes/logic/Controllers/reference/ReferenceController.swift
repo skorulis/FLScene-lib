@@ -127,7 +127,8 @@ public class ReferenceController {
         let stairUp = DungeonTileReferenceModel(type:.stairsUp,canPass: true,actions:[.goUp])
         let stairDown = DungeonTileReferenceModel(type:.stairsDown,canPass: true,actions:[.goDown])
         let teleporter = DungeonTileReferenceModel(type:.teleporter,canPass:true,actions:[.teleport])
-        return [wall,stairUp,stairDown,teleporter]
+        let arena = DungeonTileReferenceModel(type: .arena, canPass: true,actions:[.battle])
+        return [wall,stairUp,stairDown,teleporter,arena]
     }
     
     public func getItem(name:String) -> ItemReferenceModel {
