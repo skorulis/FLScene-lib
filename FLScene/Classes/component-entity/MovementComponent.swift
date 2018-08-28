@@ -6,6 +6,7 @@
 //
 
 import GameplayKit
+import SKSwiftLib
 
 public class MovementComponent: GKComponent {
 
@@ -66,16 +67,27 @@ public class MovementComponent: GKComponent {
         let originalPosition = sprite.position
         let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         let posChange = (point - originalPosition)
-        //let dir = (point - originalPosition).normalized()
-        //let length = (point - originalPosition).magnitude()
+        let length = CGFloat(posChange.magnitude())
+        let dir = posChange.normalized()
+        
         
         dungeon.removeBeing(entity: self.gridEntity()) //Remove from old node
         self.gridEntity().gridPosition = position
         dungeon.addBeing(entity: self.gridEntity()) //Add into new node
         
+        let path = CGMutablePath()
+        path.move(to: .zero)
+        path.addQuadCurve(to: CGPoint(x: length, y: 0.0), control: CGPoint(x: length/2, y: length/6))
+        
+        let bezier = Bezier(path: path)
+        
         let action = SCNAction.customAction(duration: duration) { (node, time) in
             let pct = time / CGFloat(duration)
-            node.position = originalPosition + (posChange * Float(pct))
+            let bezierPos = bezier.length() * pct
+            guard let pos = bezier.properties(at: bezierPos)?.position else { return}
+            let yMovement = SCNVector3(0,1,0) * Float(pos.y)
+            
+            node.position = originalPosition + (dir * Float(pos.x)) + yMovement
         }
         action.timingMode = .easeInEaseOut
         
