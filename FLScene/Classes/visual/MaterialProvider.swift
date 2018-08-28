@@ -82,6 +82,16 @@ class MaterialProvider: NSObject {
         return material
     }
     
+    class func bridgeStoneMaterial() -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = UIImage.sceneImage(named: "rustediron-streaks_diffuse")
+        material.normal.contents = UIImage.sceneImage(named: "rustediron-streaks_normal")
+        material.metalness.contents = UIImage.sceneImage(named: "rustediron-streaks_metallic")
+        material.roughness.contents = UIImage.sceneImage(named: "rustediron-streaks_roughness")
+        
+        return material
+    }
+    
     class func floorMaterial() -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor(displayP3Red: 0.4, green: 0.4, blue: 0.6, alpha: 1)

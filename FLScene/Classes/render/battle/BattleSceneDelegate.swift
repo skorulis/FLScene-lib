@@ -17,7 +17,6 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
     }
     
     public func renderer(_: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        //SCNTransaction.begin()
         let timeSincePreviousUpdate = time - previousUpdateTime
         previousUpdateTime = time
         if (timeSincePreviousUpdate > 0.1) {
@@ -26,7 +25,6 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
         
         scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
         scene.characterManager.update(deltaTime: timeSincePreviousUpdate)
-        //SCNTransaction.commit()
     }
     
     public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {

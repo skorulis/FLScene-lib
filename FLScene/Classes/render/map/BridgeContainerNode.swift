@@ -16,25 +16,31 @@ class BridgeContainerNode: SCNNode {
         self.bridges.removeAll()
         
         for model in bridgeModels {
-            let island1 = overland.island(named: model.firstIslandName)
-            let island2 = overland.island(named: model.secondIslandName)
+            let islandModel1 = overland.island(named: model.firstIslandName)
+            let islandModel2 = overland.island(named: model.secondIslandName)
             
-            let point1 = overland.pointFor(position: model.fistGridPosition, inDungeon: island1)
-            let point2 = overland.pointFor(position: model.secondGridPosition, inDungeon: island2)
+            let island1 = overland.islandFor(dungeon: islandModel1)
+            let island2 = overland.islandFor(dungeon: islandModel2)
             
-            let node = BridgeNode()
-            let test1 = SCNNode(geometry: SCNBox(width: 0.1, height: 4, length: 0.1, chamferRadius: 0))
-            let test2 = SCNNode(geometry: SCNBox(width: 0.1, height: 4, length: 0.1, chamferRadius: 0))
-            test1.position = point1
-            test2.position = point2
+            let node1 = island1.node(at: model.fistGridPosition)
+            let node2 = island2.node(at: model.secondGridPosition)
             
-            node.addChildNode(test1)
-            node.addChildNode(test2)
+            //let point1 = overland.pointFor(position: model.fistGridPosition, inDungeon: islandModel1)
+            //let point2 = overland.pointFor(position: model.secondGridPosition, inDungeon: islandModel2)
             
-            self.addChildNode(node)
-            bridges.append(node)
+            
+            
+            let bridgeNode = BridgeNode(from: node1, to: node2)
+            self.addChildNode(bridgeNode)
+            bridges.append(bridgeNode)
             
             print("Load bridge")
+        }
+    }
+    
+    func updateBridges() {
+        for bridge in bridges {
+            bridge.updateStones()
         }
     }
     
