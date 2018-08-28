@@ -43,6 +43,12 @@ public class Hex3DMapNode: SCNNode {
         }
     }
     
+    public func centreOffset() -> SCNVector3 {
+        let gridPos = self.size/2
+        let pos = localPosition(at: gridPos)
+        return SCNVector3(pos.x,0,pos.z)
+    }
+    
     //Return the 3D coordinates of the tile at the grid index
     public func localPosition(at:vector_int2) -> SCNVector3 {
         let dungeonNode = dungeon.nodeAt(vec: at)

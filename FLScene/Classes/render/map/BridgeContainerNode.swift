@@ -19,7 +19,7 @@ class BridgeContainerNode: SCNNode {
             let island1 = overland.island(named: model.firstIslandName)
             let island2 = overland.island(named: model.secondIslandName)
             
-            let point1 = overland.pointFor(position: model.secondGridPosition, inDungeon: island1)
+            let point1 = overland.pointFor(position: model.fistGridPosition, inDungeon: island1)
             let point2 = overland.pointFor(position: model.secondGridPosition, inDungeon: island2)
             
             let node = BridgeNode()

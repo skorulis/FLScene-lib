@@ -22,6 +22,8 @@ public class SceneEditInputHandler {
         selectedNode?.highlighted = false
         square.highlighted = true
         selectedNode = square
+        print("Selected node at position \(square.dungeonNode.gridPosition)" )
+        print("Node world position \(square.worldPosition)" )
     }
     
     public func cycleTerrain(backwards:Bool) {

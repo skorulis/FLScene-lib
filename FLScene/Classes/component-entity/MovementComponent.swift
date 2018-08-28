@@ -61,7 +61,8 @@ public class MovementComponent: GKComponent {
         isMoving = true
         let duration:Double = 0.6
         guard let scene = self.mapScene else {return}
-        let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
+        let island = scene.islandFor(dungeon: dungeon)
+        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         let action = SCNAction.move(to: point, duration: duration)
         action.timingMode = .easeInEaseOut
         
@@ -79,7 +80,8 @@ public class MovementComponent: GKComponent {
     
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {
         guard let scene = self.mapScene else {return}
-        let point = scene.pointFor(position: position,inDungeon: dungeon) + SCNVector3(0,yOffset(),0)
+        let island = scene.islandFor(dungeon: dungeon)
+        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
         sprite?.position = point
         dungeon.removeBeing(entity: self.gridEntity())

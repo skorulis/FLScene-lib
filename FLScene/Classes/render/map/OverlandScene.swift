@@ -135,8 +135,9 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     
     public func makeMap(dungeon:DungeonModel) -> Hex3DMapNode {
         let mapGrid = Hex3DMapNode(dungeon: dungeon)
-        let sphere = mapGrid.boundingSphere
-        mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
+        //let sphere = mapGrid.boundingSphere
+        //mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
+        mapGrid.position = dungeon.overlandOffset - mapGrid.centreOffset()
         return mapGrid
     }
     
@@ -158,7 +159,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     
     public func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3 {
         let island = self.islandFor(dungeon: dungeon)
-        return island.topPosition(at: position) + dungeon.overlandOffset
+        return island.topPosition(at: position) + dungeon.overlandOffset - island.centreOffset()
     }
     
 }
