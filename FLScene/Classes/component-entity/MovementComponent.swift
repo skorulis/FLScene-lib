@@ -61,18 +61,25 @@ public class MovementComponent: GKComponent {
         isMoving = true
         let duration:Double = 0.6
         guard let scene = self.mapScene else {return}
+        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let island = scene.islandFor(dungeon: dungeon)
+        let originalPosition = sprite.position
         let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
-        let action = SCNAction.move(to: point, duration: duration)
-        action.timingMode = .easeInEaseOut
+        let posChange = (point - originalPosition)
+        //let dir = (point - originalPosition).normalized()
+        //let length = (point - originalPosition).magnitude()
         
         dungeon.removeBeing(entity: self.gridEntity()) //Remove from old node
         self.gridEntity().gridPosition = position
         dungeon.addBeing(entity: self.gridEntity()) //Add into new node
         
-        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
+        let action = SCNAction.customAction(duration: duration) { (node, time) in
+            let pct = time / CGFloat(duration)
+            node.position = originalPosition + (posChange * Float(pct))
+        }
+        action.timingMode = .easeInEaseOut
         
-        sprite?.runAction(action) {
+        sprite.runAction(action) {
             self.isMoving = false
         }
         dungeon.updateConnectionGraph()
