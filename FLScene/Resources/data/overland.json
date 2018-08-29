@@ -45,6 +45,20 @@
                },
                "firstEdge":0,
                "secondEdge":0
+               },
+               {
+               "firstIslandName":"Obl",
+               "secondIslandName":"Fobl",
+               "fistGridPosition":{
+               "x":6,
+               "y":3
+               },
+               "secondGridPosition":{
+               "x":2,
+               "y":0
+               },
+               "firstEdge":0,
+               "secondEdge":0
                }
                
                ]

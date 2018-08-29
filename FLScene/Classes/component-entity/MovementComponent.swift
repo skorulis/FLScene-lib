@@ -60,20 +60,28 @@ public class MovementComponent: GKComponent {
     //Should be private
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
         isMoving = true
-        let duration:Double = 0.6
-        guard let scene = self.mapScene else {return}
-        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
-        let island = scene.islandFor(dungeon: dungeon)
-        let originalPosition = sprite.position
-        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
-        let posChange = (point - originalPosition)
-        let length = CGFloat(posChange.magnitude())
-        let dir = posChange.normalized()
         
+        guard let scene = self.mapScene else {return}
+        let island = scene.islandFor(dungeon: dungeon)
+        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         
         dungeon.removeBeing(entity: self.gridEntity()) //Remove from old node
         self.gridEntity().gridPosition = position
         dungeon.addBeing(entity: self.gridEntity()) //Add into new node
+
+        dungeon.updateConnectionGraph()
+        
+        animatePoint(point: point)
+    }
+    
+    private func animatePoint(point:SCNVector3) {
+        let duration:Double = 0.6
+        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
+        let originalPosition = sprite.position
+        
+        let posChange = (point - originalPosition)
+        let length = CGFloat(posChange.magnitude())
+        let dir = posChange.normalized()
         
         let path = CGMutablePath()
         path.move(to: .zero)
@@ -94,7 +102,6 @@ public class MovementComponent: GKComponent {
         sprite.runAction(action) {
             self.isMoving = false
         }
-        dungeon.updateConnectionGraph()
     }
     
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {

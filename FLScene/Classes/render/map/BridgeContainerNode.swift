@@ -25,11 +25,6 @@ class BridgeContainerNode: SCNNode {
             let node1 = island1.node(at: model.fistGridPosition)
             let node2 = island2.node(at: model.secondGridPosition)
             
-            //let point1 = overland.pointFor(position: model.fistGridPosition, inDungeon: islandModel1)
-            //let point2 = overland.pointFor(position: model.secondGridPosition, inDungeon: islandModel2)
-            
-            
-            
             let bridgeNode = BridgeNode(from: node1, to: node2)
             self.addChildNode(bridgeNode)
             bridges.append(bridgeNode)

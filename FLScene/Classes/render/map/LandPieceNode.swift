@@ -84,4 +84,8 @@ public class LandPieceNode: SCNNode {
         return self.parent! as! Hex3DMapNode
     }
     
+    public override var debugDescription: String {
+        return "land node pos \(self.position), grid pos \(self.dungeonNode.gridPosition)"
+    }
+    
 }

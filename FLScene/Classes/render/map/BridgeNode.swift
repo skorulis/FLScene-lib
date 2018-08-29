@@ -14,6 +14,7 @@ private class BridgeContext {
     let gap:CGFloat
     let stoneCount:CGFloat
     let point1:SCNVector3
+    let point2:SCNVector3
     let dir:SCNVector3
     
     init(from:SCNNode,to:SCNNode) {
@@ -21,11 +22,9 @@ private class BridgeContext {
         let nodeCentre2 = to.worldPosition + SCNVector3(0,0.5,0)
         dir = (nodeCentre2 - nodeCentre1).normalized()
         point1 = nodeCentre1 + dir * 1
-        let point2 = nodeCentre2 - dir * 1
+        point2 = nodeCentre2 - dir * 1
         
         let distance = CGFloat((point2 - point1).magnitude())
-        //let centre = (point1 + point2)/2 //TODO, place this node at the centre position and work around that
-        
         
         stoneCount = floor(distance / (2*stoneRadius + baseGap))
         self.gap = (distance - (stoneCount*stoneRadius)) / (stoneCount + 1)
@@ -60,12 +59,13 @@ class BridgeNode: SCNNode {
     
     func createBridgeNodes() {
         let context = BridgeContext(from: fromNode, to: toNode)
+        self.position = (context.point1 + context.point2)/2
         
         for i in 0..<Int(context.stoneCount) {
             let stone = SCNCylinder(radius: context.stoneRadius, height: 0.1)
             stone.firstMaterial = MaterialProvider.bridgeStoneMaterial()
             let stoneNode = SCNNode(geometry: stone)
-            stoneNode.position = context.stonePosition(i: i)
+            stoneNode.position = context.stonePosition(i: i) - self.position
             
             addChildNode(stoneNode)
             stones.append(stoneNode)
@@ -76,7 +76,7 @@ class BridgeNode: SCNNode {
         let context = BridgeContext(from: fromNode, to: toNode)
         for i in 0..<self.stones.count {
             let stone = self.stones[i]
-            stone.position = context.stonePosition(i: i)
+            stone.position = context.stonePosition(i: i) - self.position
         }
     }
     
