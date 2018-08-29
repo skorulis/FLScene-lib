@@ -68,5 +68,24 @@ public class FLMapSprite: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    var oldWorldPos:SCNVector3 = SCNVector3(0,0,0)
+    
+    public override var position: SCNVector3 {
+        willSet {
+            let distance = (position - newValue).magnitude()
+            if distance > 5 {
+                //print("wrong")
+            }
+        }
+        didSet {
+            //print("set world pos \(self.worldPosition)")
+            if (oldWorldPos - self.worldPosition).magnitude() > 5 {
+                //print("wrong")
+            }
+            oldWorldPos = self.worldPosition
+            
+        }
+    }
+    
     
 }

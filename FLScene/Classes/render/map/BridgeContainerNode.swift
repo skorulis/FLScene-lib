@@ -28,8 +28,6 @@ public class BridgeContainerNode: SCNNode {
             let bridgeNode = BridgeNode(from: node1, to: node2, model:model)
             self.addChildNode(bridgeNode)
             bridges.append(bridgeNode)
-            
-            print("Load bridge")
         }
     }
     

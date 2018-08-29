@@ -73,7 +73,7 @@ public class MovementComponent: GKComponent {
     }
     
     func moveAlong(steps:[MovementStep]) {
-        if steps.count == 0 {
+        if steps.count == 0 || self.isMoving {
             return
         }
         let first = steps[0]
@@ -84,7 +84,6 @@ public class MovementComponent: GKComponent {
         case .bridge(let step):
             moveOnBridge(bridge: step.model, index: step.stoneIndex)
         }
-        
     }
     
     private func moveOnBridge(bridge:BridgeModel,index:Int) {
@@ -97,7 +96,8 @@ public class MovementComponent: GKComponent {
         }
         let stone = bridgeNode.stones[index]
         let position = stone.position + SCNVector3(0,yOffset(),0)
-        animateToPoint(point: position)
+
+        self.animateToPoint(point: position)
     }
     
     private func removeFromOldNode() {
@@ -117,15 +117,12 @@ public class MovementComponent: GKComponent {
     
     //Should be private
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
-        isMoving = true
-        
         guard let scene = self.mapScene else {return}
-        let island = scene.islandFor(dungeon: dungeon)
-        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
+        let islandNode = scene.islandFor(dungeon: dungeon)
+        let point = islandNode.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         
         if isOnBridge() {
             let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
-            let islandNode = scene.islandFor(dungeon: dungeon)
             self.currentBridge()?.releaseOwnership(node: sprite!, to: islandNode)
         }
         
@@ -134,12 +131,11 @@ public class MovementComponent: GKComponent {
         addToCurrentNode(island: dungeon)
 
         dungeon.updateConnectionGraph()
-        
-        animateToPoint(point: point)
+        self.animateToPoint(point: point)
     }
     
     private func animateToPoint(point:SCNVector3) {
-        
+        isMoving = true
         guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let originalPosition = sprite.position
         
@@ -165,12 +161,12 @@ public class MovementComponent: GKComponent {
         }
         action.timingMode = .easeInEaseOut
         
-        
         sprite.runAction(action) { [unowned self] in
+            self.isMoving = false
             if self.queuedSteps.count > 0 {
-                self.moveAlong(steps: self.queuedSteps)
-            } else {
-                self.isMoving = false
+                DispatchQueue.main.async {
+                    self.moveAlong(steps: self.queuedSteps)
+                }
             }
         }
     }

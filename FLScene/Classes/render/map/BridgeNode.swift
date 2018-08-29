@@ -87,15 +87,15 @@ class BridgeNode: SCNNode {
     }
     
     func takeOwnership(node:SCNNode) {
-        let position = self.convertPosition(node.position, from: node.parent)
+        let before = node.worldTransform
         self.addChildNode(node)
-        node.position = position
+        node.setWorldTransform(before)
     }
     
     func releaseOwnership(node:SCNNode,to:SCNNode) {
-        let position = to.convertPosition(node.position, from: self)
+        let before = node.worldPosition
         to.addChildNode(node)
-        node.position = position
+        node.worldPosition = before
     }
     
 }
