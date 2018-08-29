@@ -7,7 +7,7 @@
 
 import SceneKit
 
-class BridgeContainerNode: SCNNode {
+public class BridgeContainerNode: SCNNode {
 
     var bridges:[BridgeNode] = []
     
@@ -22,10 +22,10 @@ class BridgeContainerNode: SCNNode {
             let island1 = overland.islandFor(dungeon: islandModel1)
             let island2 = overland.islandFor(dungeon: islandModel2)
             
-            let node1 = island1.node(at: model.fistGridPosition)
+            let node1 = island1.node(at: model.firstGridPosition)
             let node2 = island2.node(at: model.secondGridPosition)
             
-            let bridgeNode = BridgeNode(from: node1, to: node2)
+            let bridgeNode = BridgeNode(from: node1, to: node2, model:model)
             self.addChildNode(bridgeNode)
             bridges.append(bridgeNode)
             
@@ -37,6 +37,12 @@ class BridgeContainerNode: SCNNode {
         for bridge in bridges {
             bridge.updateStones()
         }
+    }
+    
+    func bridge(with model:BridgeModel) -> BridgeNode {
+        return self.bridges.filter { (bridge) -> Bool in
+            return bridge.model.firstIslandName == model.firstIslandName && bridge.model.secondIslandName == model.secondIslandName
+        }.first!
     }
     
 }

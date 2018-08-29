@@ -20,9 +20,11 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     var characterManager:CharacterManager!
     
     var spells:[SpellModel] = []
+    public let bridges: BridgeContainerNode
     
     public init(island:DungeonModel) {
         self.island = island;
+        bridges = BridgeContainerNode()
         self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager(islandNode: islandNode)
         super.init()

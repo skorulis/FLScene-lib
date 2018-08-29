@@ -48,8 +48,10 @@ class BridgeNode: SCNNode {
     let toNode:SCNNode
     
     var stones:[SCNNode] = []
+    let model:BridgeModel
     
-    init(from:SCNNode,to:SCNNode) {
+    init(from:SCNNode,to:SCNNode,model:BridgeModel) {
+        self.model = model
         self.fromNode = from
         self.toNode = to
         super.init()
@@ -82,6 +84,18 @@ class BridgeNode: SCNNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func takeOwnership(node:SCNNode) {
+        let position = self.convertPosition(node.position, from: node.parent)
+        self.addChildNode(node)
+        node.position = position
+    }
+    
+    func releaseOwnership(node:SCNNode,to:SCNNode) {
+        let position = to.convertPosition(node.position, from: self)
+        to.addChildNode(node)
+        node.position = position
     }
     
 }

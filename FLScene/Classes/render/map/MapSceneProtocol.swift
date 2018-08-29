@@ -12,4 +12,5 @@ public protocol MapSceneProtocol: class {
     func pointFor(position:vector_int2,inDungeon dungeon:DungeonModel) -> SCNVector3
     func island(named:String) -> DungeonModel
     func islandFor(dungeon:DungeonModel) -> Hex3DMapNode
+    var bridges:BridgeContainerNode { get }
 }

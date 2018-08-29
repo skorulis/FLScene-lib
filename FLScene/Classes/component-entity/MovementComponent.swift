@@ -8,9 +8,19 @@
 import GameplayKit
 import SKSwiftLib
 
-public struct MovementStep {
+public enum MovementStep {
+    case tile(TileStep)
+    case bridge(BridgeStep)
+}
+
+public struct TileStep {
     let position:vector_int2
     let dungeon:DungeonModel
+}
+
+public struct BridgeStep {
+    let stoneIndex:Int
+    let model:BridgeModel
 }
 
 public class MovementComponent: GKComponent {
@@ -63,9 +73,46 @@ public class MovementComponent: GKComponent {
     }
     
     func moveAlong(steps:[MovementStep]) {
+        if steps.count == 0 {
+            return
+        }
         let first = steps[0]
         self.queuedSteps = Array(steps.suffix(from: 1))
-        moveTo(position: first.position, inDungeon: first.dungeon)
+        switch first {
+        case .tile(let step):
+            moveTo(position: step.position, inDungeon: step.dungeon)
+        case .bridge(let step):
+            moveOnBridge(bridge: step.model, index: step.stoneIndex)
+        }
+        
+    }
+    
+    private func moveOnBridge(bridge:BridgeModel,index:Int) {
+        removeFromOldNode()
+        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
+        let bridgeNode = (mapScene?.bridges.bridge(with: bridge))!
+        if !self.isOnBridge() {
+            bridgeNode.takeOwnership(node: sprite)
+            gridEntity().islandName = nil //Take out of island
+        }
+        let stone = bridgeNode.stones[index]
+        let position = stone.position + SCNVector3(0,yOffset(),0)
+        animateToPoint(point: position)
+    }
+    
+    private func removeFromOldNode() {
+        if let oldIslandName = gridEntity().islandName {
+            let island = mapScene?.island(named: oldIslandName)
+            island?.removeBeing(entity: self.gridEntity()) //Remove from old node
+            gridEntity().islandName = nil
+        }
+    }
+    
+    private func addToCurrentNode(island:DungeonModel?) {
+        gridEntity().islandName = island?.name
+        if let island = island {
+            island.addBeing(entity: self.gridEntity())
+        }
     }
     
     //Should be private
@@ -76,9 +123,15 @@ public class MovementComponent: GKComponent {
         let island = scene.islandFor(dungeon: dungeon)
         let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         
-        dungeon.removeBeing(entity: self.gridEntity()) //Remove from old node
+        if isOnBridge() {
+            let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
+            let islandNode = scene.islandFor(dungeon: dungeon)
+            self.currentBridge()?.releaseOwnership(node: sprite!, to: islandNode)
+        }
+        
+        removeFromOldNode()
         self.gridEntity().gridPosition = position
-        dungeon.addBeing(entity: self.gridEntity()) //Add into new node
+        addToCurrentNode(island: dungeon)
 
         dungeon.updateConnectionGraph()
         
@@ -86,13 +139,15 @@ public class MovementComponent: GKComponent {
     }
     
     private func animateToPoint(point:SCNVector3) {
-        let duration:Double = 0.6
+        
         guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let originalPosition = sprite.position
         
         let posChange = (point - originalPosition)
         let length = CGFloat(posChange.magnitude())
         let dir = posChange.normalized()
+        
+        let duration:Double = Double(length)/4
         
         let path = CGMutablePath()
         path.move(to: .zero)
@@ -117,7 +172,6 @@ public class MovementComponent: GKComponent {
             } else {
                 self.isMoving = false
             }
-            
         }
     }
     
@@ -135,6 +189,15 @@ public class MovementComponent: GKComponent {
     
     private func yOffset() -> CGFloat {
         return 1
+    }
+    
+    private func currentBridge() -> BridgeNode? {
+        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return nil }
+        return sprite.parent as? BridgeNode
+    }
+    
+    private func isOnBridge() -> Bool {
+        return self.currentBridge() != nil
     }
     
 }

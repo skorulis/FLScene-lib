@@ -30,7 +30,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     
     private let game:GameController
     private var islands:[Hex3DMapNode] = []
-    let bridges:BridgeContainerNode
+    public let bridges:BridgeContainerNode
     
     public override init() {
         self.game = GameController.instance

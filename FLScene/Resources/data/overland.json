@@ -35,7 +35,7 @@
                {
                "firstIslandName":"Obl",
                "secondIslandName":"Rock1",
-               "fistGridPosition":{
+               "firstGridPosition":{
                "x":0,
                "y":3
                },
@@ -49,7 +49,7 @@
                {
                "firstIslandName":"Obl",
                "secondIslandName":"Fobl",
-               "fistGridPosition":{
+               "firstGridPosition":{
                "x":6,
                "y":3
                },
