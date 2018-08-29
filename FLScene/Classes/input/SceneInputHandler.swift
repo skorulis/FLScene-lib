@@ -60,9 +60,12 @@ public class SceneInputHandler {
             return
         }
         
-        let firstPoint = path[1]
-        let sprite = scene.playerEntity.component(ofType: MovementComponent.self)!
-        sprite.moveTo(position: firstPoint.gridPosition, inDungeon: scene.playerIsland)
+        let completePath = Array(path.suffix(from: 1))
+        let movement = scene.playerEntity.component(ofType: MovementComponent.self)!
+        let pathSteps = completePath.map { (model) -> MovementStep in
+            return MovementStep(position: model.gridPosition, dungeon: scene.playerIsland)
+        }
+        movement.moveAlong(steps: pathSteps)
     }
     
     public func longPress(point:CGPoint) {

@@ -8,10 +8,16 @@
 import GameplayKit
 import SKSwiftLib
 
+public struct MovementStep {
+    let position:vector_int2
+    let dungeon:DungeonModel
+}
+
 public class MovementComponent: GKComponent {
 
     private(set) var isMoving:Bool = false
     weak var mapScene:MapSceneProtocol?
+    private var queuedSteps:[MovementStep] = []
     
     init(scene:MapSceneProtocol) {
         self.mapScene = scene
@@ -56,6 +62,11 @@ public class MovementComponent: GKComponent {
         self.moveTo(position: firstPoint.gridPosition, inDungeon: island)
     }
     
+    func moveAlong(steps:[MovementStep]) {
+        let first = steps[0]
+        self.queuedSteps = Array(steps.suffix(from: 1))
+        moveTo(position: first.position, inDungeon: first.dungeon)
+    }
     
     //Should be private
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
@@ -71,10 +82,10 @@ public class MovementComponent: GKComponent {
 
         dungeon.updateConnectionGraph()
         
-        animatePoint(point: point)
+        animateToPoint(point: point)
     }
     
-    private func animatePoint(point:SCNVector3) {
+    private func animateToPoint(point:SCNVector3) {
         let duration:Double = 0.6
         guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let originalPosition = sprite.position
@@ -99,8 +110,14 @@ public class MovementComponent: GKComponent {
         }
         action.timingMode = .easeInEaseOut
         
-        sprite.runAction(action) {
-            self.isMoving = false
+        
+        sprite.runAction(action) { [unowned self] in
+            if self.queuedSteps.count > 0 {
+                self.moveAlong(steps: self.queuedSteps)
+            } else {
+                self.isMoving = false
+            }
+            
         }
     }
     
