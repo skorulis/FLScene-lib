@@ -14,6 +14,7 @@ public enum DungeonTileType:String {
     case stairsDown = "stair-down"
     case teleporter
     case arena
+    case house
 }
 
 public enum DungeonAction: String {
@@ -22,6 +23,7 @@ public enum DungeonAction: String {
     case examine
     case teleport
     case battle
+    case sleep
 }
 
 public struct DungeonTileReferenceModel {

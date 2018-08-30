@@ -31,7 +31,7 @@ public class LandPieceNode: SCNNode {
         self.rebuildTerrainGeometry()
         
         if let fixture = dungeonNode.fixture {
-            let model = NodeProvider.instance.tree()
+            let model = fixtureNode(type: fixture.ref.type)
             sitNode(node: model)
             
             let hexGeometry = GeometryProvider.instance.bevelHex(ref:dungeonNode.terrain)
@@ -42,6 +42,15 @@ public class LandPieceNode: SCNNode {
                     self.addParticleSystem(trail)
                 }
             }
+        }
+    }
+    
+    private func fixtureNode(type:DungeonTileType) -> SCNNode {
+        switch type {
+        case .house:
+            return NodeProvider.instance.house()
+        default:
+            return NodeProvider.instance.tree()
         }
     }
     

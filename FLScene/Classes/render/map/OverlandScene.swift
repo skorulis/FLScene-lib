@@ -31,6 +31,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     private let game:GameController
     private var islands:[Hex3DMapNode] = []
     public let bridges:BridgeContainerNode
+    var skybox:SkyboxManager!
     
     public override init() {
         self.game = GameController.instance
@@ -39,10 +40,12 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
         self.overland = OverlandGenerator.fromFile()
         
         super.init()
+        self.skybox = SkyboxManager(scene: self)
         self.rootNode.addChildNode(self.bridges)
         self.characterManager = CharacterManager(spellManager: nil, scene: self)
         self.buildScene()
         self.bridges.buildNodes(bridgeModels: self.overland.bridges, overland: self)
+        
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -55,11 +58,8 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
         ambientLightNode.light = SceneElements.ambientLight()
         rootNode.addChildNode(ambientLightNode)
         
-        let skyBox = SceneElements.skyBox()
+        skybox.updateSkybox()
         
-        self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
-        self.lightingEnvironment.contents = self.background.contents
-
         self.islands = self.overland.dungeons.map { self.makeMap(dungeon: $0)}
         for i in islands {
             let duration = Double(arc4random()) / Double(UINT32_MAX)

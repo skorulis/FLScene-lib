@@ -147,6 +147,8 @@ public class SceneInputHandler {
             let node = dungeon.nodeAt(vec: teleporter.targetPosition)!
             
             self.scene.teleportPlayer(dungeon: dungeon, node: node)
+        } else if action == .sleep {
+            self.scene.skybox.animateToTime(time: 1)
         }
     }
     

@@ -79,6 +79,9 @@
               "gridPosition": {
               "x": 2,
               "y": 1
+              },
+              "fixture": {
+              "type": "house"
               }
               },
               {
@@ -277,7 +280,7 @@
               "terrain": "water",
               "fixture": {
               "type": "arena",
-              "name":"arena1"
+              "name": "arena1"
               },
               "yOffset": 0,
               "gridPosition": {

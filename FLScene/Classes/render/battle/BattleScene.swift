@@ -41,7 +41,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         ambientLightNode.light = SceneElements.ambientLight()
         rootNode.addChildNode(ambientLightNode)
         
-        let skyBox = SceneElements.skyBox()
+        let skyBox = SkyboxManager.defaultSkybox()
         
         self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
         self.lightingEnvironment.contents = self.background.contents

@@ -22,6 +22,12 @@ class NodeProvider {
         return getNode(named: "tree", fromScene: "scene1.scn",maxSize: SCNVector3(0.5,2,0.5))
     }
     
+    public func house() -> SCNNode {
+        let geom = SCNPyramid(width: 1.4, height: 1, length: 1.4)
+        geom.firstMaterial = MaterialProvider.bridgeStoneMaterial()
+        return SCNNode(geometry: geom)
+    }
+    
     private func getNode(named:String,fromScene:String,maxSize:SCNVector3) -> SCNNode {
         let scene = store.getScene(name: fromScene)
         let childNode = scene.rootNode.childNode(withName: named, recursively: true)!
