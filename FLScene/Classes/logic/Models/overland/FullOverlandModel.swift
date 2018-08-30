@@ -46,5 +46,11 @@ public class FullOverlandModel: Codable {
     public func findIsland(name:String) -> DungeonModel {
         return self.dungeons.filter { $0.name == name}.first!
     }
+    
+    public func bridgeJSONArray() throws -> [Any]  {
+        let data = try JSONEncoder().encode(self.bridges)
+        let array = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+        return array as! [Any]
+    }
 
 }

@@ -29,6 +29,7 @@ public class SceneEditInputHandler {
         scene.islands.forEach { (island) in
             island.showVoid = self.editMode
         }
+        scene.bridges.buildNodes(bridgeModels: scene.overland.bridges, overland: scene)
     }
     
     public func handleTap(square:LandPieceNode) {
