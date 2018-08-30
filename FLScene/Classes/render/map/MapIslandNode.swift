@@ -8,7 +8,7 @@
 
 import SceneKit
 
-public class Hex3DMapNode: SCNNode {
+public class MapIslandNode: SCNNode {
 
     public let dungeon:DungeonModel
     public let size:vector_int2
@@ -16,6 +16,11 @@ public class Hex3DMapNode: SCNNode {
     public let blockHeight:ASFloat
     
     private let gridMult:Float
+    public var showVoid:Bool = false {
+        didSet {
+            rebuildTerrain()
+        }
+    }
     
     public init(dungeon:DungeonModel,gridSpacing:Float = 0.9) {
         self.dungeon = dungeon
@@ -28,10 +33,16 @@ public class Hex3DMapNode: SCNNode {
         
         super.init()
         
+        rebuildTerrain()
+    }
+    
+    func rebuildTerrain() {
+        terrain.forEach { $0.removeFromParentNode() }
+        terrain.removeAll()
         for y in 0..<size.y {
             for x in 0..<size.x {
                 let dungeonNode = dungeon.nodeAt(x: Int(x), y: Int(y))!
-                if dungeonNode.terrain.type == .void {
+                if dungeonNode.terrain.type == .void && !showVoid {
                     continue
                 }
                 

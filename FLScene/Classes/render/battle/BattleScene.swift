@@ -12,7 +12,7 @@ import GameplayKit
 public class BattleScene: SCNScene, MapSceneProtocol {
 
     let island:DungeonModel
-    let islandNode:Hex3DMapNode
+    let islandNode:MapIslandNode
     var playerEntity:GridEntity!
     var enemy1Entity:GridEntity!
     
@@ -25,7 +25,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     public init(island:DungeonModel) {
         self.island = island;
         bridges = BridgeContainerNode()
-        self.islandNode = Hex3DMapNode(dungeon: self.island,gridSpacing:2.0)
+        self.islandNode = MapIslandNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager(islandNode: islandNode)
         super.init()
         self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
@@ -131,7 +131,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         return self.island
     }
     
-    public func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
+    public func islandFor(dungeon:DungeonModel) -> MapIslandNode {
         return self.islandNode
     }
     

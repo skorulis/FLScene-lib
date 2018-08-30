@@ -29,7 +29,7 @@ public class SceneInputHandler {
         self.sceneView = sceneView
         self.scene = scene;
         self.camera = cameraNode.camera!
-        self.editHandler = SceneEditInputHandler()
+        self.editHandler = SceneEditInputHandler(scene:scene)
         
         let target = self.scene.playerEntity.component(ofType: GKSCNNodeComponent.self)!.node
         

@@ -10,13 +10,26 @@ import SKSwiftLib
 
 public class SceneEditInputHandler {
 
+    let scene:OverlandScene
+    
+    init(scene:OverlandScene) {
+        self.scene = scene
+    }
+    
     public var editMode:Bool = false {
         didSet {
             selectedNode?.highlighted = false
             selectedNode = nil
+            rebuildMap()
         }
     }
     var selectedNode:LandPieceNode?
+    
+    func rebuildMap() {
+        scene.islands.forEach { (island) in
+            island.showVoid = self.editMode
+        }
+    }
     
     public func handleTap(square:LandPieceNode) {
         selectedNode?.highlighted = false
@@ -29,8 +42,7 @@ public class SceneEditInputHandler {
     public func cycleTerrain(backwards:Bool) {
         guard let square = self.selectedNode else { return }
         let type = square.dungeonNode.terrain.type
-        var allTerrains:[TerrainType] = ReferenceController.instance.terrain.map { $0.1.type }
-        allTerrains = allTerrains.filter { $0 != TerrainType.void }
+        let allTerrains:[TerrainType] = ReferenceController.instance.terrain.map { $0.1.type }
         let nextType = backwards ? allTerrains.next(current:type) : allTerrains.prev(current:type)
         square.dungeonNode.terrain = ReferenceController.instance.getTerrain(type: nextType)
         square.rebuildTerrainGeometry()

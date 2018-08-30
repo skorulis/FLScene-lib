@@ -16,20 +16,18 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     private let floorY:Float = -10
     var playerEntity:GridEntity!
     
-    //public var playerSprite:FLSpriteComponent!
-    
     private var characterManager:CharacterManager!
     
     public var playerIsland:DungeonModel {
         return overland.findIsland(name: playerEntity.islandName!)
     }
     
-    public var playerIslandNode:Hex3DMapNode {
+    public var playerIslandNode:MapIslandNode {
         return islandFor(dungeon: playerIsland)
     }
     
     private let game:GameController
-    private var islands:[Hex3DMapNode] = []
+    var islands:[MapIslandNode] = []
     public let bridges:BridgeContainerNode
     var skybox:SkyboxManager!
     
@@ -67,6 +65,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
             let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: duration + 5)
             i.runAction(SCNAction.repeatForever(SCNAction.sequence([act1,act2])))
             self.rootNode.addChildNode(i)
+            
         }
         
         buildWater()
@@ -133,8 +132,8 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
         self.rootNode.addChildNode(node)
     }
     
-    public func makeMap(dungeon:DungeonModel) -> Hex3DMapNode {
-        let mapGrid = Hex3DMapNode(dungeon: dungeon)
+    public func makeMap(dungeon:DungeonModel) -> MapIslandNode {
+        let mapGrid = MapIslandNode(dungeon: dungeon)
         //let sphere = mapGrid.boundingSphere
         //mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
         mapGrid.position = dungeon.overlandOffset - mapGrid.centreOffset()
@@ -149,7 +148,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     
     //MARK: - MapSceneProtocol
     
-    public func islandFor(dungeon:DungeonModel) -> Hex3DMapNode {
+    public func islandFor(dungeon:DungeonModel) -> MapIslandNode {
         return self.islands.filter { $0.dungeon === dungeon}.first!
     }
     

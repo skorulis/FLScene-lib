@@ -37,9 +37,9 @@ class SpellManager: NSObject {
     let effectComponentSystem = GKComponentSystem(componentClass: SpellEffectComponent.self)
     let totemComponentSystem = GKComponentSystem(componentClass: TotemSpellComponent.self)
     
-    let islandNode:Hex3DMapNode
+    let islandNode:MapIslandNode
     
-    init(islandNode:Hex3DMapNode) {
+    init(islandNode:MapIslandNode) {
         self.islandNode = islandNode
     }
     
