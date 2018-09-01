@@ -1,0 +1,16 @@
+ [
+  {
+  "backStory": "Lives alone on a small terminal island and mostly keeps to himself ignoring the power struggles around him ",
+  "base": {
+  "name": "Herbert Whittaker",
+  "avatarIcon": "👴",
+  "location": {
+  "islandName": "Obl",
+  "gridPosition": {
+  "x": 2,
+  "y": 2
+  }
+  }
+  }
+  }
+  ]

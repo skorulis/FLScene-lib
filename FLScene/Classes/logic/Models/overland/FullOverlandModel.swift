@@ -28,8 +28,7 @@ public class FullOverlandModel: Codable {
             oldIsland.removeBeing(entity: entity)
         }
         
-        entity.islandName = islandName
-        entity.gridPosition = position
+        entity.location.update(gridPosition: position, islandName: islandName)
         
         let island = findIsland(name: islandName)
         island.nodeAt(vec: position)?.beings.append(entity)

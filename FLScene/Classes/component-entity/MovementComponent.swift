@@ -92,7 +92,7 @@ public class MovementComponent: GKComponent {
         let bridgeNode = (mapScene?.bridges.bridge(with: bridge))!
         if !self.isOnBridge() {
             bridgeNode.takeOwnership(node: sprite)
-            gridEntity().islandName = nil //Take out of island
+            gridEntity().location.islandName = nil //Take out of island
         }
         let stone = bridgeNode.stones[index]
         let position = stone.position + SCNVector3(0,yOffset(),0)
@@ -104,12 +104,12 @@ public class MovementComponent: GKComponent {
         if let oldIslandName = gridEntity().islandName {
             let island = mapScene?.island(named: oldIslandName)
             island?.removeBeing(entity: self.gridEntity()) //Remove from old node
-            gridEntity().islandName = nil
+            gridEntity().location.islandName = nil
         }
     }
     
     private func addToCurrentNode(island:DungeonModel?) {
-        gridEntity().islandName = island?.name
+        gridEntity().location.islandName = island?.name
         if let island = island {
             island.addBeing(entity: self.gridEntity())
         }
@@ -127,7 +127,7 @@ public class MovementComponent: GKComponent {
         }
         
         removeFromOldNode()
-        self.gridEntity().gridPosition = position
+        self.gridEntity().location.gridPosition = position
         addToCurrentNode(island: dungeon)
 
         dungeon.updateConnectionGraph()
@@ -178,7 +178,7 @@ public class MovementComponent: GKComponent {
         let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
         sprite?.position = point
         dungeon.removeBeing(entity: self.gridEntity())
-        self.gridEntity().gridPosition = position
+        self.gridEntity().location.gridPosition = position
         dungeon.addBeing(entity: self.gridEntity())
         dungeon.updateConnectionGraph()
     }

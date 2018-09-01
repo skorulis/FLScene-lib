@@ -10,7 +10,8 @@ import Foundation
 final class NonPlayerCharacterModel: Codable {
 
     let base:CharacterModel
-    let id:String
+    let id:String = NSUUID().uuidString
+    var backStory:String = ""
     
     convenience init() {
         self.init(base: CharacterModel())
@@ -18,7 +19,6 @@ final class NonPlayerCharacterModel: Codable {
     
     init(base:CharacterModel) {
         self.base = base
-        id = NSUUID().uuidString
     }
     
 }

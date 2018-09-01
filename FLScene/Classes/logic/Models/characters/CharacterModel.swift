@@ -5,15 +5,19 @@
 //  Created by Alexander Skorulis on 26/6/18.
 //
 
+import GameplayKit
+
 final public class CharacterModel: Codable {
 
-    public var name:String;
+    public var name:String
     public var avatarIcon = "👤"
+    public var spriteName = "alienPink"
     public let satiation:MaxValueField
     public let time:MaxValueField
     public var ether:Int
     public let inventory:InventoryModel
     public let skills:SkillListModel
+    var location:LocationModel
     
     init(name:String="") {
         self.name = name
@@ -22,6 +26,7 @@ final public class CharacterModel: Codable {
         ether = 100
         inventory = InventoryModel()
         skills = SkillListModel()
+        location = LocationModel(gridPosition: vector_int2(0,0))
     }
     
     public func hasResource(name:String,quantity:Int) -> Bool {

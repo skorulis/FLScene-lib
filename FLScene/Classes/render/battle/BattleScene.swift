@@ -68,12 +68,10 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
-        playerEntity = makePlayerEntity(spells: spells,playerNumber: 1)
-        playerEntity.gridPosition = vector2(0, 0)
+        playerEntity = makePlayerEntity(spells: spells,playerNumber: 1,position: vector2(0, 0))
         _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
         
-        enemy1Entity = makePlayerEntity(spells: spells,playerNumber: 2)
-        enemy1Entity.gridPosition = vector2(2, 1)
+        enemy1Entity = makePlayerEntity(spells: spells,playerNumber: 2,position: vector2(2, 1))
         enemy1Entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
         _ = characterManager.makeSprite(entity: enemy1Entity, imageNamed: "alienBlue")
 
@@ -87,9 +85,8 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
     }
     
-    private func makePlayerEntity(spells:[SpellModel],playerNumber:Int) -> GridEntity {
-        let playerEntity = GridEntity()
-        playerEntity.islandName = "battle"
+    private func makePlayerEntity(spells:[SpellModel],playerNumber:Int,position:vector_int2) -> GridEntity {
+        let playerEntity = GridEntity(location: LocationModel(gridPosition: position, islandName: "battle"))
         let playerCharacter = BattleCharacter(spells: spells,playerNumber:playerNumber)
         playerEntity.addComponent(CharacterComponent(character: playerCharacter))
         
@@ -97,8 +94,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     }
     
     func makeSecondAI() {
-        let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1)
-        enemy2.gridPosition = vector2(0, 1)
+        let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1,position: vector2(0, 1))
         enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
         _ = characterManager.makeSprite(entity: enemy2, imageNamed: "alienGreen")
         

@@ -78,9 +78,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     }
     
     public func makePlayer() -> GridEntity {
-        let playerEntity = GridEntity()
-        playerEntity.islandName = "Obl"
-        playerEntity.gridPosition = vector2(3, 3)
+        let playerEntity = GridEntity(location: LocationModel(gridPosition: vector2(3, 3), islandName: "Obl"))
         _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
         
         return playerEntity

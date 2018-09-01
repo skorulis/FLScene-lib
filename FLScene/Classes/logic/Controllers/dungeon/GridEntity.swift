@@ -10,12 +10,21 @@ import GameplayKit
 
 public class GridEntity: GKEntity {
 
-    public var gridPosition:vector_int2 = vector_int2(x: 0, y: 0)
-    public let entityId:String
-    public var islandName:String?
+    let location:LocationModel
     
-    override init() {
+    var gridPosition:vector_int2 {
+        return location.gridPosition
+    }
+    
+    var islandName:String? {
+        return location.islandName
+    }
+    
+    public let entityId:String
+    
+    init(location:LocationModel) {
         entityId = UUID().uuidString
+        self.location = location
         super.init()
     }
     
