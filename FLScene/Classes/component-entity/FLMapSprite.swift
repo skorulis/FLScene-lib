@@ -12,6 +12,7 @@ public class FLMapSprite: SCNNode {
 
     private var healthBar:SCNNode?
     private var manaBar:SCNNode?
+    private var infoIcon:SCNNode?
     
     init(image:UIImage,playerNumber:Int) {
         let plane = SCNPlane(width: 1, height: 2)
@@ -32,8 +33,9 @@ public class FLMapSprite: SCNNode {
         constraint.freeAxes = SCNBillboardAxis.Y
         self.constraints = [constraint]
         
-        updateHealthBar(pct:1)
-        updateManaBar(pct: 1)
+        //updateHealthBar(pct:1)
+        //updateManaBar(pct: 1)
+        updateInfoIcon(text: "$")
     }
     
     func updateHealthBar(pct:CGFloat) {
@@ -64,28 +66,33 @@ public class FLMapSprite: SCNNode {
         manaBar?.geometry = barGeometry
     }
     
+    func updateInfoIcon(text:String) {
+        infoIcon?.removeFromParentNode()
+        
+        let geom = SCNText(string: text, extrusionDepth: 2)
+        geom.firstMaterial = MaterialProvider.manaBarMaterial()
+        infoIcon = SCNNode(geometry: geom)
+        infoIcon?.scale = SCNVector3(0.2,0.2,0.2)
+        self.addChildNode(infoIcon!)
+        self.position(node: infoIcon!, in: (min:SCNVector3(-0.5,0,-0.5),max:SCNVector3(0.5,1,0.5)))
+    }
+    
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var oldWorldPos:SCNVector3 = SCNVector3(0,0,0)
-    
-    public override var position: SCNVector3 {
-        willSet {
-            let distance = (position - newValue).magnitude()
-            if distance > 5 {
-                //print("wrong")
-            }
-        }
-        didSet {
-            //print("set world pos \(self.worldPosition)")
-            if (oldWorldPos - self.worldPosition).magnitude() > 5 {
-                //print("wrong")
-            }
-            oldWorldPos = self.worldPosition
-            
-        }
+    func position(node:SCNNode, in box:(min:SCNVector3,max:SCNVector3)) {
+        let space = box.max - box.min
+        let size = node.boundingBox.max - node.boundingBox.min
+        let scale = space / size
+        let minScale = min(scale.x,scale.y,scale.z)
+        node.scale = SCNVector3(minScale,minScale,minScale)
+        let scaledBox = node.scaledBoundingBox()
+        
+        let y = 1 - scaledBox.min.y
+        let x:CGFloat = CGFloat(-(scaledBox.max.x - scaledBox.min.x)/2)
+        let z:CGFloat = 0
+        node.position = SCNVector3(x,CGFloat(y),z)
     }
-    
     
 }

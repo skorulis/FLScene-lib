@@ -1,8 +1,8 @@
  [
   {
-  "backStory": "Lives alone on a small terminal island and mostly keeps to himself ignoring the power struggles around him ",
+  "backStory": "Herbert has been around for a long time but refuses to give much information about his past. He lives alone on the small terminal island of Obl where he distances himself from the power struggles that go on around him. The island has everything he needs to survive so he only leaves on rare occasions. He's happy to have visitors as long as they don't cause any trouble.",
   "base": {
-  "name": "Herbert Whittaker",
+  "name": "Herbert Winaker",
   "spriteName":"alienGreen",
   "avatarIcon": "👴",
   "location": {
@@ -10,6 +10,21 @@
   "gridPosition": {
   "x": 2,
   "y": 2
+  }
+  }
+  }
+  },
+  {
+  "backStory": "Farmer",
+  "base": {
+  "name": "Tram Dustworth",
+  "spriteName":"alienBlue",
+  "avatarIcon": "😔",
+  "location": {
+  "islandName": "Fobl",
+  "gridPosition": {
+  "x": 3,
+  "y": 3
   }
   }
   }
