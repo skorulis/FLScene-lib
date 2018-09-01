@@ -37,8 +37,8 @@ public class SceneInputHandler {
         lookAt.isGimbalLockEnabled = true
         let distance = SCNDistanceConstraint(target: target)
         let acceleration = SCNAccelerationConstraint()
-        distance.minimumDistance = 12
-        distance.maximumDistance = 18
+        distance.minimumDistance = 10
+        distance.maximumDistance = 14
         cameraNode.constraints = [lookAt,distance,acceleration]
     }
     

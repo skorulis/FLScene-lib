@@ -9,6 +9,14 @@ import GameplayKit
 
 final public class CharacterModel: Codable {
 
+    enum CodingKeys: String, CodingKey {
+        case name
+        case avatarIcon
+        case spriteName
+        case location
+        case ether
+    }
+    
     public var name:String
     public var avatarIcon = "👤"
     public var spriteName = "alienPink"
@@ -27,6 +35,19 @@ final public class CharacterModel: Codable {
         inventory = InventoryModel()
         skills = SkillListModel()
         location = LocationModel(gridPosition: vector_int2(0,0))
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        spriteName = try container.decode(String.self, forKey: .spriteName)
+        location = try container.decode(LocationModel.self, forKey: .location)
+        avatarIcon = try container.decode(String.self, forKey: .avatarIcon)
+        ether = try container.decodeIfPresent(Int.self, forKey: .ether) ?? 100
+        satiation = MaxValueField(maxValue: 100)
+        time = MaxValueField(maxValue: 100)
+        inventory = InventoryModel()
+        skills = SkillListModel()
     }
     
     public func hasResource(name:String,quantity:Int) -> Bool {

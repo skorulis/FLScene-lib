@@ -30,6 +30,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     var islands:[MapIslandNode] = []
     public let bridges:BridgeContainerNode
     var skybox:SkyboxManager!
+    var npcs:[GridEntity] = []
     
     public override init() {
         self.game = GameController.instance
@@ -74,12 +75,20 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
             addRock()
         }
         
-        self.playerEntity = makePlayer()
+        let character:CharacterModel = CharacterModel()
+        character.location = LocationModel(gridPosition: vector2(3, 3), islandName: "Obl")
+        
+        self.playerEntity = makeEntity(character: character)
+        
+        let npcModels:[NonPlayerCharacterModel] = ReferenceController.readReferenceObjects(filename: "npcs")
+        self.npcs = npcModels.map({ (char) -> GridEntity in
+            return makeEntity(character: char.base)
+        })
     }
     
-    public func makePlayer() -> GridEntity {
-        let playerEntity = GridEntity(location: LocationModel(gridPosition: vector2(3, 3), islandName: "Obl"))
-        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
+    public func makeEntity(character:CharacterModel) -> GridEntity {
+        let playerEntity = GridEntity(location: character.location)
+        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: character.spriteName)
         
         return playerEntity
     }
