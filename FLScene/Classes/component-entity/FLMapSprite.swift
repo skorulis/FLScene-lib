@@ -35,7 +35,7 @@ public class FLMapSprite: SCNNode {
         
         //updateHealthBar(pct:1)
         //updateManaBar(pct: 1)
-        updateInfoIcon(text: "$")
+        //updateInfoIcon(text: "$")
     }
     
     func updateHealthBar(pct:CGFloat) {
