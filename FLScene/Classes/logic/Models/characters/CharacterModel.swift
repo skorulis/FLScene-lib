@@ -15,6 +15,7 @@ final public class CharacterModel: Codable {
         case spriteName
         case location
         case ether
+        case spells
     }
     
     public var name:String
@@ -25,15 +26,12 @@ final public class CharacterModel: Codable {
     public var ether:Int
     public let inventory:InventoryModel
     public var skills:SkillListModel
-    var location:LocationModel
+    var location:LocationModel?
     
     //Battle 
-    var spells:[SpellModel] = []
+    var spells:[SpellModel]
     var health:MaxValueField = MaxValueField(maxValue: 20)
     var mana:MaxValueField = MaxValueField(maxValue: 20)
-    var playerNumber:Int = 0
-    var killCount:Int = 0
-    var deathCount:Int = 0
     
     public init(name:String="") {
         self.name = name
@@ -44,17 +42,20 @@ final public class CharacterModel: Codable {
         skills = SkillListModel()
         location = LocationModel(gridPosition: vector_int2(0,0))
         let spell = ReferenceController.instance.namedSpells["minor bolt"]!
-        spells.append(spell)
+        self.spells = [spell]
         updateStats()
     }
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
         spriteName = try container.decode(String.self, forKey: .spriteName)
-        location = try container.decode(LocationModel.self, forKey: .location)
-        avatarIcon = try container.decode(String.self, forKey: .avatarIcon)
+        
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unnamed"
+        location = try container.decodeIfPresent(LocationModel.self, forKey: .location)
+        avatarIcon = try container.decodeIfPresent(String.self, forKey: .avatarIcon) ?? "👤"
         ether = try container.decodeIfPresent(Int.self, forKey: .ether) ?? 100
+        spells = try container.decode([SpellModel].self, forKey: .spells)
+        
         satiation = MaxValueField(maxValue: 100)
         time = MaxValueField(maxValue: 100)
         inventory = InventoryModel()

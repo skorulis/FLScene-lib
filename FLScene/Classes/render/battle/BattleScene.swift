@@ -97,7 +97,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let entity = GridEntity(location: location)
         _ = characterManager.makeSprite(entity: entity, imageNamed: character.spriteName)
         character.updateStats() //Make sure stats are up to date
-        entity.addComponent(CharacterComponent(character: character))
+        entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         
         return entity
     }

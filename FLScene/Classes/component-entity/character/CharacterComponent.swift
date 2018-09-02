@@ -10,9 +10,13 @@ import GameplayKit
 class CharacterComponent: GKComponent {
 
     let character:CharacterModel
+    let playerNumber:Int
+    var killCount:Int = 0
+    var deathCount:Int = 0
     
-    init(character:CharacterModel) {
+    init(character:CharacterModel,playerNumber:Int) {
         self.character = character
+        self.playerNumber = playerNumber
         super.init()
     }
     

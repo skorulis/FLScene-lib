@@ -18,3 +18,9 @@ public class ArenaBattleModel: Codable {
     }
     
 }
+
+public class FullArenaModel: Codable {
+    
+    public let battles:[ArenaBattleModel]
+    
+}

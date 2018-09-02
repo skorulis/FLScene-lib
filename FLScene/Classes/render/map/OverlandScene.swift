@@ -90,7 +90,7 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     }
     
     public func makeEntity(character:CharacterModel) -> GridEntity {
-        let playerEntity = GridEntity(location: character.location)
+        let playerEntity = GridEntity(location: character.location!)
         _ = characterManager.makeSprite(entity: playerEntity, imageNamed: character.spriteName)
         
         return playerEntity

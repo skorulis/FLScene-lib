@@ -43,7 +43,7 @@ public class ReferenceController {
     public let dungeonTiles:[DungeonTileType:DungeonTileReferenceModel]
     public let terrain:[TerrainType:TerrainReferenceModel]
     public let monsters:[String:MonsterReferenceModel]
-    let namedSpells:[String:SpellModel]
+    var namedSpells:[String:SpellModel] = [:]
     
     init() {
         let itemArray = ReferenceController.makeItems()
@@ -53,10 +53,13 @@ public class ReferenceController {
         actions = ReferenceController.makeActions().groupSingle { $0.type }
         dungeonTiles = ReferenceController.makeDungeonTiles().groupSingle { $0.type }
         
-        namedSpells = ReferenceController.readReferenceObjects(filename: "spells").groupSingle { $0.name }
-        
         terrain = ReferenceController.readReferenceObjects(filename: "terrain").groupSingle { $0.type}
         monsters = ReferenceController.readReferenceObjects(filename: "monsters").groupSingle { $0.name}
+    }
+    
+    //Needs to be separate to help with circular references
+    public func readNamedSpells() {
+        namedSpells = ReferenceController.readReferenceObjects(filename: "spells").groupSingle { $0.name }
     }
     
     static func makeStory() -> [StoryReferenceModel] {
@@ -84,8 +87,11 @@ public class ReferenceController {
         endurance.applyBlock = { (character,level) in
             character.health.maxValue += (level * 5)
         }
+        let magic = SkillReferenceModel(type: .magic) { (character, level) in
+            character.mana.maxValue += (level * 5)
+        }
         
-        return [foraging, lumberjacking, mining, endurance]
+        return [foraging, lumberjacking, mining, endurance, magic]
     }
     
     static func makeActions() -> [ActionReferenceModel] {

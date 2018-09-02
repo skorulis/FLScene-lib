@@ -1,0 +1,28 @@
+{
+    "battles": [
+                {
+                "mapName": "battle1",
+                "playerStartPosition": {
+                "x": 0,
+                "y": 2
+                },
+                "enemies": [
+                            {
+                            "position": {
+                            "x": 4,
+                            "y": 2
+                            },
+                            "base": {
+                            "spriteName": "alienBlue",
+                            "spells": [
+                                       {
+                                       "name": "minor bolt"
+                                       }
+                                       ]
+                            },
+                            "ai": {}
+                            }
+                            ]
+                }
+                ]
+}

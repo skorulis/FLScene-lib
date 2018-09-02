@@ -58,13 +58,22 @@ class SpellModel: Codable {
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.type = try container.decodeIfPresent(SpellType.self, forKey: .type) ?? .bolt
         self.name = try container.decode(String.self, forKey:.name)
-        self.effects = try container.decodeIfPresent([SpellEffectType].self, forKey: .effects) ?? [.damage]
-        self.speedPoints = try container.decodeIfPresent(Int.self, forKey: .speedPoints) ?? 1
-        self.powerPoints = try container.decodeIfPresent(Int.self, forKey: .powerPoints) ?? 1
-        self.rangePoints = try container.decodeIfPresent(Int.self, forKey: .rangePoints) ?? 1
-        self.homingPoints = try container.decodeIfPresent(Int.self, forKey: .homingPoints) ?? 0
+        if let existing = ReferenceController.instance.namedSpells[self.name] {
+            self.type = existing.type
+            self.effects = existing.effects
+            self.speedPoints = existing.speedPoints
+            self.powerPoints = existing.powerPoints
+            self.rangePoints = existing.rangePoints
+            self.homingPoints = existing.homingPoints
+        } else {
+            self.type = try container.decodeIfPresent(SpellType.self, forKey: .type) ?? .bolt
+            self.effects = try container.decodeIfPresent([SpellEffectType].self, forKey: .effects) ?? [.damage]
+            self.speedPoints = try container.decodeIfPresent(Int.self, forKey: .speedPoints) ?? 1
+            self.powerPoints = try container.decodeIfPresent(Int.self, forKey: .powerPoints) ?? 1
+            self.rangePoints = try container.decodeIfPresent(Int.self, forKey: .rangePoints) ?? 1
+            self.homingPoints = try container.decodeIfPresent(Int.self, forKey: .homingPoints) ?? 0
+        }
     }
     
     func cost() -> Int {

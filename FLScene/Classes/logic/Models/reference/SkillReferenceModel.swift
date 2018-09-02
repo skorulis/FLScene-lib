@@ -13,6 +13,7 @@ public enum SkillType: String, Codable {
     case mining
     case lumberjacking
     case endurance
+    case magic
 }
 
 public struct SkillReferenceModel {

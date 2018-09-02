@@ -92,6 +92,7 @@ public class SkillListModel:Codable {
     public class func defaultSkills() -> SkillListModel {
         let skills = SkillListModel()
         skills.set(type: .endurance, level: 1)
+        skills.set(type: .magic, level: 1)
         return skills
     }
     
