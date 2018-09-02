@@ -8,7 +8,11 @@
 public final class MaxValueField: Codable {
 
     public var value:Int
-    public var maxValue:Int
+    public var maxValue:Int {
+        didSet {
+            value = min(maxValue,value)
+        }
+    }
     private var remainder:Float = 0 //Left over from any calculations
     
     public init(maxValue:Int) {

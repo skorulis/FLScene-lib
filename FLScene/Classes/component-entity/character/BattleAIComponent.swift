@@ -46,9 +46,10 @@ class BattleAIComponent: GKComponent {
                 return
             }
         }
+        guard let target = entity!.component(ofType: TargetComponent.self) else { return } //No target so stop
         
         let ownNode:SCNNode = entity!.component(ofType: GKSCNNodeComponent.self)!.node
-        let target = entity!.component(ofType: TargetComponent.self)!
+        
         guard let targetEntity = target.target else { return }
         let targetNode = target.node()
         let distance = (ownNode.position - targetNode.position).magnitude()

@@ -9,9 +9,9 @@ import GameplayKit
 
 class CharacterComponent: GKComponent {
 
-    let character:BattleCharacter
+    let character:CharacterModel
     
-    init(character:BattleCharacter) {
+    init(character:CharacterModel) {
         self.character = character
         super.init()
     }

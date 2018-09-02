@@ -18,16 +18,22 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     
     let spellManager:SpellManager
     var characterManager:CharacterManager!
+    var skybox:SkyboxManager!
     
     var spells:[SpellModel] = []
     public let bridges: BridgeContainerNode
+    var battleModel:ArenaBattleModel
+    let playerCharacter:CharacterModel
     
-    public init(island:DungeonModel) {
+    public init(island:DungeonModel,battleModel:ArenaBattleModel,playerCharacter:CharacterModel) {
         self.island = island;
+        self.battleModel = battleModel
+        self.playerCharacter = playerCharacter
         bridges = BridgeContainerNode()
         self.islandNode = MapIslandNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager(islandNode: islandNode)
         super.init()
+        self.skybox = SkyboxManager(scene: self)
         self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
         self.buildScene()
     }
@@ -41,10 +47,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         ambientLightNode.light = SceneElements.ambientLight()
         rootNode.addChildNode(ambientLightNode)
         
-        let skyBox = SkyboxManager.defaultSkybox()
-        
-        self.background.contents = skyBox.imageFromTexture()?.takeUnretainedValue()
-        self.lightingEnvironment.contents = self.background.contents
+        skybox.updateSkybox()
         
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
@@ -68,40 +71,35 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
         
-        playerEntity = makePlayerEntity(spells: spells,playerNumber: 1,position: vector2(0, 0))
-        _ = characterManager.makeSprite(entity: playerEntity, imageNamed: "alienPink")
+        playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
         
-        enemy1Entity = makePlayerEntity(spells: spells,playerNumber: 2,position: vector2(2, 1))
-        enemy1Entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        _ = characterManager.makeSprite(entity: enemy1Entity, imageNamed: "alienBlue")
-
-        playerEntity.setTarget(entity: enemy1Entity,show: true)
-        enemy1Entity.setTarget(entity: playerEntity)
+        var enemyEntities:[GridEntity] = []
         
-        makeSecondAI()
+        for enemy in battleModel.enemies {
+            let entity = makeEntity(character: enemy.base, playerNumber: 2,position:enemy.position)
+            entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
+            entity.setTarget(entity: playerEntity)
+            enemyEntities.append(entity)
+            self.characterManager.add(entity: entity)
+        }
         
+        if let enemy = enemyEntities.first {
+            playerEntity.setTarget(entity: enemy,show: true)
+        }
+        
+        //Give the player an AI for now so I don't have to control it
+        playerEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
         self.characterManager.add(entity: playerEntity)
-        self.characterManager.add(entity: enemy1Entity)
-        
     }
     
-    private func makePlayerEntity(spells:[SpellModel],playerNumber:Int,position:vector_int2) -> GridEntity {
-        let playerEntity = GridEntity(location: LocationModel(gridPosition: position, islandName: "battle"))
-        let playerCharacter = BattleCharacter(spells: spells,playerNumber:playerNumber)
-        playerEntity.addComponent(CharacterComponent(character: playerCharacter))
+    private func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
+        let location = LocationModel(gridPosition: position, islandName: "battle")
+        let entity = GridEntity(location: location)
+        _ = characterManager.makeSprite(entity: entity, imageNamed: character.spriteName)
+        character.updateStats() //Make sure stats are up to date
+        entity.addComponent(CharacterComponent(character: character))
         
-        return playerEntity
-    }
-    
-    func makeSecondAI() {
-        let enemy2 = makePlayerEntity(spells: spells, playerNumber: 1,position: vector2(0, 1))
-        enemy2.addComponent(BattleAIComponent(island:island,spells:spellManager))
-        _ = characterManager.makeSprite(entity: enemy2, imageNamed: "alienGreen")
-        
-        enemy1Entity.setTarget(entity: enemy2)
-        enemy2.setTarget(entity: enemy1Entity)
-        
-        self.characterManager.add(entity: enemy2)
+        return entity
     }
     
     func playerCastingComponent() -> SpellCastingComponent {

@@ -10,7 +10,6 @@ import Foundation
 final class NonPlayerCharacterModel: Codable {
 
     let base:CharacterModel
-    let id:String = NSUUID().uuidString
     var backStory:String = ""
     var quests:[QuestModel] = []
     

@@ -12,10 +12,17 @@ public enum SkillType: String, Codable {
     case foraging
     case mining
     case lumberjacking
+    case endurance
 }
 
-public struct SkillReferenceModel: Codable {
+public struct SkillReferenceModel {
 
-    public let name:SkillType
+    public let name:SkillType //Should be called type
+    var applyBlock: ((CharacterModel,Int) -> Void)? //The block that should be called to adjust player stats
+    
+    init(type:SkillType, applyBlock:((CharacterModel,Int) -> Void)? = nil) {
+        self.name = type
+        self.applyBlock = applyBlock
+    }
     
 }

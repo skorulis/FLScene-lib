@@ -43,6 +43,7 @@ public class ReferenceController {
     public let dungeonTiles:[DungeonTileType:DungeonTileReferenceModel]
     public let terrain:[TerrainType:TerrainReferenceModel]
     public let monsters:[String:MonsterReferenceModel]
+    let namedSpells:[String:SpellModel]
     
     init() {
         let itemArray = ReferenceController.makeItems()
@@ -51,6 +52,8 @@ public class ReferenceController {
         skills = ReferenceController.makeSkills().groupSingle { $0.name }
         actions = ReferenceController.makeActions().groupSingle { $0.type }
         dungeonTiles = ReferenceController.makeDungeonTiles().groupSingle { $0.type }
+        
+        namedSpells = ReferenceController.readReferenceObjects(filename: "spells").groupSingle { $0.name }
         
         terrain = ReferenceController.readReferenceObjects(filename: "terrain").groupSingle { $0.type}
         monsters = ReferenceController.readReferenceObjects(filename: "monsters").groupSingle { $0.name}
@@ -74,7 +77,15 @@ public class ReferenceController {
     }
     
     static func makeSkills() -> [SkillReferenceModel] {
-        return [SkillReferenceModel(name: .foraging),SkillReferenceModel(name: .lumberjacking),SkillReferenceModel(name: .mining)]
+        let foraging = SkillReferenceModel(type: .foraging)
+        let lumberjacking = SkillReferenceModel(type: .lumberjacking)
+        let mining = SkillReferenceModel(type: .mining)
+        var endurance = SkillReferenceModel(type: .endurance)
+        endurance.applyBlock = { (character,level) in
+            character.health.maxValue += (level * 5)
+        }
+        
+        return [foraging, lumberjacking, mining, endurance]
     }
     
     static func makeActions() -> [ActionReferenceModel] {

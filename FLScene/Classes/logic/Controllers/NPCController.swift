@@ -44,7 +44,7 @@ public class NPCController {
     private func randomSkill() -> SkillModel {
         let skillRef = ref.randomSkill()
         let level = Int(arc4random_uniform(10))
-        return SkillModel(type: skillRef,level:level)
+        return SkillModel(ref: skillRef,level:level)
     }
     
     public func dayFinished() {

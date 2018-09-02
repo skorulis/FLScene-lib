@@ -24,10 +24,18 @@ final public class CharacterModel: Codable {
     public let time:MaxValueField
     public var ether:Int
     public let inventory:InventoryModel
-    public let skills:SkillListModel
+    public var skills:SkillListModel
     var location:LocationModel
     
-    init(name:String="") {
+    //Battle 
+    var spells:[SpellModel] = []
+    var health:MaxValueField = MaxValueField(maxValue: 20)
+    var mana:MaxValueField = MaxValueField(maxValue: 20)
+    var playerNumber:Int = 0
+    var killCount:Int = 0
+    var deathCount:Int = 0
+    
+    public init(name:String="") {
         self.name = name
         satiation = MaxValueField(maxValue: 100)
         time = MaxValueField(maxValue: 100)
@@ -35,6 +43,9 @@ final public class CharacterModel: Codable {
         inventory = InventoryModel()
         skills = SkillListModel()
         location = LocationModel(gridPosition: vector_int2(0,0))
+        let spell = ReferenceController.instance.namedSpells["minor bolt"]!
+        spells.append(spell)
+        updateStats()
     }
     
     public required init(from decoder: Decoder) throws {
@@ -48,6 +59,7 @@ final public class CharacterModel: Codable {
         time = MaxValueField(maxValue: 100)
         inventory = InventoryModel()
         skills = SkillListModel()
+        updateStats()
     }
     
     public func hasResource(name:String,quantity:Int) -> Bool {
@@ -87,6 +99,7 @@ final public class CharacterModel: Codable {
     
     public func addSkill(skill:SkillModel) {
         self.skills.add(skill: skill)
+        updateStats()
     }
     
     public func addXP(skill:String,quantity:Int) {
@@ -95,6 +108,19 @@ final public class CharacterModel: Codable {
     
     public func hasSkill(skill:SkillType) -> Bool {
         return self.skills.skillLevel(type: skill) > 0
+    }
+    
+    func updateStats() {
+        self.health.maxValue = 10 //Base 10 health
+        self.mana.maxValue = 10 //Base 10 mana
+        for skill in self.skills.skills {
+            if let apply = skill.ref.applyBlock {
+                apply(self,skill.level)
+            }
+        }
+        
+        self.health.setToMax()
+        self.mana.setToMax()
     }
     
 }

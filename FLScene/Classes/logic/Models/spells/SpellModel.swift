@@ -25,9 +25,21 @@ enum SpellEffectType: String, Codable {
 
 class SpellModel: Codable {
 
+    enum CodingKeys: String, CodingKey {
+        case name
+        case type
+        case effects
+        case speedPoints
+        case powerPoints
+        case rangePoints
+        case homingPoints
+        
+    }
+    
+    var name:String
     let type:SpellType
     let effects:[SpellEffectType]
-    let spellId:String
+    let spellId:String = UUID().uuidString
     
     //Points allocated to various aspects of the spell
     var speedPoints:Int = 1
@@ -41,7 +53,18 @@ class SpellModel: Codable {
     init(type:SpellType,effect:SpellEffectType) {
         self.type = type
         self.effects = [effect]
-        self.spellId = UUID().uuidString
+        self.name = "none"
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.type = try container.decodeIfPresent(SpellType.self, forKey: .type) ?? .bolt
+        self.name = try container.decode(String.self, forKey:.name)
+        self.effects = try container.decodeIfPresent([SpellEffectType].self, forKey: .effects) ?? [.damage]
+        self.speedPoints = try container.decodeIfPresent(Int.self, forKey: .speedPoints) ?? 1
+        self.powerPoints = try container.decodeIfPresent(Int.self, forKey: .powerPoints) ?? 1
+        self.rangePoints = try container.decodeIfPresent(Int.self, forKey: .rangePoints) ?? 1
+        self.homingPoints = try container.decodeIfPresent(Int.self, forKey: .homingPoints) ?? 0
     }
     
     func cost() -> Int {

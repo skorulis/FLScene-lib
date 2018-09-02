@@ -1,0 +1,9 @@
+ [
+  {
+  "name": "minor bolt",
+  "type": "bolt",
+  "effects": [
+              "damage"
+              ]
+  }
+  ]
