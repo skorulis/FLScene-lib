@@ -139,6 +139,12 @@ class SpellManager: NSObject {
         }
     }
     
+    func reset() {
+        for e in self.livingSpells {
+            self.removeSpell(spell: e)
+        }
+    }
+    
     func handleContact(contact:SCNPhysicsContact) {
         let spellNode = contact.spellNode()!
         let spellEntity = spellNode.entity as! SpellEntity

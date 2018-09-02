@@ -68,20 +68,10 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         let longRangeSpell = SpellModel(type:.bolt,effect:.damage)
         let healSpell = SpellModel(type: .channel,effect:.heal)
         let totemSpell = SpellModel(type: .totem,effect:.mana)
-        //let teleportSpell = SpellModel(type:.teleport)
         longRangeSpell.rangePoints = 4
         
         spells = [defaultSpell,longRangeSpell,healSpell,totemSpell]
-        
-        playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
-        
-        /*if let enemy = enemyEntities.first {
-            playerEntity.setTarget(entity: enemy,show: true)
-        }*/
-        
-        //Give the player an AI for now so I don't have to control it
-        playerEntity.addComponent(BattleAIComponent(island:island,spells:spellManager,characterManager:characterManager))
-        self.characterManager.add(entity: playerEntity)
+        self.resetBattle()
     }
     
     func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
@@ -92,6 +82,21 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         
         return entity
+    }
+    
+    //Puts the player back to the start and resets everything
+    func resetBattle() {
+        self.battleManager.reset()
+        self.characterManager.reset()
+        self.spellManager.reset()
+        
+        playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
+        
+        //Give the player an AI for now so I don't have to control it
+        let ai = BattleAIComponent(island:island,spells:spellManager,characterManager:characterManager)
+        ai.isPlayerAI = true
+        playerEntity.addComponent(ai)
+        self.characterManager.add(entity: playerEntity)
     }
     
     func playerCastingComponent() -> SpellCastingComponent {

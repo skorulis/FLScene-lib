@@ -29,6 +29,8 @@ class CharacterManager: NSObject {
         if let spellManager = spellManager {
             entity.addComponent(SpellCastingComponent(spellManager: spellManager))
         }
+        entity.addComponent(TargetComponent(target: nil)) //Add empty target component
+        
         self.entities.append(entity)
         
         characterComponentSystem.addComponent(foundIn: entity)
@@ -43,20 +45,33 @@ class CharacterManager: NSObject {
         targetSystem.update(deltaTime: seconds)
         spellSystem.update(deltaTime: seconds)
         
-        self.entities.forEach { (entity) in
+        let dead = self.entities.filter { (entity) -> Bool in
             let battleComponent = entity.component(ofType: CharacterComponent.self)!
-            if battleComponent.isDead() {
-                battleComponent.reset()
-                battleComponent.deathCount += 1
-                print("player \(battleComponent.playerNumber) has died \(battleComponent.deathCount) times")
-                
-                let sprite = entity.component(ofType: MovementComponent.self)
-                let island = scene!.island(named: entity.islandName!)
-                let spawn = island.randomEmptySquare()
-                sprite?.placeAt(position: spawn.gridPosition, inDungeon: island)
-                //TODO: Add death and rebirth effects. Maybe a slight delay
-            }
+            return battleComponent.isDead()
         }
+        self.entities = self.entities.filter({ (entity) -> Bool in
+            let battleComponent = entity.component(ofType: CharacterComponent.self)!
+            return !battleComponent.isDead()
+        })
+        
+        dead.forEach { (entity) in
+            let node = entity.component(ofType: GKSCNNodeComponent.self)?.node
+            node?.removeFromParentNode()
+            let movement = entity.component(ofType: MovementComponent.self)
+            movement?.removeFromOldNode()
+        }
+    }
+    
+    func reset() {
+        self.entities.forEach(killEntity)
+        self.entities = []
+    }
+    
+    private func killEntity(entity:GridEntity) {
+        let node = entity.component(ofType: GKSCNNodeComponent.self)?.node
+        node?.removeFromParentNode()
+        let movement = entity.component(ofType: MovementComponent.self)
+        movement?.removeFromOldNode()
     }
     
     func makeSprite(entity:GridEntity,imageNamed:String) -> MovementComponent {
@@ -81,6 +96,13 @@ class CharacterManager: NSObject {
         return self.entities.filter { (entity) -> Bool in
             let component = entity.component(ofType: CharacterComponent.self)!
             return component.playerNumber != playerNumber
+        }
+    }
+    
+    func playerEntities(playerNumber:Int) -> [GridEntity] {
+        return self.entities.filter { (entity) -> Bool in
+            let component = entity.component(ofType: CharacterComponent.self)!
+            return component.playerNumber == playerNumber
         }
     }
     

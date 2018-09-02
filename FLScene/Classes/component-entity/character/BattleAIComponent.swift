@@ -13,6 +13,7 @@ class BattleAIComponent: GKComponent {
     let island:DungeonModel
     let spells:SpellManager
     weak var characterManager:CharacterManager?
+    var isPlayerAI:Bool = false
     
     func gridEntity() -> GridEntity {
         return self.entity as! GridEntity
@@ -52,10 +53,14 @@ class BattleAIComponent: GKComponent {
             findTarget()
             return
         }
+        guard let targetEntity = target.target else {
+            findTarget()
+            return
+        }
         
         let ownNode:SCNNode = entity!.component(ofType: GKSCNNodeComponent.self)!.node
         
-        guard let targetEntity = target.target else { return }
+        
         let targetNode = target.node()
         let distance = (ownNode.position - targetNode.position).magnitude()
         
@@ -71,7 +76,7 @@ class BattleAIComponent: GKComponent {
     private func findTarget() {
         guard let component = self.entity?.component(ofType: CharacterComponent.self) else { return }
         guard let newTarget = characterManager?.otherEntities(playerNumber: component.playerNumber).first else { return }
-        self.gridEntity().setTarget(entity: newTarget)
+        self.gridEntity().setTarget(entity: newTarget, show: self.isPlayerAI)
     }
     
     //Calculates how dangerous the AI considers its current position

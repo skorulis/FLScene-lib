@@ -2,8 +2,8 @@
     "battles": [
                 {
                 "mapName": "battle1",
-                "waves":1,
-                "waveDelay":5,
+                "waves":2,
+                "waveDelay":1,
                 "playerStartPosition": {
                 "x": 0,
                 "y": 2
@@ -14,9 +14,25 @@
                             "x": 4,
                             "y": 2
                             },
+                            "wave":1,
                             "base": {
                             "spriteName": "alienBlue",
-                            "wave":1,
+                            "spells": [
+                                       {
+                                       "name": "minor bolt"
+                                       }
+                                       ]
+                            },
+                            "ai": {}
+                            },
+                            {
+                            "position": {
+                            "x": 4,
+                            "y": 2
+                            },
+                            "wave":2,
+                            "base": {
+                            "spriteName": "alienBlue",
                             "spells": [
                                        {
                                        "name": "minor bolt"

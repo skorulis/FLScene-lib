@@ -10,6 +10,7 @@ import Foundation
 enum BattleManagerState {
     case battling
     case preparation
+    case finished
 }
 
 class BattleManager {
@@ -17,29 +18,51 @@ class BattleManager {
     weak var scene:BattleScene?
     let model:ArenaBattleModel
     var state:BattleManagerState = .preparation
-    var remainingDelay:TimeInterval
-    var currentWave:Int
+    var remainingDelay:TimeInterval = 0
+    var currentWave:Int = 0
     
     init(scene:BattleScene,model:ArenaBattleModel) {
         self.scene = scene
         self.model = model
-        remainingDelay = TimeInterval(model.waveDelay)
-        currentWave = 0
+        self.reset()
     }
     
     func update(deltaTime seconds: TimeInterval) {
         if state == .preparation {
             remainingDelay -= seconds
-            if (remainingDelay <= 0) {
+            guard remainingDelay <= 0 else { return }
+            if currentWave < model.waves {
                 nextWave()
+            } else {
+                state = .finished
             }
-        } else if state == .battling {
             
+        } else if state == .battling {
+            let playerCount = scene!.characterManager.playerEntities(playerNumber: 1).count
+            let enemyCount = scene!.characterManager.playerEntities(playerNumber: 2).count
+            if playerCount == 0 {
+                print("player dead ")
+                state = .finished
+                //Reset battle and get the player to start again
+            } else if enemyCount == 0 {
+                print("all enemies dead ")
+                state = .preparation //Next wave
+            }
+        } else if state == .finished {
+            scene?.resetBattle()
         }
     }
     
+    func reset() {
+        state = .preparation
+        remainingDelay = TimeInterval(model.waveDelay)
+        currentWave = 0
+    }
+    
     func nextWave() {
+        state = .battling
         currentWave = currentWave + 1
+        print("start wave \(currentWave)")
         remainingDelay = TimeInterval(model.waveDelay)
         let enemies = model.enemies(for: currentWave)
         guard let scene = scene else { return }

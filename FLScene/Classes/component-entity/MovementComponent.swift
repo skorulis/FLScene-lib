@@ -100,7 +100,7 @@ public class MovementComponent: GKComponent {
         self.animateToPoint(point: position)
     }
     
-    private func removeFromOldNode() {
+    func removeFromOldNode() {
         if let oldIslandName = gridEntity().islandName {
             let island = mapScene?.island(named: oldIslandName)
             island?.removeBeing(entity: self.gridEntity()) //Remove from old node

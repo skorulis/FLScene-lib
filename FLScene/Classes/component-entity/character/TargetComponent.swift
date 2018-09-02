@@ -23,7 +23,7 @@ class TargetComponent: GKComponent {
     
     private var targetRing:SCNNode?
     
-    init(target:GridEntity) {
+    init(target:GridEntity?) {
         self.target = target
         super.init()
         updateTargetRing()
@@ -55,7 +55,13 @@ class TargetComponent: GKComponent {
     override func update(deltaTime seconds: TimeInterval) {
         if self.target != nil {
             self.targetRing?.position = self.node().position - SCNVector3(0,0.8,0)
+        } else {
+            self.targetRing?.removeFromParentNode()
         }
+    }
+    
+    deinit {
+        self.targetRing?.removeFromParentNode()
     }
     
 }
