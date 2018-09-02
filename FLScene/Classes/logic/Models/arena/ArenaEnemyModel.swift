@@ -12,6 +12,7 @@ public class ArenaEnemyModel: Codable {
     public var position:vector_int2 = vector_int2(0,0)
     public var base:CharacterModel = CharacterModel(name: "empty")
     public var ai:BattleAIModel = BattleAIModel()
+    let wave:Int = 1 //Wave number that this enemy will show up on
     
     public init() {
         

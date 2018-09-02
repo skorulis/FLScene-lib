@@ -25,6 +25,7 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
         
         scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
         scene.characterManager.update(deltaTime: timeSincePreviousUpdate)
+        scene.battleManager.update(deltaTime: timeSincePreviousUpdate)
     }
     
     public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {

@@ -18,6 +18,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     
     let spellManager:SpellManager
     var characterManager:CharacterManager!
+    var battleManager:BattleManager!
     var skybox:SkyboxManager!
     
     var spells:[SpellModel] = []
@@ -35,6 +36,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         super.init()
         self.skybox = SkyboxManager(scene: self)
         self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
+        self.battleManager = BattleManager(scene: self, model: battleModel)
         self.buildScene()
     }
     
@@ -73,26 +75,16 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         
         playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
         
-        var enemyEntities:[GridEntity] = []
-        
-        for enemy in battleModel.enemies {
-            let entity = makeEntity(character: enemy.base, playerNumber: 2,position:enemy.position)
-            entity.addComponent(BattleAIComponent(island:island,spells:spellManager))
-            entity.setTarget(entity: playerEntity)
-            enemyEntities.append(entity)
-            self.characterManager.add(entity: entity)
-        }
-        
-        if let enemy = enemyEntities.first {
+        /*if let enemy = enemyEntities.first {
             playerEntity.setTarget(entity: enemy,show: true)
-        }
+        }*/
         
         //Give the player an AI for now so I don't have to control it
-        playerEntity.addComponent(BattleAIComponent(island:island,spells:spellManager))
+        playerEntity.addComponent(BattleAIComponent(island:island,spells:spellManager,characterManager:characterManager))
         self.characterManager.add(entity: playerEntity)
     }
     
-    private func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
+    func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
         let location = LocationModel(gridPosition: position, islandName: "battle")
         let entity = GridEntity(location: location)
         _ = characterManager.makeSprite(entity: entity, imageNamed: character.spriteName)

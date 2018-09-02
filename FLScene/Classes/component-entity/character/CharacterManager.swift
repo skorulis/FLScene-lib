@@ -77,4 +77,11 @@ class CharacterManager: NSObject {
         return spriteComponent
     }
     
+    func otherEntities(playerNumber:Int) -> [GridEntity] {
+        return self.entities.filter { (entity) -> Bool in
+            let component = entity.component(ofType: CharacterComponent.self)!
+            return component.playerNumber != playerNumber
+        }
+    }
+    
 }
