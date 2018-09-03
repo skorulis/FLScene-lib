@@ -54,12 +54,7 @@ class CharacterManager: NSObject {
             return !battleComponent.isDead()
         })
         
-        dead.forEach { (entity) in
-            let node = entity.component(ofType: GKSCNNodeComponent.self)?.node
-            node?.removeFromParentNode()
-            let movement = entity.component(ofType: MovementComponent.self)
-            movement?.removeFromOldNode()
-        }
+        dead.forEach(killEntity)
     }
     
     func reset() {
@@ -72,6 +67,11 @@ class CharacterManager: NSObject {
         node?.removeFromParentNode()
         let movement = entity.component(ofType: MovementComponent.self)
         movement?.removeFromOldNode()
+        
+        characterComponentSystem.removeComponent(foundIn: entity)
+        aiComponentSystem.removeComponent(foundIn: entity)
+        targetSystem.removeComponent(foundIn: entity)
+        spellSystem.removeComponent(foundIn:entity)
     }
     
     func makeSprite(entity:GridEntity,imageNamed:String) -> MovementComponent {

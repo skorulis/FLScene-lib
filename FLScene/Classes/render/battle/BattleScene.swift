@@ -80,6 +80,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         _ = characterManager.makeSprite(entity: entity, imageNamed: character.spriteName)
         character.updateStats() //Make sure stats are up to date
         entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
+        entity.addComponent(CharacterEventComponent())
         
         return entity
     }
@@ -89,6 +90,11 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         self.battleManager.reset()
         self.characterManager.reset()
         self.spellManager.reset()
+        
+        if playerEntity != nil {
+            let events = playerEntity.component(ofType: CharacterEventComponent.self)!
+            events.printResults()
+        }
         
         playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
         

@@ -157,8 +157,14 @@ class SpellManager: NSObject {
     }
     
     func applyDamage(spell:SpellEntity,character:GridEntity) {
-        let component = character.component(ofType: CharacterComponent.self)
-        component?.takeDamage(damage: spell.model.damage())
+        guard let component = character.component(ofType: CharacterComponent.self) else { return }
+        let damage = spell.model.damage()
+        component.takeDamage(damage: damage)
+        let casterEvents = spell.caster.component(ofType: CharacterEventComponent.self)
+        casterEvents?.dealtDamage(amount: damage)
+        if component.isDead() {
+            casterEvents?.killedEnemy()
+        }
     }
     
     func spellsTargeting(entity:GridEntity) -> [SpellEntity] {

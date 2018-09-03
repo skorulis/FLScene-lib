@@ -29,14 +29,20 @@ class CharacterComponent: GKComponent {
         return sprite!
     }
     
+    private func events() -> CharacterEventComponent {
+        return (entity?.component(ofType: CharacterEventComponent.self))!
+    }
+    
     func takeDamage(damage:Int) {
         character.health -= damage
         sprite().updateHealthBar(pct:character.health.fullPercentage)
+        events().receivedDamage(amount: damage)
     }
     
     func takeMana(amount:Int) {
         character.mana -= amount
         sprite().updateManaBar(pct: character.mana.fullPercentage)
+        events().spendMana(amount: amount)
     }
     
     func heal(amount:Float) {

@@ -10,7 +10,8 @@ import Foundation
 enum BattleManagerState {
     case battling
     case preparation
-    case finished
+    case won
+    case lost
 }
 
 class BattleManager {
@@ -34,21 +35,22 @@ class BattleManager {
             if currentWave < model.waves {
                 nextWave()
             } else {
-                state = .finished
+                state = .won
             }
             
         } else if state == .battling {
             let playerCount = scene!.characterManager.playerEntities(playerNumber: 1).count
             let enemyCount = scene!.characterManager.playerEntities(playerNumber: 2).count
             if playerCount == 0 {
-                print("player dead ")
-                state = .finished
-                //Reset battle and get the player to start again
+                state = .lost
             } else if enemyCount == 0 {
-                print("all enemies dead ")
                 state = .preparation //Next wave
             }
-        } else if state == .finished {
+        } else if state == .won {
+            print("won battle")
+            scene?.resetBattle()
+        } else if state == .lost {
+            print("lost battle")
             scene?.resetBattle()
         }
     }

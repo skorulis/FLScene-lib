@@ -1,0 +1,11 @@
+{
+"spriteName": "alienPink",
+"spells": [
+{
+"name": "minor bolt"
+},
+{
+"name": "minor heal"
+}
+]
+}

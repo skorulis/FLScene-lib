@@ -5,5 +5,12 @@
   "effects": [
               "damage"
               ]
+  },
+  {
+  "name": "minor heal",
+  "type": "channel",
+  "effects": [
+              "heal"
+              ]
   }
   ]

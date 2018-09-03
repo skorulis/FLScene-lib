@@ -77,6 +77,10 @@ class SpellCastingComponent: GKComponent {
         channelledSpell = nil
     }
     
+    func isChannelling() -> Bool{
+        return self.channelledSpell != nil
+    }
+    
     func isCasting() -> Bool {
         return self.channelledSpell != nil || self.castingSpell != nil
     }
