@@ -14,6 +14,7 @@ class CharacterEventComponent: GKComponent {
     private var manaSpent:Int = 0
     private var killCount:Int = 0
     private var healingCast:Float = 0
+    private var wastedDamage:Float = 0
     
     func printResults() {
         print("----Character stats----")
@@ -22,10 +23,14 @@ class CharacterEventComponent: GKComponent {
         print("Mana spent: \(manaSpent)")
         print("Kill count: \(killCount)")
         print("healing Cast: \(healingCast)")
+        print("Wasted damage: \(wastedDamage)")
     }
     
     func receivedDamage(amount:Int) {
         self.damageReceived += amount
+    }
+    func wastedDamage(amount:Int) {
+        self.wastedDamage += Float(wastedDamage)
     }
     
     func dealtDamage(amount:Int) {

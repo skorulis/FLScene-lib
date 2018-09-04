@@ -69,9 +69,9 @@ final public class CharacterModel: Codable {
     
     public func resourceQuantity(name:String) -> Int {
         if (name == "satiation") {
-            return satiation.value
+            return satiation.valueInt
         } else if (name == "time") {
-            return time.value
+            return time.valueInt
         } else if (name == "ether") {
             return ether
         }

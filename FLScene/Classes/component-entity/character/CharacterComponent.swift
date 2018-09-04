@@ -34,9 +34,13 @@ class CharacterComponent: GKComponent {
     }
     
     func takeDamage(damage:Int) {
+        let wastedDamage = max(damage - character.health.valueInt,0)
+        
         character.health -= damage
         sprite().updateHealthBar(pct:character.health.fullPercentage)
+        
         events().receivedDamage(amount: damage)
+        events().wastedDamage(amount: wastedDamage)
     }
     
     func takeMana(amount:Int) {
@@ -56,7 +60,7 @@ class CharacterComponent: GKComponent {
     }
     
     func hasMana(cost:Int) -> Bool {
-        return character.mana.value >= cost
+        return character.mana.valueInt >= cost
     }
     
     override func update(deltaTime seconds: TimeInterval) {

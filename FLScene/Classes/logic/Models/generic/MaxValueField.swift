@@ -7,48 +7,43 @@
 
 public final class MaxValueField: Codable {
 
-    public var value:Int
+    public var value:Float
+    public var valueInt:Int {
+        return Int(value)
+    }
     public var maxValue:Int {
         didSet {
-            value = min(maxValue,value)
+            value = min(Float(maxValue),value)
         }
     }
-    private var remainder:Float = 0 //Left over from any calculations
     
     public init(maxValue:Int) {
         self.maxValue = maxValue
-        self.value = maxValue
+        self.value = Float(maxValue)
     }
     
     public func setToMax() {
-        value = maxValue
-        self.remainder = 0
+        value = Float(maxValue)
     }
     
     public func set(value:Int) {
-        self.value = value
+        self.value = Float(value)
     }
     
-    public func add(_ amount:Int) {
-        self.value = max(min(self.value + amount,self.maxValue),0)
+    public func add(_ amount:Float) {
+        self.value = max(min(self.value + amount,Float(self.maxValue)),0)
     }
     
     public static func +=(left:MaxValueField,right:Int) {
-        left.add(right)
+        left.add(Float(right))
     }
     
     public static func +=(left:MaxValueField,right:Float) {
-        let whole = Int(right)
-        left.add(whole)
-        left.remainder += right - Float(whole)
-        if (left.remainder > 1) {
-            left.remainder -= 1
-            left.add(1)
-        }
+        left.add(right)
     }
     
     public static func -=(left:MaxValueField,right:Int) {
-        left.add(-right)
+        left.add(Float(-right))
     }
     
     public var description:String {
