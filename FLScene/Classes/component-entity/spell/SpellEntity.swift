@@ -12,6 +12,7 @@ class SpellEntity: GKEntity {
     let model:SpellModel
     let target:SCNNode?
     let caster:GridEntity
+    var stats:SpellStatsModel! //Pre calculated spell statistics
     
     init(model:SpellModel,caster:GridEntity,node:SCNNode, target:SCNNode? = nil) {
         self.model = model

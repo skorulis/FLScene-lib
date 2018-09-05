@@ -17,7 +17,7 @@ class SpellCastingComponent: GKComponent {
     private var castingParticlSystem:SCNParticleSystem
     
     private var nextCastTime:[String:TimeInterval] = [:]
-    private let calc:SpellCalcuator = SpellCalcuator()
+    let calc:SpellCalcuator = SpellCalcuator()
     private let castProgressNode:SCNNode
     
     init(spellManager:SpellManager) {
@@ -65,7 +65,7 @@ class SpellCastingComponent: GKComponent {
         } else if spell.type == .channel {
             spellEntity = spellManager.makePersonalSpell(spell: spell, caster: gridEntity())
         } else if spell.type == .buff {
-            
+            spellEntity = spellManager.makePersonalSpell(spell: spell, caster: gridEntity())
         }
         if spell.isChannelSpell() {
             channelledSpell = spellEntity
@@ -128,6 +128,7 @@ class SpellCastingComponent: GKComponent {
         node!.addChildNode(castProgressNode)
         castProgressNode.position = node!.basePosition()
         castProgressNode.isHidden = true
+        calc.character = entity?.component(ofType: CharacterComponent.self)?.character
     }
     
     override func willRemoveFromEntity() {

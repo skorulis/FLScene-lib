@@ -47,7 +47,8 @@ class SpellManager: NSObject {
         let casterNode = (caster.component(ofType: GKSCNNodeComponent.self)?.node)!
         
         //Create geometry
-        let sphereSize = CGFloat(spell.damage()) * 0.03
+        let stats = getStats(spell: spell, caster: caster)
+        let sphereSize = CGFloat(stats.damage) * 0.03
         let geometry = SCNSphere(radius: sphereSize)
         geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode(geometry: geometry)
@@ -55,6 +56,7 @@ class SpellManager: NSObject {
         
         //Create spell entity
         let entity = SpellEntity(model: spell,caster:caster, node:node, target:target)
+        entity.stats = stats
         
         let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
         trail.emitterShape = geometry
@@ -65,15 +67,15 @@ class SpellManager: NSObject {
     func makePersonalSpell(spell:SpellModel,caster:GridEntity) -> SpellEntity {
         let casterNode = (caster.component(ofType: GKSCNNodeComponent.self)?.node)!
         
-        let geometry = SCNSphere(radius: 2.25)
-        //geometry.firstMaterial = MaterialProvider.floorMaterial()
         let node = SCNNode()
         node.position = casterNode.position
         
         let entity = SpellEntity(model: spell,caster:caster, node:node)
+        entity.stats = getStats(spell: spell, caster: caster)
         livingSpells.append(entity)
         
         if spell.isChannelSpell() {
+            let geometry = SCNSphere(radius: 2.25)
             let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
             trail.emitterShape = geometry
             trail.particleCharge = -1
@@ -101,11 +103,17 @@ class SpellManager: NSObject {
         let totemComponent = TotemSpellComponent(landNode:landNode.dungeonNode, cornerIndex: cornerIndex)
         let spellNode = TotemSpellComponent.makeNode()
         let entity = SpellEntity(model: spell,caster:caster, node:spellNode)
+        entity.stats = getStats(spell: spell, caster: caster)
         entity.addComponent(SpellEffectComponent(target:nil))
         entity.addComponent(totemComponent)
         
         totemComponent.positionAtCorner(squarePosition: landNode.position)
         return entity
+    }
+    
+    func getStats(spell:SpellModel,caster:GridEntity) -> SpellStatsModel {
+        let calc = caster.component(ofType: SpellCastingComponent.self)?.calc
+        return calc!.stats(spell: spell)
     }
     
     func addSpellToWorld(entity:SpellEntity) {
@@ -160,7 +168,7 @@ class SpellManager: NSObject {
     
     func applyDamage(spell:SpellEntity,character:GridEntity) {
         guard let component = character.component(ofType: CharacterComponent.self) else { return }
-        let damage = spell.model.damage()
+        let damage = spell.stats.damage
         component.takeDamage(damage: damage)
         let casterEvents = spell.caster.component(ofType: CharacterEventComponent.self)
         casterEvents?.dealtDamage(amount: damage)

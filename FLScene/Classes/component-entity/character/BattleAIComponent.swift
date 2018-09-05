@@ -76,6 +76,7 @@ class BattleAIComponent: GKComponent {
             if characterComponent().character.health.atMax() {
                 if let buff = self.buffSpell() {
                     spellCasting.castSpell(spell: buff)
+                    return
                 }
             }
         }
@@ -122,7 +123,7 @@ class BattleAIComponent: GKComponent {
             let spellPos = spell.node().presentation.worldPosition
             return (spellPos - ownPosition).magnitude() < 3
         }
-        let spellDanger = nearbySpells.map { Float($0.model.damage()) }
+        let spellDanger = nearbySpells.map { Float($0.stats.damage) }
         return spellDanger.reduce(0,+)
     }
     

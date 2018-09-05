@@ -104,11 +104,6 @@ class SpellModel: Codable {
         return Float(self.powerPoints) * 3
     }
     
-    func damage() -> Int {
-        guard effects.contains(.damage) else { return 0 }
-        return self.powerPoints * 3
-    }
-    
     func homingRate() -> Float {
         return Float(self.homingPoints) * 5
     }
