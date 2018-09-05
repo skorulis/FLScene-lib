@@ -13,13 +13,19 @@ class SpellCastingComponent: GKComponent {
     private var channelledSpell:SpellEntity? //Spell that is being constantly channelled
     private var castingSpell:SpellEntity? //Spell that is currently being cast
     private var remainingCastTime:TimeInterval = 0
+    private var fullCastTime:TimeInterval = 0
     private var castingParticlSystem:SCNParticleSystem
     
     private var nextCastTime:[String:TimeInterval] = [:]
+    private let calc:SpellCalcuator = SpellCalcuator()
+    private let castProgressNode:SCNNode
     
     init(spellManager:SpellManager) {
         self.spellManager = spellManager
         castingParticlSystem = SCNParticleSystem.flSystem(named: "trail")!
+        let shape = SCNCylinder(radius: 0.8, height: 0.05)
+        shape.firstMaterial = MaterialProvider.healthBarMaterial()
+        castProgressNode = SCNNode(geometry: shape)
         super.init()
     }
     
@@ -33,7 +39,8 @@ class SpellCastingComponent: GKComponent {
     
     func castSpell(spell:SpellModel) {
         guard let component = self.entity?.component(ofType: CharacterComponent.self) else { return }
-        guard component.hasMana(cost: spell.cost()) else { return }
+        let cost = calc.spellCost(spell: spell)
+        guard component.hasMana(cost: cost) else { return }
         
         if gridEntity().isBusy() {
             return //Entity is already doing something
@@ -50,7 +57,7 @@ class SpellCastingComponent: GKComponent {
             guard let target = self.entity?.component(ofType: TargetComponent.self) else { return }
             
             spellEntity = spellManager.makeBoltSpell(spell: spell, caster: gridEntity(), target: target.node())
-            component.takeMana(amount: spell.cost())
+            component.takeMana(amount: cost)
         } else if spell.type == .teleport {
             
         } else if spell.type == .totem {
@@ -63,7 +70,9 @@ class SpellCastingComponent: GKComponent {
             spellManager.addSpellToWorld(entity: spellEntity!)
         } else {
             self.castingSpell = spellEntity
-            self.remainingCastTime = spell.castingTime()
+            self.fullCastTime = calc.castingTime(spell: spell)
+            self.remainingCastTime = fullCastTime
+            self.castProgressNode.isHidden = false
             let node = gridEntity().component(ofType: GKSCNNodeComponent.self)?.node
             node?.addParticleSystem(castingParticlSystem)
         }
@@ -93,13 +102,27 @@ class SpellCastingComponent: GKComponent {
     override func update(deltaTime seconds: TimeInterval) {
         if let castingSpell = castingSpell {
             self.remainingCastTime -= seconds
+            let pctCast = (fullCastTime - self.remainingCastTime) / fullCastTime
+            self.castProgressNode.scale = SCNVector3(pctCast,pctCast,pctCast)
             if remainingCastTime <= 0 {
                 spellManager.addSpellToWorld(entity: castingSpell)
                 self.castingSpell = nil
                 let spriteComponent = gridEntity().component(ofType: GKSCNNodeComponent.self)!
                 spriteComponent.node.removeParticleSystem(castingParticlSystem)
+                castProgressNode.isHidden = true
             }
         }
+    }
+    
+    override func didAddToEntity() {
+        let node = entity?.component(ofType: GKSCNNodeComponent.self)?.node as? FLMapSprite
+        node!.addChildNode(castProgressNode)
+        castProgressNode.position = node!.basePosition()
+        castProgressNode.isHidden = true
+    }
+    
+    override func willRemoveFromEntity() {
+        castProgressNode.removeFromParentNode()
     }
     
 }

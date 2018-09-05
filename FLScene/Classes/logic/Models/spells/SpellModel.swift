@@ -12,8 +12,10 @@ enum SpellType: String, Codable {
     case channel //Constant cast on the player
     case totem //Totem that gets placed in the square
     case teleport
-    /*case buff
-    case beam
+    case buff //A beneficial spell cast at the current player
+    /*case beam
+     case blast
+     case cloud
     case shield*/
 }
 
@@ -76,17 +78,6 @@ class SpellModel: Codable {
         }
     }
     
-    func cost() -> Int {
-        switch (type) {
-        case .bolt:
-            return speedPoints + powerPoints + rangePoints + homingPoints
-        case .teleport:
-            return rangePoints * 3
-        default:
-            return powerPoints //Not yet implemented
-        }
-    }
-    
     func speed() -> Float {
         return Float(speedPoints) * SpellModel.speedMultiplier
     }
@@ -101,16 +92,6 @@ class SpellModel: Codable {
     
     func isChannelSpell() -> Bool {
         return self.type == .channel
-    }
-    
-    func castingTime() -> TimeInterval {
-        if isChannelSpell() {
-            return 0
-        }
-        if self.type == .totem {
-            return 2
-        }
-        return 0.3 * TimeInterval(self.powerPoints)
     }
     
     func healingRate() -> Float {

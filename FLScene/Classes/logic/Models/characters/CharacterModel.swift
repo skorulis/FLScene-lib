@@ -30,6 +30,7 @@ final public class CharacterModel: Codable {
     
     //Battle 
     var spells:[SpellModel]
+    var buffs:[BuffModel]
     var health:MaxValueField = MaxValueField(maxValue: 20)
     var mana:MaxValueField = MaxValueField(maxValue: 20)
     
@@ -43,6 +44,7 @@ final public class CharacterModel: Codable {
         location = LocationModel(gridPosition: vector_int2(0,0))
         let spell = ReferenceController.instance.namedSpells["minor bolt"]!
         self.spells = [spell]
+        buffs = []
         updateStats()
     }
     
@@ -60,6 +62,7 @@ final public class CharacterModel: Codable {
         time = MaxValueField(maxValue: 100)
         inventory = InventoryModel()
         skills = SkillListModel()
+        buffs = []
         updateStats()
     }
     

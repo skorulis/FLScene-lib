@@ -95,4 +95,7 @@ public class FLMapSprite: SCNNode {
         node.position = SCNVector3(x,CGFloat(y),z)
     }
     
+    func basePosition() -> SCNVector3 {
+        return SCNVector3(0,-0.8,0)
+    }
 }

@@ -24,6 +24,7 @@ class CharacterEventComponent: GKComponent {
         print("Kill count: \(killCount)")
         print("healing Cast: \(healingCast)")
         print("Wasted damage: \(wastedDamage)")
+        print("---------")
     }
     
     func receivedDamage(amount:Int) {
