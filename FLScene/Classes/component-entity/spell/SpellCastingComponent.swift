@@ -62,8 +62,10 @@ class SpellCastingComponent: GKComponent {
             
         } else if spell.type == .totem {
             spellEntity = spellManager.makeTotemSpell(spell: spell, caster: gridEntity())
-        } else {
+        } else if spell.type == .channel {
             spellEntity = spellManager.makePersonalSpell(spell: spell, caster: gridEntity())
+        } else if spell.type == .buff {
+            
         }
         if spell.isChannelSpell() {
             channelledSpell = spellEntity
@@ -105,7 +107,14 @@ class SpellCastingComponent: GKComponent {
             let pctCast = (fullCastTime - self.remainingCastTime) / fullCastTime
             self.castProgressNode.scale = SCNVector3(pctCast,pctCast,pctCast)
             if remainingCastTime <= 0 {
-                spellManager.addSpellToWorld(entity: castingSpell)
+                if castingSpell.model.type == .buff {
+                    let character = entity?.component(ofType: CharacterComponent.self)
+                    let buff = calc.generateBuff(spell: castingSpell.model)
+                    character?.addBuff(buff: buff)
+                } else {
+                    spellManager.addSpellToWorld(entity: castingSpell)
+                }
+                
                 self.castingSpell = nil
                 let spriteComponent = gridEntity().component(ofType: GKSCNNodeComponent.self)!
                 spriteComponent.node.removeParticleSystem(castingParticlSystem)

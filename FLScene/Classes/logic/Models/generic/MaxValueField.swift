@@ -54,4 +54,8 @@ public final class MaxValueField: Codable {
         return CGFloat(self.value) / CGFloat(self.maxValue)
     }
     
+    public func atMax(tolerance:Float = 0) -> Bool {
+        return (self.value + tolerance) >= Float(self.maxValue)
+    }
+    
 }

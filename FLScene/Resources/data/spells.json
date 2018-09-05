@@ -12,5 +12,12 @@
   "effects": [
               "heal"
               ]
+  },
+  {
+  "name": "buff damage",
+  "type": "buff",
+  "effects": [
+              "damage"
+              ]
   }
   ]

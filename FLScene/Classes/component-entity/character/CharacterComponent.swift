@@ -88,4 +88,8 @@ class CharacterComponent: GKComponent {
         return self.character.health.value == 0
     }
     
+    func addBuff(buff:BuffModel) {
+        self.character.buffs.append(buff)
+    }
+    
 }

@@ -6,6 +6,9 @@
 },
 {
 "name": "minor heal"
-}
+},
+           {
+           "name": "buff damage"
+           }
 ]
 }

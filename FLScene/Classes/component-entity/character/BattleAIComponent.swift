@@ -72,6 +72,14 @@ class BattleAIComponent: GKComponent {
     }
     
     private func prepareDefense(spellCasting:SpellCastingComponent) {
+        if !spellCasting.isChannelling() {
+            if characterComponent().character.health.atMax() {
+                if let buff = self.buffSpell() {
+                    spellCasting.castSpell(spell: buff)
+                }
+            }
+        }
+        
         guard let heal = self.healSpell() else { return }
         if self.hasTarget() && spellCasting.isChannelling() {
             spellCasting.stopSpell()
@@ -94,8 +102,15 @@ class BattleAIComponent: GKComponent {
     }
     
     private func healSpell() -> SpellModel? {
-        guard let characterComponent = self.entity?.component(ofType: CharacterComponent.self) else { return nil}
-        return characterComponent.character.spells.filter { $0.effects.contains(.heal)}.first
+        return characterComponent().character.spells.filter { $0.effects.contains(.heal)}.first
+    }
+    
+    private func buffSpell() -> SpellModel? {
+        return characterComponent().character.spells.filter { $0.type == .buff}.first
+    }
+    
+    private func characterComponent() -> CharacterComponent {
+        return (self.entity?.component(ofType: CharacterComponent.self))!
     }
     
     //Calculates how dangerous the AI considers its current position

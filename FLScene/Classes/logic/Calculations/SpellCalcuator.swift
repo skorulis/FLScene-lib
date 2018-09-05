@@ -36,4 +36,9 @@ class SpellCalcuator: NSObject {
         }
     }
     
+    func generateBuff(spell:SpellModel) -> BuffModel {
+        let effect = spell.effects[0]
+        return BuffModel(time: 10, effect: effect, power: spell.powerPoints)
+    }
+    
 }

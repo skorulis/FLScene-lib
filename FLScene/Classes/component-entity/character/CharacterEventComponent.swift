@@ -15,6 +15,7 @@ class CharacterEventComponent: GKComponent {
     private var killCount:Int = 0
     private var healingCast:Float = 0
     private var wastedDamage:Float = 0
+    private var spellsUsed:[SpellType:Int] = [:]
     
     func printResults() {
         print("----Character stats----")
@@ -24,6 +25,7 @@ class CharacterEventComponent: GKComponent {
         print("Kill count: \(killCount)")
         print("healing Cast: \(healingCast)")
         print("Wasted damage: \(wastedDamage)")
+        print("Spells cast: \(spellsUsed)")
         print("---------")
     }
     
@@ -48,6 +50,14 @@ class CharacterEventComponent: GKComponent {
     
     func didHeal(amount:Float) {
         healingCast += amount
+    }
+    
+    func castSpell(spell:SpellModel) {
+        if let oldCount = spellsUsed[spell.type] {
+            spellsUsed[spell.type] = oldCount + 1
+        } else {
+            spellsUsed[spell.type] = 1
+        }
     }
     
 }

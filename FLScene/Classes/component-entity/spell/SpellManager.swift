@@ -73,22 +73,24 @@ class SpellManager: NSObject {
         let entity = SpellEntity(model: spell,caster:caster, node:node)
         livingSpells.append(entity)
         
-        let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
-        trail.emitterShape = geometry
-        trail.particleCharge = -1
-        trail.isAffectedByPhysicsFields = true
-        trail.particleColor = UIColor.purple
-        node.addParticleSystem(trail)
+        if spell.isChannelSpell() {
+            let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
+            trail.emitterShape = geometry
+            trail.particleCharge = -1
+            trail.isAffectedByPhysicsFields = true
+            trail.particleColor = UIColor.purple
+            node.addParticleSystem(trail)
+            
+            let field = SCNPhysicsField.radialGravity()
+            field.strength = 10
+            node.physicsField = field
+            
+            let fieldGeometry = SCNSphere(radius: 0.2)
+            let physicsShape = SCNPhysicsShape(geometry: fieldGeometry, options: nil)
+            node.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
+            entity.addComponent(SpellEffectComponent(target:caster))
+        }
         
-        let field = SCNPhysicsField.radialGravity()
-        field.strength = 10
-        node.physicsField = field
-        
-        let fieldGeometry = SCNSphere(radius: 0.2)
-        let physicsShape = SCNPhysicsShape(geometry: fieldGeometry, options: nil)
-        node.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
-        
-        entity.addComponent(SpellEffectComponent(target:caster))
         return entity
     }
     
