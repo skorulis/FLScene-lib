@@ -31,7 +31,7 @@ public extension SCNParticleSystem {
     public class func flSystem(named:String) -> SCNParticleSystem? {
         
         let system = SCNParticleSystem(named: named, inDirectory: nil)
-        system?.particleImage = UIImage.particleImage(named: "spark")
+        //system?.particleImage = UIImage.particleImage(named: "spark")
         return system
     }
     

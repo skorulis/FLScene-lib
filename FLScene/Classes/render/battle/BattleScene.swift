@@ -96,6 +96,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
             events.printResults()
         }
         
+        playerCharacter.buffs.removeAll()
         playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
         
         //Give the player an AI for now so I don't have to control it

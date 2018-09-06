@@ -75,21 +75,12 @@ class SpellManager: NSObject {
         livingSpells.append(entity)
         
         if spell.isChannelSpell() {
-            let geometry = SCNSphere(radius: 2.25)
+            let geometry = SCNTube(innerRadius: 0.6, outerRadius: 0.7, height: 0.1)
             let trail = SCNParticleSystem.flSystem(named: spell.particleFileName())!
             trail.emitterShape = geometry
-            trail.particleCharge = -1
-            trail.isAffectedByPhysicsFields = true
-            trail.particleColor = UIColor.purple
+            //trail.particleColor = UIColor.purple
             node.addParticleSystem(trail)
             
-            let field = SCNPhysicsField.radialGravity()
-            field.strength = 10
-            node.physicsField = field
-            
-            let fieldGeometry = SCNSphere(radius: 0.2)
-            let physicsShape = SCNPhysicsShape(geometry: fieldGeometry, options: nil)
-            node.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
             entity.addComponent(SpellEffectComponent(target:caster))
         }
         

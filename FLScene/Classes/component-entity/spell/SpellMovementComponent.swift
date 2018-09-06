@@ -30,6 +30,7 @@ class SpellMovementComponent: GKComponent {
         let physicsShape = SCNPhysicsShape(geometry: geometry, options: shapeOptions)
         let physicsBody = SCNPhysicsBody(type: .dynamic, shape: physicsShape)
         physicsBody.velocity = direction * Float(spellEntity().model.speed())
+        physicsBody.damping = 0
         physicsBody.isAffectedByGravity = false
         physicsBody.categoryBitMask = 1
         physicsBody.collisionBitMask = 0

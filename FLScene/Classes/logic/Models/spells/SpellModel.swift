@@ -122,7 +122,7 @@ class SpellModel: Codable {
         case .bolt:
             return "trail"
         default:
-            return "focus"
+            return "heal"
         }
     }
     
