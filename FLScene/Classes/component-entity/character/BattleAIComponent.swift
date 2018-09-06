@@ -40,6 +40,9 @@ class BattleAIComponent: GKComponent {
             prepareDefense(spellCasting:spellCasting)
             return
         }
+        if spellCasting.isChannelling() {
+            spellCasting.stopSpell()
+        }
         
         guard characterComponent.hasMana(cost: 10) else { return }
         

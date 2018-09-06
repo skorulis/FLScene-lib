@@ -17,4 +17,9 @@ extension SCNNode {
         return (min:scaledMin,max:scaledMax)
     }
     
+    //How much this node needs to be moved up so that it is sitting flat
+    func yOffset() -> ASFloat {
+        return -1 * self.boundingBox.min.y
+    }
+    
 }

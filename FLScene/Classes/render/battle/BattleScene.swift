@@ -77,7 +77,7 @@ public class BattleScene: SCNScene, MapSceneProtocol {
     func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
         let location = LocationModel(gridPosition: position, islandName: "battle")
         let entity = GridEntity(location: location)
-        _ = characterManager.makeSprite(entity: entity, imageNamed: character.spriteName)
+        characterManager.addSprite(entity: entity, imageNamed: character.spriteName)
         character.updateStats() //Make sure stats are up to date
         entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         entity.addComponent(CharacterEventComponent())

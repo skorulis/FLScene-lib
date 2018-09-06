@@ -74,22 +74,23 @@ class CharacterManager: NSObject {
         spellSystem.removeComponent(foundIn:entity)
     }
     
-    func makeSprite(entity:GridEntity,imageNamed:String) -> MovementComponent {
+    func addSprite(entity:GridEntity,imageNamed:String) {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
         
         let playerNumber = entity.component(ofType: CharacterComponent.self)?.playerNumber ?? 0
-        let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteComponent = MovementComponent(scene:scene!)
+        //let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
+        let spriteNode = SimpleBeingNode(face: "$")
+        
+        let movementComponent = MovementComponent(scene:scene!)
         spriteNode.entity = entity
         let island = scene!.island(named: entity.islandName!)
         let islandNode = scene!.islandFor(dungeon: island)
-        entity.addComponent(spriteComponent)
+        entity.addComponent(movementComponent)
         entity.addComponent(GKSCNNodeComponent(node: spriteNode))
         islandNode.addChildNode(spriteNode)
         
         islandNode.dungeon.addBeing(entity: entity)
-        spriteComponent.placeAt(position: entity.gridPosition,inDungeon: islandNode.dungeon)
-        return spriteComponent
+        movementComponent.placeAt(position: entity.gridPosition,inDungeon: islandNode.dungeon)
     }
     
     func otherEntities(playerNumber:Int) -> [GridEntity] {

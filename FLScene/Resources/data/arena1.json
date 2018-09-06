@@ -2,8 +2,8 @@
     "battles": [
                 {
                 "mapName": "battle1",
-                "waves":2,
-                "waveDelay":2,
+                "waves": 3,
+                "waveDelay": 2,
                 "playerStartPosition": {
                 "x": 0,
                 "y": 2
@@ -14,7 +14,7 @@
                             "x": 4,
                             "y": 2
                             },
-                            "wave":1,
+                            "wave": 1,
                             "base": {
                             "spriteName": "alienBlue",
                             "spells": [
@@ -30,7 +30,39 @@
                             "x": 4,
                             "y": 2
                             },
-                            "wave":2,
+                            "wave": 2,
+                            "base": {
+                            "spriteName": "alienBlue",
+                            "spells": [
+                                       {
+                                       "name": "minor bolt"
+                                       }
+                                       ]
+                            },
+                            "ai": {}
+                            },
+                            {
+                            "position": {
+                            "x": 2,
+                            "y": 0
+                            },
+                            "wave": 3,
+                            "base": {
+                            "spriteName": "alienBlue",
+                            "spells": [
+                                       {
+                                       "name": "minor bolt"
+                                       }
+                                       ]
+                            },
+                            "ai": {}
+                            },
+                            {
+                            "position": {
+                            "x": 2,
+                            "y": 4
+                            },
+                            "wave": 3,
                             "base": {
                             "spriteName": "alienBlue",
                             "spells": [

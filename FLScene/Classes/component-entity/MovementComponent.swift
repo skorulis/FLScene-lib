@@ -118,12 +118,12 @@ public class MovementComponent: GKComponent {
     //Should be private
     public func moveTo(position:vector_int2,inDungeon dungeon:DungeonModel) {
         guard let scene = self.mapScene else {return}
+        guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let islandNode = scene.islandFor(dungeon: dungeon)
-        let point = islandNode.topPosition(at: position) + SCNVector3(0,yOffset(),0)
+        let point = islandNode.topPosition(at: position) + SCNVector3(0,sprite.yOffset(),0)
         
         if isOnBridge() {
-            let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
-            self.currentBridge()?.releaseOwnership(node: sprite!, to: islandNode)
+            self.currentBridge()?.releaseOwnership(node: sprite, to: islandNode)
         }
         
         removeFromOldNode()
@@ -161,11 +161,12 @@ public class MovementComponent: GKComponent {
         }
         action.timingMode = .easeInEaseOut
         
-        sprite.runAction(action) { [unowned self] in
-            self.isMoving = false
-            if self.queuedSteps.count > 0 {
+        sprite.runAction(action) { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.isMoving = false
+            if strongSelf.queuedSteps.count > 0 {
                 DispatchQueue.main.async {
-                    self.moveAlong(steps: self.queuedSteps)
+                    strongSelf.moveAlong(steps: strongSelf.queuedSteps)
                 }
             }
         }
@@ -174,8 +175,8 @@ public class MovementComponent: GKComponent {
     public func placeAt(position:vector_int2,inDungeon dungeon:DungeonModel) {
         guard let scene = self.mapScene else {return}
         let island = scene.islandFor(dungeon: dungeon)
-        let point = island.topPosition(at: position) + SCNVector3(0,yOffset(),0)
         let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node
+        let point = island.topPosition(at: position) + SCNVector3(0,sprite!.yOffset(),0)
         sprite?.position = point
         dungeon.removeBeing(entity: self.gridEntity())
         self.gridEntity().location.gridPosition = position
