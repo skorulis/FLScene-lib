@@ -19,7 +19,7 @@ public class DungeonLogicController {
         self.ref = ref
     }
     
-    public func getActions(at point:CGPoint) -> [DungeonAction] {
+    public func getActions(at point:CGPoint) -> [ActionType] {
         guard let type = dungeon.fixture(at: point) else {
             return [.examine]
         }

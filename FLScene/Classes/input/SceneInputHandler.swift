@@ -10,7 +10,7 @@ import GameplayKit
 
 public protocol SceneInputHandlerDelegate: class {
     
-    func showLandOptions(node:MapHexModel,actions:[DungeonAction])
+    func showLandOptions(node:MapHexModel,actions:[ActionType])
     
 }
 
@@ -134,13 +134,11 @@ public class SceneInputHandler {
         guard let square = first.node.parent as? LandPieceNode else { return }
         
         let node = square.dungeonNode
-        
-        if let fixture = node.fixture {
-            self.delegate?.showLandOptions(node: square.dungeonNode,actions: fixture.ref.actions)
-        }
+        let availableActions = node.actions()
+        self.delegate?.showLandOptions(node: square.dungeonNode,actions: availableActions)
     }
     
-    public func performAction(node:MapHexModel,action:DungeonAction) {
+    public func performAction(node:MapHexModel,action:ActionType) {
         if action == .teleport {
             let teleporter = node.fixture as! TeleporterFixtureModel
             let dungeon = scene.overland.findIsland(name: teleporter.targetIslandName)

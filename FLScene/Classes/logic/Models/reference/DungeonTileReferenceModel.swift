@@ -17,22 +17,13 @@ public enum DungeonTileType:String {
     case house
 }
 
-public enum DungeonAction: String {
-    case goUp
-    case goDown
-    case examine
-    case teleport
-    case battle
-    case sleep
-}
-
 public struct DungeonTileReferenceModel {
 
     public let type:DungeonTileType
     public let canPass:Bool
-    public let actions:[DungeonAction]
+    public let actions:[ActionType]
     
-    public init(type:DungeonTileType,canPass:Bool,actions:[DungeonAction] = []) {
+    public init(type:DungeonTileType,canPass:Bool,actions:[ActionType] = []) {
         self.type = type
         self.canPass = canPass
         self.actions = actions

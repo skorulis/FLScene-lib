@@ -125,6 +125,8 @@ public class ReferenceController {
                                            reqs:[RequirementModel.time(value: 100),
                                                  RequirementModel.satiation(value: 10)])
         
+        let fish = ActionReferenceModel(type: .fish)
+        
         #if os(iOS)
         /*let iconSize = CGFloat(30)
         sleep.icon = FAKFontAwesome.moonOIcon(withSize: iconSize)
@@ -136,7 +138,7 @@ public class ReferenceController {
         dungeon.icon = FAKFontAwesome.fortAwesomeIcon(withSize: iconSize)*/
         #endif
         
-        return [sleep,eat,forage,mine,lumberjack,explore,dungeon]
+        return [sleep,eat,forage,mine,lumberjack,explore,dungeon,fish]
     }
     
     private static func makeDungeonTiles() -> [DungeonTileReferenceModel] {

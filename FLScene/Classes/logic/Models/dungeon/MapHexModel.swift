@@ -62,7 +62,7 @@ public class MapHexModel: GKGridGraphNode, Codable {
     }
     
     public func canPass() -> Bool {
-        if self.terrain.type == .void {
+        if self.terrain.type == .void || self.terrain.type == .water {
             return false
         }
         if let f = fixture {
@@ -72,6 +72,18 @@ public class MapHexModel: GKGridGraphNode, Codable {
             return false
         }
         return true
+    }
+    
+    public func actions() -> [ActionType] {
+        var actions = [ActionType]()
+        if let fixture = fixture {
+            actions.append(contentsOf: fixture.ref.actions)
+        }
+        if self.terrain.type == .water {
+            actions.append(ActionType.fish)
+        }
+        
+        return actions
     }
     
 }

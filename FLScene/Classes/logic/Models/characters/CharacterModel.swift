@@ -56,7 +56,7 @@ final public class CharacterModel: Codable {
         location = try container.decodeIfPresent(LocationModel.self, forKey: .location)
         avatarIcon = try container.decodeIfPresent(String.self, forKey: .avatarIcon) ?? "👤"
         ether = try container.decodeIfPresent(Int.self, forKey: .ether) ?? 100
-        spells = try container.decode([SpellModel].self, forKey: .spells)
+        spells = try container.decodeIfPresent([SpellModel].self, forKey: .spells) ?? []
         
         satiation = MaxValueField(maxValue: 100)
         time = MaxValueField(maxValue: 100)
