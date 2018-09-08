@@ -9,7 +9,7 @@ import SceneKit
 import SKSwiftLib
 import GameplayKit
 
-public class BattleScene: SCNScene, MapSceneProtocol {
+public class BattleScene: BaseScene, MapSceneProtocol {
 
     let island:DungeonModel
     let islandNode:MapIslandNode
@@ -50,14 +50,6 @@ public class BattleScene: SCNScene, MapSceneProtocol {
         rootNode.addChildNode(ambientLightNode)
         
         skybox.updateSkybox()
-        
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        rootNode.addChildNode(cameraNode)
-        
-        // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 4, z: 15)
-        cameraNode.look(at: SCNVector3())
         
         self.rootNode.addChildNode(islandNode)
         let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: 6)
