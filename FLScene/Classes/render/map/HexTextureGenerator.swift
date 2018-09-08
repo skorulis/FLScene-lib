@@ -92,6 +92,20 @@ public class HexTextureGenerator: ImageGen {
         ctx.closePath()
     }
     
+    func face(glyph:String,color:UIColor) -> UIImage {
+        let ctx = newContext(textureSize)
+        ctx.setFillColor(color.cgColor)
+        ctx.fill(CGRect(origin: .zero, size: textureSize))
+        
+        let rect = CGRect(origin: .zero, size: textureSize)
+        let font = UIFont.systemFont(ofSize: 30);
+        let atts:[NSAttributedStringKey:Any] = [NSAttributedStringKey.font:font]
+        (glyph as NSString).draw(in: rect, withAttributes: atts)
+        
+        
+        return finishContext()
+    }
+    
     public class func generateAllImages() {
         let gen = HexTextureGenerator()
         

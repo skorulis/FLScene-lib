@@ -6,6 +6,7 @@
 //
 
 import SceneKit
+import SKSwiftLib
 
 class SimpleBeingNode: SCNNode {
 
@@ -18,6 +19,9 @@ class SimpleBeingNode: SCNNode {
         let sphereRadius = radius * 0.6
         let cone = SCNCone(topRadius: radius * 0.5, bottomRadius: radius, height: coneHeight)
         let head = SCNSphere(radius: sphereRadius)
+        
+        cone.firstMaterial = MaterialProvider.playerBodyMaterial(color: UIColor.orange)
+        head.firstMaterial = MaterialProvider.playerFaceMaterial(glyph: face)
         
         let coneNode = SCNNode(geometry: cone)
         let headNode = SCNNode(geometry: head)

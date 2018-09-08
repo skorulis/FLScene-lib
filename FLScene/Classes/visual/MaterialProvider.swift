@@ -102,6 +102,19 @@ class MaterialProvider: NSObject {
         return material
     }
     
+    class func playerFaceMaterial(glyph:String) -> SCNMaterial {
+        let material = SCNMaterial()
+        let faceColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        material.diffuse.contents = HexTextureGenerator().face(glyph: glyph, color: faceColor)
+        return material
+    }
+    
+    class func playerBodyMaterial(color:UIColor) -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = color
+        return material
+    }
+    
     class func targetMaterial() -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor(displayP3Red: 1.0, green: 0.2, blue: 0.2, alpha: 1)
