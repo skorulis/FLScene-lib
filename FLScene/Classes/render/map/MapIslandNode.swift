@@ -77,7 +77,8 @@ public class MapIslandNode: SCNNode {
     //Returns the coordinates of the top of the tile
     public func topPosition(at:vector_int2) -> SCNVector3 {
         let mid = localPosition(at: at)
-        return SCNVector3(mid.x,mid.y+blockHeight/2,mid.z)
+        let top = self.node(at: at).topSurfacePosition()
+        return SCNVector3(mid.x,mid.y+top,mid.z)
     }
     
     func node(at:vector_int2) -> LandPieceNode {

@@ -23,7 +23,7 @@ class NodeProvider {
     }
     
     public func house() -> SCNNode {
-        let geom = SCNPyramid(width: 1.4, height: 1, length: 1.4)
+        let geom = SCNPyramid(width: 1.2, height: 1, length: 1.2)
         geom.firstMaterial = MaterialProvider.bridgeStoneMaterial()
         return SCNNode(geometry: geom)
     }

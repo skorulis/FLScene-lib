@@ -76,10 +76,10 @@ class CharacterManager: NSObject {
     
     func addSprite(entity:GridEntity,imageNamed:String) {
         let spriteImage = UIImage.sceneSprite(named: imageNamed)!
-        
+        let character = entity.component(ofType: CharacterComponent.self)?.character
         let playerNumber = entity.component(ofType: CharacterComponent.self)?.playerNumber ?? 0
         //let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteNode = SimpleBeingNode(face: "😅")
+        let spriteNode = SimpleBeingNode(face: character!.avatarIcon)
         
         let movementComponent = MovementComponent(scene:scene!)
         spriteNode.entity = entity

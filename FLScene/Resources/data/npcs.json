@@ -1,13 +1,15 @@
  [
   {
   "backStory": "Lives alone on a small terminal island and mostly keeps to himself ignoring the power struggles around him ",
-  "quests":[{
-            "name":"Tomatoes!",
-            "text":"You look like you're. I'm sure you've got a lot of questions, sadly I don't have that many answers for you. What I can tell you is that there's a lot of dangers around and you won't get far without a weapon. I've got an old wand lying around that you can have if you help me with a little bit of gardening. Bring me back 10 tomatoes and I'll sort you out."
-            }],
+  "quests": [
+             {
+             "name": "Tomatoes!",
+             "text": "You look like you're. I'm sure you've got a lot of questions, sadly I don't have that many answers for you. What I can tell you is that there's a lot of dangers around and you won't get far without a weapon. I've got an old wand lying around that you can have if you help me with a little bit of gardening. Bring me back 10 tomatoes and I'll sort you out."
+             }
+             ],
   "base": {
   "name": "Herbert Whittaker",
-  "spriteName":"alienGreen",
+  "spriteName": "alienGreen",
   "avatarIcon": "👴",
   "location": {
   "islandName": "Obl",
@@ -20,10 +22,10 @@
   },
   {
   "backStory": "Farmer",
-  "quests":[],
+  "quests": [],
   "base": {
   "name": "Tram Dustworth",
-  "spriteName":"alienBlue",
+  "spriteName": "alienBlue",
   "avatarIcon": "😔",
   "location": {
   "islandName": "Fobl",
@@ -33,5 +35,21 @@
   }
   }
   }
+  },
+  {
+  "backStory": "King Leone ruled a small kingdom of 3 islands in the early ages. It was a brutal rule that ended at the battle of Kolm where he was killed and his binding crystal destroyed. With his army scattered his enemy took over his lands quickly . After numerous attempts to regain his rule he was banished to Lilim where he is forced to fend for himself ",
+  "quests": [],
+  "base": {
+  "name": "King Leone",
+  "spriteName": "alienBlue",
+  "avatarIcon": "🤴",
+  "location": {
+  "islandName": "Fobl",
+  "gridPosition": {
+  "x": 3,
+  "y": 3
   }
-  ]
+  }
+  }
+  }
+  ] 

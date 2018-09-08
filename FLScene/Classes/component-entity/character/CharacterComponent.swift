@@ -80,8 +80,8 @@ class CharacterComponent: GKComponent {
     }
     
     override func didAddToEntity() {
-        sprite().updateManaBar(pct: character.mana.fullPercentage)
-        sprite().updateHealthBar(pct:character.health.fullPercentage)
+        //sprite().updateManaBar(pct: character.mana.fullPercentage)
+        //sprite().updateHealthBar(pct:character.health.fullPercentage)
     }
     
     func isDead() -> Bool {

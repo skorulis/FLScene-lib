@@ -73,15 +73,19 @@ public class LandPieceNode: SCNNode {
     }
     
     private func sitNode(node:SCNNode) {
-        let hexMath = Hex3DMath(baseSize: 1)
         self.addChildNode(node)
         let minY = CGFloat(node.boundingBox.min.y)
         
-        node.position = SCNVector3(0,hexMath.height()/2 - minY,0) + node.position
+        node.position = SCNVector3(0,topSurfacePosition() - minY,0) + node.position
         
         /*let constraint = SCNDistanceConstraint(target: self)
         constraint.maximumDistance = 0.1
         node.constraints = [constraint]*/
+    }
+    
+    func topSurfacePosition() -> CGFloat {
+        let hexMath = Hex3DMath(baseSize: 1)
+        return hexMath.height()/2 + 0.1
     }
     
     private func sitGeometry(geometry:SCNGeometry) {

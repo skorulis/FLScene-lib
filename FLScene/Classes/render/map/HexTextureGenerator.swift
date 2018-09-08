@@ -105,7 +105,7 @@ public class HexTextureGenerator: ImageGen {
         #endif
         
         let fontSize:CGFloat = 50
-        let y:CGFloat = textureSize.height/2 - fontSize/2
+        let y:CGFloat = textureSize.height/2 - fontSize/2 - 10
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = NSTextAlignment.center

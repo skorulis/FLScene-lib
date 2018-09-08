@@ -91,6 +91,8 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     
     public func makeEntity(character:CharacterModel) -> GridEntity {
         let playerEntity = GridEntity(location: character.location!)
+        let characterComponent = CharacterComponent(character: character, playerNumber: 1)
+        playerEntity.addComponent(characterComponent)
         characterManager.addSprite(entity: playerEntity, imageNamed: character.spriteName)
         
         return playerEntity

@@ -44,6 +44,7 @@ public class CharacterScene: BaseScene, MapSceneProtocol {
     func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
         let location = LocationModel(gridPosition: position, islandName: "battle")
         let entity = GridEntity(location: location)
+        entity.addComponent(CharacterComponent(character: character, playerNumber: 1))
         characterManager.addSprite(entity: entity, imageNamed: character.spriteName)
         
         return entity

@@ -10,16 +10,17 @@ import SKSwiftLib
 
 class SimpleBeingNode: SCNNode {
 
-    private let radius:CGFloat = 0.5
-    private let height:CGFloat = 2
+    private let radius:CGFloat = 0.35
+    private let height:CGFloat = 1.5
     
     init(face:String) {
         
-        let sphereRadius = radius * 0.5
+        let sphereRadius = radius * 0.4
         let capsuleHeight = height / 2.5
         let head = SCNSphere(radius: sphereRadius)
-        let foot = SCNBox(width: 0.2, height: 0.2, length: 0.4, chamferRadius: 0.05)
-        let hand = SCNBox(width: 0.1, height: 0.2, length: 0.3, chamferRadius: 0.05)
+        
+        let foot = SCNBox(width: radius/2, height: radius/2, length: radius, chamferRadius: 0.05)
+        let hand = SCNBox(width: radius/4, height: radius/2, length: radius/1.5, chamferRadius: 0.05)
         
         let body = SCNCapsule(capRadius: radius * 0.5, height: capsuleHeight)
         body.firstMaterial = MaterialProvider.playerBodyMaterial(color: UIColor.orange)
@@ -35,13 +36,14 @@ class SimpleBeingNode: SCNNode {
         let leftHandNode = SCNNode(geometry: hand)
         let rightHandNode = SCNNode(geometry: hand)
         
-        let headY = capsuleHeight/2 + sphereRadius + 0.1
+        let headY = capsuleHeight/2 + sphereRadius + height / 20
         headNode.position = SCNVector3(0,headY,0)
         
         let footOffset = radius * 0.5
+        let footY = -height / 3
         
-        leftFootNode.position = SCNVector3(-footOffset,-0.6,0.1)
-        rightFootNode.position = SCNVector3(footOffset,-0.6,0.1)
+        leftFootNode.position = SCNVector3(-footOffset, footY, 0.1)
+        rightFootNode.position = SCNVector3(footOffset, footY, 0.1)
         
         leftHandNode.position = SCNVector3(footOffset, 0, 0.1)
         rightHandNode.position = SCNVector3(-footOffset, 0, 0.1)

@@ -19,7 +19,7 @@ final public class CharacterModel: Codable {
     }
     
     public var name:String
-    public var avatarIcon = "👤"
+    public var avatarIcon = "😕"
     public var spriteName = "alienPink"
     public let satiation:MaxValueField
     public let time:MaxValueField
