@@ -13,9 +13,9 @@ public class MapFixtureModel: Codable {
         case targetPosition
     }
     
-    let ref:DungeonTileReferenceModel
+    let ref:FixtureReferenceModel
     
-    init(ref:DungeonTileReferenceModel) {
+    init(ref:FixtureReferenceModel) {
         self.ref = ref
     }
     
@@ -27,7 +27,7 @@ public class MapFixtureModel: Codable {
     public required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let typeString = try values.decode(String.self, forKey: .type)
-        let type = DungeonTileType(rawValue: typeString)!
+        let type = FixtureType(rawValue: typeString)!
         ref = ReferenceController.instance.getDungeonTile(type: type)
     }
     
@@ -37,7 +37,7 @@ public class MapFixtureModel: Codable {
         }
         let values = try parent.nestedContainer(keyedBy: CodingKeys.self, forKey: .fixture)
         let typeString = try values.decode(String.self, forKey: .type)
-        let type = DungeonTileType(rawValue: typeString)!
+        let type = FixtureType(rawValue: typeString)!
         if type == .teleporter {
             return try parent.decode(TeleporterFixtureModel.self, forKey: .fixture)
         } else {

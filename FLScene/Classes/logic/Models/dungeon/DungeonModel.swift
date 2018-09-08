@@ -132,7 +132,7 @@ public class DungeonModel: Codable {
         return x >= 0 && y >= 0 && x < width && y < height
     }
     
-    public func fixture(at:CGPoint) -> DungeonTileType? {
+    public func fixture(at:CGPoint) -> FixtureType? {
         let node = self.nodeAt(point: at)
         return node?.fixture?.ref.type
     }

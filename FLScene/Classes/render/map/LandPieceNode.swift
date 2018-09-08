@@ -45,7 +45,7 @@ public class LandPieceNode: SCNNode {
         }
     }
     
-    private func fixtureNode(type:DungeonTileType) -> SCNNode {
+    private func fixtureNode(type:FixtureType) -> SCNNode {
         switch type {
         case .house:
             return NodeProvider.instance.house()

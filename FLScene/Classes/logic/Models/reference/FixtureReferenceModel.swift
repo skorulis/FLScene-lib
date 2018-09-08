@@ -1,5 +1,5 @@
 //
-//  DungeonTileReferenceModel.swift
+//  FixtureReferenceModel.swift
 //  floatios
 //
 //  Created by Alexander Skorulis on 21/7/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum DungeonTileType:String {
+public enum FixtureType:String {
     case wall = "wall"
     case stairsUp = "stair-up"
     case stairsDown = "stair-down"
@@ -17,13 +17,13 @@ public enum DungeonTileType:String {
     case house
 }
 
-public struct DungeonTileReferenceModel {
+public struct FixtureReferenceModel {
 
-    public let type:DungeonTileType
+    public let type:FixtureType
     public let canPass:Bool
     public let actions:[ActionType]
     
-    public init(type:DungeonTileType,canPass:Bool,actions:[ActionType] = []) {
+    public init(type:FixtureType,canPass:Bool,actions:[ActionType] = []) {
         self.type = type
         self.canPass = canPass
         self.actions = actions

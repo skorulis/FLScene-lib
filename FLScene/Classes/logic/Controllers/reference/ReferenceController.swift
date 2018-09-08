@@ -40,7 +40,7 @@ public class ReferenceController {
     public let story:[String:StoryReferenceModel]
     public let skills:[SkillType:SkillReferenceModel]
     public let actions:[ActionType:ActionReferenceModel]
-    public let dungeonTiles:[DungeonTileType:DungeonTileReferenceModel]
+    public let dungeonTiles:[FixtureType:FixtureReferenceModel]
     public let terrain:[TerrainType:TerrainReferenceModel]
     public let monsters:[String:MonsterReferenceModel]
     var namedSpells:[String:SpellModel] = [:]
@@ -141,13 +141,13 @@ public class ReferenceController {
         return [sleep,eat,forage,mine,lumberjack,explore,dungeon,fish]
     }
     
-    private static func makeDungeonTiles() -> [DungeonTileReferenceModel] {
-        let wall = DungeonTileReferenceModel(type: .wall, canPass: false)
-        let stairUp = DungeonTileReferenceModel(type:.stairsUp,canPass: true,actions:[.goUp])
-        let stairDown = DungeonTileReferenceModel(type:.stairsDown,canPass: true,actions:[.goDown])
-        let teleporter = DungeonTileReferenceModel(type:.teleporter,canPass:true,actions:[.teleport])
-        let arena = DungeonTileReferenceModel(type: .arena, canPass: true,actions:[.battle])
-        let house = DungeonTileReferenceModel(type: .house,canPass:false,actions:[.sleep])
+    private static func makeDungeonTiles() -> [FixtureReferenceModel] {
+        let wall = FixtureReferenceModel(type: .wall, canPass: false)
+        let stairUp = FixtureReferenceModel(type:.stairsUp,canPass: true,actions:[.goUp])
+        let stairDown = FixtureReferenceModel(type:.stairsDown,canPass: true,actions:[.goDown])
+        let teleporter = FixtureReferenceModel(type:.teleporter,canPass:true,actions:[.teleport])
+        let arena = FixtureReferenceModel(type: .arena, canPass: true,actions:[.battle])
+        let house = FixtureReferenceModel(type: .house,canPass:false,actions:[.sleep])
         return [wall,stairUp,stairDown,teleporter,arena,house]
     }
     
@@ -167,12 +167,12 @@ public class ReferenceController {
         return actions[type]!
     }
     
-    public func getDungeonTile(type:DungeonTileType) -> DungeonTileReferenceModel {
+    public func getDungeonTile(type:FixtureType) -> FixtureReferenceModel {
         return dungeonTiles[type]!
     }
     
-    public func getDungeonTile(name:String) -> DungeonTileReferenceModel {
-        let type = DungeonTileType.init(rawValue: name)!
+    public func getDungeonTile(name:String) -> FixtureReferenceModel {
+        let type = FixtureType.init(rawValue: name)!
         return getDungeonTile(type: type)
     }
     
