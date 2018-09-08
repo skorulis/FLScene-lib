@@ -96,21 +96,38 @@ public class HexTextureGenerator: ImageGen {
         let ctx = newContext(textureSize)
         ctx.setFillColor(color.cgColor)
         ctx.fill(CGRect(origin: .zero, size: textureSize))
+        ctx.setStrokeColor(UIColor.red.cgColor)
         
-        let rect = CGRect(origin: .zero, size: textureSize)
-        let font = UIFont.systemFont(ofSize: 30);
-        let atts:[NSAttributedStringKey:Any] = [NSAttributedStringKey.font:font]
+        #if os(OSX)
+        let priorNsgc = NSGraphicsContext.current
+        defer { NSGraphicsContext.current = priorNsgc }
+        NSGraphicsContext.current = NSGraphicsContext(cgContext: ctx, flipped: true)
+        #endif
+        
+        let fontSize:CGFloat = 50
+        let y:CGFloat = textureSize.height/2 - fontSize/2
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = NSTextAlignment.center
+        
+        let rect = CGRect(origin: CGPoint(x:0,y:y), size: textureSize)
+        let font = UIFont.systemFont(ofSize: fontSize);
+        let atts:[NSAttributedStringKey:Any] = [NSAttributedStringKey.font:font,
+                                                NSAttributedStringKey.foregroundColor:UIColor.red,
+                                                NSAttributedStringKey.paragraphStyle:paragraphStyle
+                                                ]
         (glyph as NSString).draw(in: rect, withAttributes: atts)
         
-        
-        return finishContext()
+        let image = finishContext()
+        return image
     }
     
     public class func generateAllImages() {
         let gen = HexTextureGenerator()
         
-        gen.saveImage(name: "hex1", image: gen.topHex(UIColor.brown))
-        gen.saveImage(name: "spike1", image: gen.spikeySide(UIColor.brown))
+        ///gen.saveImage(name: "hex1", image: gen.topHex(UIColor.brown))
+        //gen.saveImage(name: "spike1", image: gen.spikeySide(UIColor.brown))
+        gen.saveImage(name: "face1", image: gen.face(glyph: "😅", color: UIColor.lightGray))
         
         let texture = UIImage.sceneImage(named: "sandyground1_normal")!
         gen.saveImage(name: "texturedHex", image: gen.topHex(texture, lineColor: UIColor.brown))

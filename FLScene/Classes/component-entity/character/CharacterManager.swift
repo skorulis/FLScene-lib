@@ -79,7 +79,7 @@ class CharacterManager: NSObject {
         
         let playerNumber = entity.component(ofType: CharacterComponent.self)?.playerNumber ?? 0
         //let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
-        let spriteNode = SimpleBeingNode(face: "$")
+        let spriteNode = SimpleBeingNode(face: "😅")
         
         let movementComponent = MovementComponent(scene:scene!)
         spriteNode.entity = entity

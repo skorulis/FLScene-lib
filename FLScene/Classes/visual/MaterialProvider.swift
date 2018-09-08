@@ -104,14 +104,17 @@ class MaterialProvider: NSObject {
     
     class func playerFaceMaterial(glyph:String) -> SCNMaterial {
         let material = SCNMaterial()
-        let faceColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+        let faceColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.8, alpha: 1)
         material.diffuse.contents = HexTextureGenerator().face(glyph: glyph, color: faceColor)
         return material
     }
     
     class func playerBodyMaterial(color:UIColor) -> SCNMaterial {
         let material = SCNMaterial()
+        material.lightingModel = .physicallyBased
         material.diffuse.contents = color
+        material.normal.contents = UIImage.sceneImage(named: "plasticpattern1-normal2b")
+        material.roughness.contents = UIImage.sceneImage(named: "plasticpattern1-roughness2")
         return material
     }
     
