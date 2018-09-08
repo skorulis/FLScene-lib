@@ -19,7 +19,6 @@ public class BattleScene: BaseScene, MapSceneProtocol {
     let spellManager:SpellManager
     var characterManager:CharacterManager!
     var battleManager:BattleManager!
-    var skybox:SkyboxManager!
     
     var spells:[SpellModel] = []
     public let bridges: BridgeContainerNode
@@ -34,7 +33,6 @@ public class BattleScene: BaseScene, MapSceneProtocol {
         self.islandNode = MapIslandNode(dungeon: self.island,gridSpacing:2.0)
         self.spellManager = SpellManager(islandNode: islandNode)
         super.init()
-        self.skybox = SkyboxManager(scene: self)
         self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
         self.battleManager = BattleManager(scene: self, model: battleModel)
         self.buildScene()
@@ -45,12 +43,6 @@ public class BattleScene: BaseScene, MapSceneProtocol {
     }
     
     public func buildScene() {
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SceneElements.ambientLight()
-        rootNode.addChildNode(ambientLightNode)
-        
-        skybox.updateSkybox()
-        
         self.rootNode.addChildNode(islandNode)
         let act1 = SCNAction.moveBy(x: 0, y: -0.5, z: 0, duration: 6)
         let act2 = SCNAction.moveBy(x: 0, y: 0.5, z: 0, duration: 6)

@@ -11,6 +11,7 @@ public class BaseScene: SCNScene {
 
     let cameraNode:SCNNode
     let camera:SCNCamera
+    var skybox:SkyboxManager!
     
     override init() {
         cameraNode = SCNNode()
@@ -23,6 +24,12 @@ public class BaseScene: SCNScene {
         
         super.init()
         rootNode.addChildNode(cameraNode)
+        self.skybox = SkyboxManager(scene: self)
+        skybox.updateSkybox()
+        
+        let ambientLightNode = SCNNode()
+        ambientLightNode.light = SceneElements.ambientLight()
+        rootNode.addChildNode(ambientLightNode)
     }
     
     public required init?(coder aDecoder: NSCoder) {
