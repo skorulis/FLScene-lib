@@ -81,12 +81,13 @@ public class OverlandScene: BaseScene, MapSceneProtocol {
     }
     
     public func makeEntity(character:CharacterModel) -> GridEntity {
-        let playerEntity = GridEntity(location: character.location!)
+        let entity = GridEntity(location: character.location!)
         let characterComponent = CharacterComponent(character: character, playerNumber: 1)
-        playerEntity.addComponent(characterComponent)
-        characterManager.addSprite(entity: playerEntity, imageNamed: character.spriteName)
+        entity.addComponent(characterComponent)
+        characterManager.addSprite(entity: entity, imageNamed: character.spriteName)
+        characterManager.add(entity: entity)
         
-        return playerEntity
+        return entity
     }
     
     private func buildWater() {
