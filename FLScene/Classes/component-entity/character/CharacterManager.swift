@@ -15,13 +15,16 @@ class CharacterManager: NSObject {
     let aiComponentSystem = GKComponentSystem(componentClass: BattleAIComponent.self)
     let targetSystem = GKComponentSystem(componentClass: TargetComponent.self)
     let spellSystem = GKComponentSystem(componentClass: SpellCastingComponent.self)
+    let actionsSystem = GKComponentSystem(componentClass: SustainedActionComponent.self)
     
     let spellManager:SpellManager?
+    let allSystems:[GKComponentSystem<GKComponent>]
     weak var scene:MapSceneProtocol?
     
     init(spellManager:SpellManager?,scene:MapSceneProtocol) {
         self.spellManager = spellManager
         self.scene = scene
+        self.allSystems = [characterComponentSystem,aiComponentSystem,targetSystem,spellSystem,actionsSystem]
         super.init()
     }
     
@@ -30,20 +33,15 @@ class CharacterManager: NSObject {
             entity.addComponent(SpellCastingComponent(spellManager: spellManager))
         }
         entity.addComponent(TargetComponent(target: nil)) //Add empty target component
+        entity.addComponent(SustainedActionComponent())
         
         self.entities.append(entity)
         
-        characterComponentSystem.addComponent(foundIn: entity)
-        aiComponentSystem.addComponent(foundIn: entity)
-        targetSystem.addComponent(foundIn: entity)
-        spellSystem.addComponent(foundIn:entity)
+        allSystems.forEach { $0.addComponent(foundIn:entity)}
     }
     
     func update(deltaTime seconds: TimeInterval) {
-        characterComponentSystem.update(deltaTime: seconds)
-        aiComponentSystem.update(deltaTime: seconds)
-        targetSystem.update(deltaTime: seconds)
-        spellSystem.update(deltaTime: seconds)
+        allSystems.forEach { $0.update(deltaTime: seconds)}
         
         let dead = self.entities.filter { (entity) -> Bool in
             let battleComponent = entity.component(ofType: CharacterComponent.self)!
@@ -68,10 +66,7 @@ class CharacterManager: NSObject {
         let movement = entity.component(ofType: MovementComponent.self)
         movement?.removeFromOldNode()
         
-        characterComponentSystem.removeComponent(foundIn: entity)
-        aiComponentSystem.removeComponent(foundIn: entity)
-        targetSystem.removeComponent(foundIn: entity)
-        spellSystem.removeComponent(foundIn:entity)
+        allSystems.forEach { $0.removeComponent(foundIn: entity)}
     }
     
     func addSprite(entity:GridEntity,imageNamed:String) {
@@ -91,6 +86,8 @@ class CharacterManager: NSObject {
         
         islandNode.dungeon.addBeing(entity: entity)
         movementComponent.placeAt(position: entity.gridPosition,inDungeon: islandNode.dungeon)
+        
+        
     }
     
     func otherEntities(playerNumber:Int) -> [GridEntity] {

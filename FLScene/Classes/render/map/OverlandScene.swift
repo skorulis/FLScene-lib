@@ -10,7 +10,7 @@ import SceneKit
 import SKSwiftLib
 import GameplayKit
 
-public class OverlandScene: SCNScene, MapSceneProtocol {
+public class OverlandScene: BaseScene, MapSceneProtocol {
 
     public var overland:FullOverlandModel
     private let floorY:Float = -10
@@ -29,7 +29,6 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     private let game:GameController
     var islands:[MapIslandNode] = []
     public let bridges:BridgeContainerNode
-    var skybox:SkyboxManager!
     var npcs:[GridEntity] = []
     
     public override init() {
@@ -39,7 +38,8 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
         self.overland = OverlandGenerator.fromFile()
         
         super.init()
-        self.skybox = SkyboxManager(scene: self)
+        cameraNode.position = SCNVector3(x: 0, y: 10, z: 15)
+        cameraNode.look(at: SCNVector3())
         self.rootNode.addChildNode(self.bridges)
         self.characterManager = CharacterManager(spellManager: nil, scene: self)
         self.buildScene()
@@ -52,12 +52,6 @@ public class OverlandScene: SCNScene, MapSceneProtocol {
     }
     
     public func buildScene() {
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SceneElements.ambientLight()
-        rootNode.addChildNode(ambientLightNode)
-        
-        skybox.updateSkybox()
         
         self.islands = self.overland.dungeons.map { self.makeMap(dungeon: $0)}
         for i in islands {

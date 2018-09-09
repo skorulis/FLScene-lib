@@ -63,6 +63,8 @@ public struct ActionReferenceModel {
 
     public let type:ActionType
     public let requirements:[RequirementModel]
+    var sustained:Bool = false
+    
     #if os(iOS)
     //public var icon:FAKIcon?
     #endif

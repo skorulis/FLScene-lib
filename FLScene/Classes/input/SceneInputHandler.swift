@@ -139,7 +139,12 @@ public class SceneInputHandler {
     }
     
     public func performAction(node:MapHexModel,action:ActionType) {
-        if action == .teleport {
+        let ref = ReferenceController.instance.getAction(type: action)
+        if ref.sustained {
+            let actionComponent = scene.playerEntity.component(ofType: SustainedActionComponent.self)
+            actionComponent?.startAction(action: action)
+            
+        } else if action == .teleport {
             let teleporter = node.fixture as! TeleporterFixtureModel
             let dungeon = scene.overland.findIsland(name: teleporter.targetIslandName)
             let node = dungeon.nodeAt(vec: teleporter.targetPosition)!

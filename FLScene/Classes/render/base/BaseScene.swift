@@ -9,7 +9,7 @@ import SceneKit
 
 public class BaseScene: SCNScene {
 
-    let cameraNode:SCNNode
+    public let cameraNode:SCNNode
     let camera:SCNCamera
     var skybox:SkyboxManager!
     

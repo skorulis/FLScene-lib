@@ -125,7 +125,8 @@ public class ReferenceController {
                                            reqs:[RequirementModel.time(value: 100),
                                                  RequirementModel.satiation(value: 10)])
         
-        let fish = ActionReferenceModel(type: .fish)
+        var fish = ActionReferenceModel(type: .fish)
+        fish.sustained = true
         
         #if os(iOS)
         /*let iconSize = CGFloat(30)
