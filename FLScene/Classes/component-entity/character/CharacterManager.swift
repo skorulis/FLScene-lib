@@ -13,6 +13,7 @@ class CharacterManager: NSObject {
     private var entities:[GridEntity] = []
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
     let aiComponentSystem = GKComponentSystem(componentClass: BattleAIComponent.self)
+    let overlandAISystem = GKComponentSystem(componentClass: OverlandAIComponent.self)
     let targetSystem = GKComponentSystem(componentClass: TargetComponent.self)
     let spellSystem = GKComponentSystem(componentClass: SpellCastingComponent.self)
     let actionsSystem = GKComponentSystem(componentClass: SustainedActionComponent.self)
@@ -24,7 +25,7 @@ class CharacterManager: NSObject {
     init(spellManager:SpellManager?,scene:MapSceneProtocol) {
         self.spellManager = spellManager
         self.scene = scene
-        self.allSystems = [characterComponentSystem,aiComponentSystem,targetSystem,spellSystem,actionsSystem]
+        self.allSystems = [characterComponentSystem,aiComponentSystem,targetSystem,spellSystem,actionsSystem,overlandAISystem]
         super.init()
     }
     
@@ -70,10 +71,11 @@ class CharacterManager: NSObject {
     }
     
     func addSprite(entity:GridEntity,imageNamed:String) {
-        let spriteImage = UIImage.sceneSprite(named: imageNamed)!
-        let character = entity.component(ofType: CharacterComponent.self)?.character
-        let playerNumber = entity.component(ofType: CharacterComponent.self)?.playerNumber ?? 0
+        //let spriteImage = UIImage.sceneSprite(named: imageNamed)!
+        //let playerNumber = entity.component(ofType: CharacterComponent.self)?.playerNumber ?? 0
         //let spriteNode = FLMapSprite(image: spriteImage,playerNumber:playerNumber)
+        
+        let character = entity.component(ofType: CharacterComponent.self)?.character
         let spriteNode = SimpleBeingNode(face: character!.avatarIcon)
         
         let movementComponent = MovementComponent(scene:scene!)
