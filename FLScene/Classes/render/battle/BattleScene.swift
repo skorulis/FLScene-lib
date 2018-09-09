@@ -59,7 +59,6 @@ public class BattleScene: BaseScene, MapSceneProtocol {
         entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         characterManager.addSprite(entity: entity, imageNamed: character.spriteName)
         character.updateStats() //Make sure stats are up to date
-        entity.addComponent(CharacterEventComponent())
         
         return entity
     }

@@ -23,7 +23,7 @@ public struct BridgeStep {
     let model:BridgeModel
 }
 
-public class MovementComponent: GKComponent {
+public class MovementComponent: BaseEntityComponent {
 
     private(set) var isMoving:Bool = false
     weak var mapScene:MapSceneProtocol?
@@ -36,10 +36,6 @@ public class MovementComponent: GKComponent {
     
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func gridEntity() -> GridEntity {
-        return self.entity! as! GridEntity
     }
     
     func moveToFull(position:vector_int2,island:DungeonModel) {
@@ -76,6 +72,8 @@ public class MovementComponent: GKComponent {
         if steps.count == 0 || self.isMoving {
             return
         }
+        events()?.performedBlockingAction()
+        
         let first = steps[0]
         self.queuedSteps = Array(steps.suffix(from: 1))
         switch first {

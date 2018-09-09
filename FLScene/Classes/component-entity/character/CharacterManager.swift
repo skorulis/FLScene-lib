@@ -8,7 +8,7 @@
 import GameplayKit
 import SKSwiftLib
 
-class CharacterManager: NSObject {
+public class CharacterManager: NSObject {
 
     private var entities:[GridEntity] = []
     let characterComponentSystem = GKComponentSystem(componentClass: CharacterComponent.self)
@@ -35,10 +35,16 @@ class CharacterManager: NSObject {
         }
         entity.addComponent(TargetComponent(target: nil)) //Add empty target component
         entity.addComponent(SustainedActionComponent())
+        entity.addComponent(CharacterEventComponent())
         
         self.entities.append(entity)
         
         allSystems.forEach { $0.addComponent(foundIn:entity)}
+        entity.components.forEach { (component) in
+            if let entityComponent = component as? BaseEntityComponent {
+                entityComponent.wasAddedToManager(manager: self)
+            }
+        }
     }
     
     func update(deltaTime seconds: TimeInterval) {

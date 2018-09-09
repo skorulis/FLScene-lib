@@ -7,7 +7,7 @@
 
 import GameplayKit
 
-class CharacterComponent: GKComponent {
+class CharacterComponent: BaseEntityComponent {
 
     let character:CharacterModel
     let playerNumber:Int
@@ -29,24 +29,20 @@ class CharacterComponent: GKComponent {
         return sprite!
     }
     
-    private func events() -> CharacterEventComponent {
-        return (entity?.component(ofType: CharacterEventComponent.self))!
-    }
-    
     func takeDamage(damage:Int) {
         let wastedDamage = max(damage - character.health.valueInt,0)
         
         character.health -= damage
         sprite().updateHealthBar(pct:character.health.fullPercentage)
         
-        events().receivedDamage(amount: damage)
-        events().wastedDamage(amount: wastedDamage)
+        events()?.receivedDamage(amount: damage)
+        events()?.wastedDamage(amount: wastedDamage)
     }
     
     func takeMana(amount:Int) {
         character.mana -= amount
         sprite().updateManaBar(pct: character.mana.fullPercentage)
-        events().spendMana(amount: amount)
+        events()?.spendMana(amount: amount)
     }
     
     func heal(amount:Float) {

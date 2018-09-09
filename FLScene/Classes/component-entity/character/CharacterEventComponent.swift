@@ -6,8 +6,10 @@
 //
 
 import GameplayKit
+import SKSwiftLib
 
-class CharacterEventComponent: GKComponent {
+//Central place to log and fire events from
+class CharacterEventComponent: BaseEntityComponent {
 
     private var damageDone:Int = 0
     private var damageReceived:Int = 0
@@ -16,6 +18,17 @@ class CharacterEventComponent: GKComponent {
     private var healingCast:Float = 0
     private var wastedDamage:Float = 0
     private var spellsUsed:[SpellType:Int] = [:]
+    
+    let actionObservers:ObserverSet<GridEntity>
+    
+    override init() {
+        actionObservers = ObserverSet<GridEntity>()
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func printResults() {
         print("----Character stats----")
@@ -58,6 +71,11 @@ class CharacterEventComponent: GKComponent {
         } else {
             spellsUsed[spell.type] = 1
         }
+    }
+    
+    //Called when the character does something that should cancel other actions
+    func performedBlockingAction() {
+        actionObservers.notify(parameters: self.gridEntity())
     }
     
 }

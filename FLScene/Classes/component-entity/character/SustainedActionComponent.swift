@@ -7,7 +7,7 @@
 
 import GameplayKit
 
-class SustainedActionComponent: GKComponent {
+class SustainedActionComponent: BaseEntityComponent {
 
     private var currentAction:ActionType?
     private var tickDelay:DeltaDelayTicker
@@ -49,6 +49,12 @@ class SustainedActionComponent: GKComponent {
             character.inventory.add(item: item)
             print("got item \(item.ref.name)")
         }
+    }
+    
+    override func wasAddedToManager(manager:CharacterManager) {
+        events()?.actionObservers.add(object: self, {[weak self] (entity) in
+            self?.stopAction()
+        })
     }
     
 }
