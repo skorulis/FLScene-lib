@@ -14,8 +14,6 @@ public class CharacterScene: BaseScene, MapSceneProtocol {
     var playerEntity:GridEntity!
     var character:CharacterModel
     
-    var characterManager:CharacterManager!
-    
     public init(island:DungeonModel,character:CharacterModel) {
         self.island = island
         self.character = character
@@ -62,10 +60,6 @@ public class CharacterScene: BaseScene, MapSceneProtocol {
     
     public func islandFor(dungeon:DungeonModel) -> MapIslandNode {
         return self.islandNode
-    }
-    
-    public var bridges:BridgeContainerNode {
-        return BridgeContainerNode()
     }
     
 }

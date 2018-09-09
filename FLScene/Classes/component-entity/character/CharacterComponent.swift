@@ -24,8 +24,8 @@ class CharacterComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func sprite() -> FLMapSprite {
-        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node as? FLMapSprite
+    private func sprite() -> SimpleBeingNode {
+        let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node as? SimpleBeingNode
         return sprite!
     }
     

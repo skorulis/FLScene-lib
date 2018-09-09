@@ -65,7 +65,7 @@ public class DungeonGenerator {
     }
     
     private func generateOutdoors() {
-        let allTerrain:[TerrainType] = [.grass,.water,.dirt]
+        let allTerrain:[TerrainType] = [.grass,.sand,.dirt]
         
         for y in 0..<dungeon.height {
             for x in 0..<dungeon.width {

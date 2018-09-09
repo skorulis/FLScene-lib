@@ -12,6 +12,10 @@ public class BaseScene: SCNScene {
     public let cameraNode:SCNNode
     let camera:SCNCamera
     var skybox:SkyboxManager!
+    var characterManager:CharacterManager!
+    var spellManager:SpellManager?
+    var battleManager:BattleManager?
+    public let bridges:BridgeContainerNode
     
     override init() {
         cameraNode = SCNNode()
@@ -21,6 +25,7 @@ public class BaseScene: SCNScene {
         // place the camera
         cameraNode.position = SCNVector3(x: 0, y: 4, z: 15)
         cameraNode.look(at: SCNVector3())
+        self.bridges = BridgeContainerNode()
         
         super.init()
         rootNode.addChildNode(cameraNode)

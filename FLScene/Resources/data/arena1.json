@@ -3,7 +3,7 @@
                 {
                 "mapName": "battle1",
                 "waves": 3,
-                "waveDelay": 2,
+                "waveDelay": 5,
                 "playerStartPosition": {
                 "x": 0,
                 "y": 2

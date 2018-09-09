@@ -71,7 +71,7 @@ class BattleManager {
         
         for enemy in enemies {
             let entity = scene.makeEntity(character: enemy.base, playerNumber: 2,position:enemy.position)
- entity.addComponent(BattleAIComponent(island:scene.island,spells:scene.spellManager,characterManager:scene.characterManager))
+            entity.addComponent(BattleAIComponent(island:scene.island,spells:scene.spellManager!,characterManager:scene.characterManager))
             scene.characterManager.add(entity: entity)
         }
     }

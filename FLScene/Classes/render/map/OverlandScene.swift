@@ -16,8 +16,6 @@ public class OverlandScene: BaseScene, MapSceneProtocol {
     private let floorY:Float = -10
     var playerEntity:GridEntity!
     
-    private var characterManager:CharacterManager!
-    
     public var playerIsland:DungeonModel {
         return overland.findIsland(name: playerEntity.islandName!)
     }
@@ -28,12 +26,11 @@ public class OverlandScene: BaseScene, MapSceneProtocol {
     
     private let game:GameController
     var islands:[MapIslandNode] = []
-    public let bridges:BridgeContainerNode
     var npcs:[GridEntity] = []
     
     public override init() {
         self.game = GameController.instance
-        self.bridges = BridgeContainerNode()
+        
         
         self.overland = OverlandGenerator.fromFile()
         
@@ -140,8 +137,6 @@ public class OverlandScene: BaseScene, MapSceneProtocol {
     
     public func makeMap(dungeon:DungeonModel) -> MapIslandNode {
         let mapGrid = MapIslandNode(dungeon: dungeon)
-        //let sphere = mapGrid.boundingSphere
-        //mapGrid.position = SCNVector3(-sphere.center.x,0,-sphere.center.z) + dungeon.overlandOffset
         mapGrid.position = dungeon.overlandOffset - mapGrid.centreOffset()
         return mapGrid
     }

@@ -22,4 +22,8 @@ extension SCNNode {
         return -1 * self.boundingBox.min.y
     }
     
+    func basePosition() -> SCNVector3 {
+        return SCNVector3(0,self.boundingBox.min.y,0)
+    }
+    
 }

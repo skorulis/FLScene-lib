@@ -124,7 +124,7 @@ class SpellCastingComponent: GKComponent {
     }
     
     override func didAddToEntity() {
-        let node = entity?.component(ofType: GKSCNNodeComponent.self)?.node as? FLMapSprite
+        let node = entity?.component(ofType: GKSCNNodeComponent.self)?.node
         node!.addChildNode(castProgressNode)
         castProgressNode.position = node!.basePosition()
         castProgressNode.isHidden = true

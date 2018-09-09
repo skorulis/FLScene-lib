@@ -9,10 +9,10 @@ import SceneKit
 
 public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysicsContactDelegate {
 
-    weak var scene:BattleScene!
+    weak var scene:BaseScene!
     var previousUpdateTime: TimeInterval = 0
     
-    public init(scene:BattleScene) {
+    public init(scene:BaseScene) {
         self.scene = scene
     }
     
@@ -23,14 +23,16 @@ public class BattleSceneDelegate: NSObject, SCNSceneRendererDelegate, SCNPhysics
             return //Animation was probably paused
         }
         
-        scene.spellManager.update(deltaTime: timeSincePreviousUpdate)
+        scene.bridges.updateBridges()
+        
+        scene.spellManager?.update(deltaTime: timeSincePreviousUpdate)
         scene.characterManager.update(deltaTime: timeSincePreviousUpdate)
-        scene.battleManager.update(deltaTime: timeSincePreviousUpdate)
+        scene.battleManager?.update(deltaTime: timeSincePreviousUpdate)
     }
     
     public func physicsWorld(_ world: SCNPhysicsWorld,didBegin contact: SCNPhysicsContact) {
         if contact.spellNode() != nil {
-            scene.spellManager.handleContact(contact: contact)
+            scene.spellManager?.handleContact(contact: contact)
         }
     }
     

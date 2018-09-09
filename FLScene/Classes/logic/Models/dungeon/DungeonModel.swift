@@ -151,9 +151,6 @@ public class DungeonModel: Codable {
     }
     
     func findPath(from:MapHexModel,to:MapHexModel) -> [MapHexModel] {
-        if !to.canPass() {
-            return []
-        }
         let missingConnections = to.connectedNodes.filter { (otherNode) -> Bool in
             return !otherNode.connectedNodes.contains(to)
         }

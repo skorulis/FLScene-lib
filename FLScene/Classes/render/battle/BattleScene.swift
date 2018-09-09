@@ -16,12 +16,7 @@ public class BattleScene: BaseScene, MapSceneProtocol {
     var playerEntity:GridEntity!
     var enemy1Entity:GridEntity!
     
-    let spellManager:SpellManager
-    var characterManager:CharacterManager!
-    var battleManager:BattleManager!
-    
     var spells:[SpellModel] = []
-    public let bridges: BridgeContainerNode
     var battleModel:ArenaBattleModel
     let playerCharacter:CharacterModel
     
@@ -29,10 +24,10 @@ public class BattleScene: BaseScene, MapSceneProtocol {
         self.island = island;
         self.battleModel = battleModel
         self.playerCharacter = playerCharacter
-        bridges = BridgeContainerNode()
         self.islandNode = MapIslandNode(dungeon: self.island,gridSpacing:2.0)
-        self.spellManager = SpellManager(islandNode: islandNode)
         super.init()
+        
+        self.spellManager = SpellManager(islandNode: islandNode)
         self.characterManager = CharacterManager(spellManager: spellManager,scene:self)
         self.battleManager = BattleManager(scene: self, model: battleModel)
         self.buildScene()
@@ -61,9 +56,9 @@ public class BattleScene: BaseScene, MapSceneProtocol {
     func makeEntity(character:CharacterModel,playerNumber:Int,position:vector_int2) -> GridEntity {
         let location = LocationModel(gridPosition: position, islandName: "battle")
         let entity = GridEntity(location: location)
+        entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         characterManager.addSprite(entity: entity, imageNamed: character.spriteName)
         character.updateStats() //Make sure stats are up to date
-        entity.addComponent(CharacterComponent(character: character,playerNumber:playerNumber))
         entity.addComponent(CharacterEventComponent())
         
         return entity
@@ -71,9 +66,9 @@ public class BattleScene: BaseScene, MapSceneProtocol {
     
     //Puts the player back to the start and resets everything
     func resetBattle() {
-        self.battleManager.reset()
+        self.battleManager?.reset()
         self.characterManager.reset()
-        self.spellManager.reset()
+        self.spellManager?.reset()
         
         if playerEntity != nil {
             let events = playerEntity.component(ofType: CharacterEventComponent.self)!
@@ -84,7 +79,7 @@ public class BattleScene: BaseScene, MapSceneProtocol {
         playerEntity = makeEntity(character: playerCharacter, playerNumber: 1,position: battleModel.playerStartPosition)
         
         //Give the player an AI for now so I don't have to control it
-        let ai = BattleAIComponent(island:island,spells:spellManager,characterManager:characterManager)
+        let ai = BattleAIComponent(island:island,spells:spellManager!,characterManager:characterManager)
         ai.isPlayerAI = true
         playerEntity.addComponent(ai)
         self.characterManager.add(entity: playerEntity)

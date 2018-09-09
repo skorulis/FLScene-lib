@@ -56,10 +56,25 @@ class SimpleBeingNode: SCNNode {
         self.addChildNode(rightFootNode)
         self.addChildNode(leftHandNode)
         self.addChildNode(rightHandNode)
+        
+        let physicsGeometry = SCNCylinder(radius: radius, height: height)
+        let physicsShape = SCNPhysicsShape(geometry: physicsGeometry, options: nil)
+        physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
+        physicsBody?.collisionBitMask = 1
+        physicsBody?.categoryBitMask = 1
+        physicsBody?.contactTestBitMask = 1
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateHealthBar(pct:CGFloat) {
+
+    }
+    
+    func updateManaBar(pct:CGFloat) {
+        
     }
     
 }
