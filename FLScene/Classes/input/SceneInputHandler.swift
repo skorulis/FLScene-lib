@@ -72,7 +72,8 @@ public class SceneInputHandler {
         let path = scene.playerIsland.path(to: playerStartBridgePosition, from: fromPoint)
         let pathSteps = getTileSteps(path: path) + getBridgeSteps(bridge: bridgeNode)
         
-        scene.playerEntity.component(ofType: ActionQueueComponent.self)?.moveAlong(steps: pathSteps)
+        let actionQueue = scene.playerEntity.component(ofType: ActionQueueComponent.self)
+        actionQueue?.moveAlong(steps: pathSteps)
     }
     
     private func tappedCurrentIsland(hit:SCNHitTestResult) {
@@ -86,7 +87,8 @@ public class SceneInputHandler {
         let fromPoint = scene.playerEntity.gridPosition
         let path = scene.playerIsland.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         let pathSteps = getTileSteps(path: path)
-        scene.playerEntity.component(ofType: ActionQueueComponent.self)?.moveAlong(steps: pathSteps)
+        let actionQueue = scene.playerEntity.component(ofType: ActionQueueComponent.self)
+        actionQueue?.moveAlong(steps: pathSteps)
     }
     
     private func getTileSteps(path:[MapHexModel]) -> [MovementStep] {

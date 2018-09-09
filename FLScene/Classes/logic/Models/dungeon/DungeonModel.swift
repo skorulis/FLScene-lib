@@ -151,6 +151,12 @@ public class DungeonModel: Codable {
     }
     
     func findPath(from:MapHexModel,to:MapHexModel) -> [MapHexModel] {
+        if !to.canPass() {
+            if self.isDirectlyAdjacent(pos1: from.gridPosition, pos2: to.gridPosition) {
+                return [] //Trying to move to a square that cannot be entered and already next to it
+            }
+        }
+        
         let missingConnections = to.connectedNodes.filter { (otherNode) -> Bool in
             return !otherNode.connectedNodes.contains(to)
         }
@@ -165,6 +171,9 @@ public class DungeonModel: Codable {
         //Remove additional connections
         for node in missingConnections {
             node.removeConnections(to: [to], bidirectional: false)
+        }
+        if !to.canPass() {
+            return  Array(path.prefix(upTo: path.count - 1))
         }
         
         return path

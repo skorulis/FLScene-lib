@@ -36,6 +36,7 @@ public class CharacterManager: NSObject {
         entity.addComponent(TargetComponent(target: nil)) //Add empty target component
         entity.addComponent(SustainedActionComponent())
         entity.addComponent(CharacterEventComponent())
+        entity.addComponent(ActionQueueComponent())
         
         self.entities.append(entity)
         
