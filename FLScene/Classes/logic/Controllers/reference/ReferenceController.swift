@@ -36,6 +36,7 @@ public class ReferenceController {
 
     public static let instance = ReferenceController()
     
+    let itemsArray:[ItemReferenceModel]
     public let items:[String:ItemReferenceModel]
     public let story:[String:StoryReferenceModel]
     public let skills:[SkillType:SkillReferenceModel]
@@ -46,8 +47,8 @@ public class ReferenceController {
     var namedSpells:[String:SpellModel] = [:]
     
     init() {
-        let itemArray = ReferenceController.makeItems()
-        items = itemArray.groupSingle { $0.name }
+        itemsArray = ReferenceController.makeItems()
+        items = itemsArray.groupSingle { $0.name }
         story = ReferenceController.makeStory().groupSingle { $0.key }
         skills = ReferenceController.makeSkills().groupSingle { $0.name }
         actions = ReferenceController.makeActions().groupSingle { $0.type }
@@ -75,8 +76,10 @@ public class ReferenceController {
         let ether = ItemReferenceModel(name: "Ether", description: "Should link to lore article")
         let minerals = ItemReferenceModel(name: "Minerals", description: "Generic minerals")
         let wood = ItemReferenceModel(name: "Wood", description: "Generic wood")
+        var fish = ItemReferenceModel(name: "Fish", description: "Generic fish, replace with better ones")
+        fish.attributes = [.fish]
         
-        return [food,ether,minerals,wood]
+        return [food,ether,minerals,wood,fish]
     }
     
     static func makeSkills() -> [SkillReferenceModel] {
