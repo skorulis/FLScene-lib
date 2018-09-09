@@ -72,11 +72,7 @@ public class SceneInputHandler {
         let path = scene.playerIsland.path(to: playerStartBridgePosition, from: fromPoint)
         let pathSteps = getTileSteps(path: path) + getBridgeSteps(bridge: bridgeNode)
         
-        let movement = scene.playerEntity.component(ofType: MovementComponent.self)!
-        if movement.isMoving {
-            return //Can't move twice
-        }
-        movement.moveAlong(steps: pathSteps)
+        scene.playerEntity.component(ofType: ActionQueueComponent.self)?.moveAlong(steps: pathSteps)
     }
     
     private func tappedCurrentIsland(hit:SCNHitTestResult) {
@@ -90,11 +86,7 @@ public class SceneInputHandler {
         let fromPoint = scene.playerEntity.gridPosition
         let path = scene.playerIsland.path(to: square.dungeonNode.gridPosition, from: fromPoint)
         let pathSteps = getTileSteps(path: path)
-        let movement = scene.playerEntity.component(ofType: MovementComponent.self)!
-        if movement.isMoving {
-            return //Can't move twice
-        }
-        movement.moveAlong(steps: pathSteps)
+        scene.playerEntity.component(ofType: ActionQueueComponent.self)?.moveAlong(steps: pathSteps)
     }
     
     private func getTileSteps(path:[MapHexModel]) -> [MovementStep] {

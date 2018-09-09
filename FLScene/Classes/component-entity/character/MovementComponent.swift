@@ -8,26 +8,10 @@
 import GameplayKit
 import SKSwiftLib
 
-public enum MovementStep {
-    case tile(TileStep)
-    case bridge(BridgeStep)
-}
-
-public struct TileStep {
-    let position:vector_int2
-    let dungeon:DungeonModel
-}
-
-public struct BridgeStep {
-    let stoneIndex:Int
-    let model:BridgeModel
-}
-
 public class MovementComponent: BaseEntityComponent {
 
     private(set) var isMoving:Bool = false
     weak var mapScene:MapSceneProtocol?
-    private var queuedSteps:[MovementStep] = []
     
     init(scene:MapSceneProtocol) {
         self.mapScene = scene
@@ -68,23 +52,7 @@ public class MovementComponent: BaseEntityComponent {
         self.moveTo(position: firstPoint.gridPosition, inDungeon: island)
     }
     
-    func moveAlong(steps:[MovementStep]) {
-        if steps.count == 0 || self.isMoving {
-            return
-        }
-        events()?.performedBlockingAction()
-        
-        let first = steps[0]
-        self.queuedSteps = Array(steps.suffix(from: 1))
-        switch first {
-        case .tile(let step):
-            moveTo(position: step.position, inDungeon: step.dungeon)
-        case .bridge(let step):
-            moveOnBridge(bridge: step.model, index: step.stoneIndex)
-        }
-    }
-    
-    private func moveOnBridge(bridge:BridgeModel,index:Int) {
+    func moveOnBridge(bridge:BridgeModel,index:Int) {
         removeFromOldNode()
         guard let sprite = entity?.component(ofType: GKSCNNodeComponent.self)?.node else { return }
         let bridgeNode = (mapScene?.bridges.bridge(with: bridge))!
@@ -162,11 +130,7 @@ public class MovementComponent: BaseEntityComponent {
         sprite.runAction(action) { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.isMoving = false
-            if strongSelf.queuedSteps.count > 0 {
-                DispatchQueue.main.async {
-                    strongSelf.moveAlong(steps: strongSelf.queuedSteps)
-                }
-            }
+            strongSelf.entity?.component(ofType: ActionQueueComponent.self)?.consumeNext()
         }
     }
     
