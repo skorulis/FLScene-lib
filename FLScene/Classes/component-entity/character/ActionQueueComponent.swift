@@ -10,6 +10,7 @@ import GameplayKit
 public enum MovementStep {
     case tile(TileStep)
     case bridge(BridgeStep)
+    case startAction(ActionType)
 }
 
 public struct TileStep {
@@ -41,6 +42,8 @@ class ActionQueueComponent: BaseEntityComponent {
             movement.moveTo(position: step.position, inDungeon: step.dungeon)
         case .bridge(let step):
             movement.moveOnBridge(bridge: step.model, index: step.stoneIndex)
+        case .startAction(let action):
+            entity?.component(ofType: SustainedActionComponent.self)?.startAction(action: action)
         }
     }
     
