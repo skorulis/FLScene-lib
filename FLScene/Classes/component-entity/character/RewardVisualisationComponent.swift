@@ -13,11 +13,19 @@ class RewardVisualisationComponent: BaseEntityComponent {
     
     func showIndicator() {
         let indicator = RewardIndicatorNode()
+        indicator.position = SCNVector3(0,1.2,0)
+        indicator.opacity = 0
         self.node()?.addChildNode(indicator)
+        
+        let fadeIn = SCNAction.fadeIn(duration: 0.2)
+        let move = SCNAction.move(by: SCNVector3(0,2,0), duration: 2)
+        let delay = SCNAction.wait(duration: 1)
         let fade = SCNAction.fadeOut(duration: 1)
         let remove = SCNAction.removeFromParentNode()
-        let sequence = SCNAction.sequence([fade,remove])
+        let sequence = SCNAction.sequence([delay,fade,remove])
         
+        indicator.runAction(fadeIn)
+        indicator.runAction(move)
         indicator.runAction(sequence)
     }
     
