@@ -135,8 +135,13 @@ public class SceneInputHandler {
     public func performAction(node:MapHexModel,action:ActionType) {
         let ref = ReferenceController.instance.getAction(type: action)
         if ref.sustained {
-            let actionComponent = scene.playerEntity.component(ofType: SustainedActionComponent.self)
-            actionComponent?.startAction(action: action)
+            let fromPoint = scene.playerEntity.gridPosition
+            let path = scene.playerIsland.path(to: node.gridPosition, from: fromPoint)
+            var pathSteps = getTileSteps(path: path)
+            pathSteps.append(MovementStep.startAction(action))
+            
+            let queueComponent = scene.playerEntity.component(ofType: ActionQueueComponent.self)
+            queueComponent?.moveAlong(steps: pathSteps)
             
         } else if action == .teleport {
             let teleporter = node.fixture as! TeleporterFixtureModel
