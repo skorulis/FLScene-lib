@@ -37,6 +37,7 @@ public class CharacterManager: NSObject {
         entity.addComponent(SustainedActionComponent())
         entity.addComponent(CharacterEventComponent())
         entity.addComponent(ActionQueueComponent())
+        entity.addComponent(RewardVisualisationComponent())
         
         self.entities.append(entity)
         

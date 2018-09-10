@@ -47,6 +47,7 @@ class SustainedActionComponent: BaseEntityComponent {
         if action == .fish {
             let item = controller.findItem(attributes: [.fish])
             character.inventory.add(item: item)
+            events()?.gotItem(item: item)
             print("got item \(item.ref.name)")
         }
     }

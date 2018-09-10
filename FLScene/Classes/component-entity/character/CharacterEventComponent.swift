@@ -20,9 +20,11 @@ class CharacterEventComponent: BaseEntityComponent {
     private var spellsUsed:[SpellType:Int] = [:]
     
     let actionObservers:ObserverSet<GridEntity>
+    let getItemObservers:ObserverSet<ItemModel>
     
     override init() {
         actionObservers = ObserverSet<GridEntity>()
+        getItemObservers = ObserverSet<ItemModel>()
         super.init()
     }
     
@@ -76,6 +78,11 @@ class CharacterEventComponent: BaseEntityComponent {
     //Called when the character does something that should cancel other actions
     func performedBlockingAction() {
         actionObservers.notify(parameters: self.gridEntity())
+    }
+    
+    //Called when a character gets given a new item
+    func gotItem(item:ItemModel) {
+        getItemObservers.notify(parameters: item)
     }
     
 }

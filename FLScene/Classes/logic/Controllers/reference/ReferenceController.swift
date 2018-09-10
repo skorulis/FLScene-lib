@@ -131,6 +131,8 @@ public class ReferenceController {
         var fish = ActionReferenceModel(type: .fish)
         fish.sustained = true
         
+        let teleport = ActionReferenceModel(type: .teleport)
+        
         #if os(iOS)
         /*let iconSize = CGFloat(30)
         sleep.icon = FAKFontAwesome.moonOIcon(withSize: iconSize)
@@ -142,7 +144,7 @@ public class ReferenceController {
         dungeon.icon = FAKFontAwesome.fortAwesomeIcon(withSize: iconSize)*/
         #endif
         
-        return [sleep,eat,forage,mine,lumberjack,explore,dungeon,fish]
+        return [sleep,eat,forage,mine,lumberjack,explore,dungeon,fish,teleport]
     }
     
     private static func makeDungeonTiles() -> [FixtureReferenceModel] {

@@ -17,6 +17,10 @@ public class BaseEntityComponent: GKComponent {
         return self.entity?.component(ofType: CharacterEventComponent.self)
     }
     
+    func node() -> SCNNode? {
+        return self.entity?.component(ofType: GKSCNNodeComponent.self)?.node
+    }
+    
     open func wasAddedToManager(manager:CharacterManager) {
         //To be overriden by subclasses
     }
