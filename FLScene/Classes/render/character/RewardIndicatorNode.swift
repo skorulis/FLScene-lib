@@ -6,6 +6,7 @@
 //
 
 import SceneKit
+import SKSwiftLib
 
 class RewardIndicatorNode: SCNNode {
 
@@ -13,13 +14,16 @@ class RewardIndicatorNode: SCNNode {
         super.init()
         //Probably want to switch to a box instead at some point, makes it feel more solid
         //let geom = SCNPlane(width: 1, height: 1)
-        let geom = SCNBox(width: 1, height: 1, length: 0.1, chamferRadius: 0.1)
-        geom.firstMaterial = MaterialProvider.bridgeStoneMaterial()
+        let geom = SCNBox(width: 1, height: 1, length: 0.1, chamferRadius: 0.05)
+        let matFace = MaterialProvider.spriteMaterial(named: "fish")
+        let matEdge = MaterialProvider.colorMaterial(color: UIColor.black)
+        
+        geom.materials = [matFace,matEdge,matFace,matEdge,matEdge,matEdge]
         self.geometry = geom
         
         let constraint = SCNBillboardConstraint()
         constraint.freeAxes = SCNBillboardAxis.Y
-        self.constraints = [constraint]
+        //self.constraints = [constraint]
 
     }
     

@@ -119,25 +119,29 @@ class MaterialProvider: NSObject {
     }
     
     class func targetMaterial() -> SCNMaterial {
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor(displayP3Red: 1.0, green: 0.2, blue: 0.2, alpha: 1)
-        return material
+        return colorMaterial(color: UIColor(displayP3Red: 1.0, green: 0.2, blue: 0.2, alpha: 1))
     }
     
     class func healthBarMaterial() -> SCNMaterial {
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.green
-        return material
+        return colorMaterial(color: UIColor.green)
     }
     
     class func manaBarMaterial() -> SCNMaterial {
+        return colorMaterial(color: UIColor.blue)
+    }
+    
+    class func spriteMaterial(named:String) -> SCNMaterial {
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.blue
+        material.diffuse.contents = UIImage.sceneSprite(named: named)
         return material
     }
     
-    class func pbrMaterial(baseName:String)  {
-        
+    class func colorMaterial(color:UIColor) -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = color
+        return material
     }
+    
+    
     
 }
