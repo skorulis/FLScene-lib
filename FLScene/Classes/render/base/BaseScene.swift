@@ -10,7 +10,7 @@ import SceneKit
 public class BaseScene: SCNScene {
 
     public let cameraNode:SCNNode
-    let camera:SCNCamera
+    public let camera:GameCamera
     var skybox:SkyboxManager!
     var characterManager:CharacterManager!
     var spellManager:SpellManager?
@@ -19,8 +19,7 @@ public class BaseScene: SCNScene {
     
     override init() {
         cameraNode = SCNNode()
-        camera = SCNCamera()
-        cameraNode.camera = camera
+        camera = GameCamera(owner: cameraNode)
         
         // place the camera
         cameraNode.position = SCNVector3(x: 0, y: 4, z: 15)

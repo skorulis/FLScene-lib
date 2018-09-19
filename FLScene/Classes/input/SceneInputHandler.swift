@@ -18,28 +18,22 @@ public class SceneInputHandler {
 
     public let sceneView:SCNView
     let scene:OverlandScene
-    let camera:SCNCamera
+    public let camera:GameCamera
     let game = GameController.instance
     public let editHandler:SceneEditInputHandler
     
     public weak var delegate:SceneInputHandlerDelegate?
     
+    private var lastZoom:CGFloat = 0
     
-    public init(sceneView:SCNView,scene:OverlandScene,cameraNode:SCNNode) {
+    public init(sceneView:SCNView,scene:OverlandScene,camera:GameCamera) {
         self.sceneView = sceneView
         self.scene = scene;
-        self.camera = cameraNode.camera!
+        self.camera = camera
         self.editHandler = SceneEditInputHandler(scene:scene)
         
         let target = self.scene.playerEntity.component(ofType: GKSCNNodeComponent.self)!.node
-        
-        let lookAt = SCNLookAtConstraint(target: target)
-        lookAt.isGimbalLockEnabled = true
-        let distance = SCNDistanceConstraint(target: target)
-        let acceleration = SCNAccelerationConstraint()
-        distance.minimumDistance = 8
-        distance.maximumDistance = 10
-        cameraNode.constraints = [lookAt,distance,acceleration]
+        self.camera.makeConstraints(target: target)
     }
     
     public func tapped(point:CGPoint) {
@@ -130,6 +124,16 @@ public class SceneInputHandler {
         let node = square.dungeonNode
         let availableActions = node.actions()
         self.delegate?.showLandOptions(node: square.dungeonNode,actions: availableActions)
+    }
+    
+    public func zoomStarted() {
+        lastZoom = 0
+    }
+    
+    public func zoomed(amount:CGFloat) {
+        let change = (amount - lastZoom)
+        self.camera.zoom(amount: -change)
+        lastZoom = amount
     }
     
     public func performAction(node:MapHexModel,action:ActionType) {
