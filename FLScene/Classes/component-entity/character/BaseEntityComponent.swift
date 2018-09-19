@@ -13,6 +13,10 @@ public class BaseEntityComponent: GKComponent {
         return self.entity! as! GridEntity
     }
     
+    func location() -> LocationModel {
+        return gridEntity().location
+    }
+    
     func events() -> CharacterEventComponent? {
         return self.entity?.component(ofType: CharacterEventComponent.self)
     }

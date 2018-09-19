@@ -73,7 +73,7 @@ public class OverlandScene: BaseScene, MapSceneProtocol {
         
         let npcModels:[NonPlayerCharacterModel] = ReferenceController.readReferenceObjects(filename: "npcs")
         self.npcs = npcModels.map({ (char) -> GridEntity in
-            let ai = OverlandAIComponent()
+            let ai = OverlandAIComponent(overland: self.overland)
             let npcComponent = NPCComponent(npc: char)
             let entity = makeEntity(character: char.base,extraComponents: [ai,npcComponent])
             return entity

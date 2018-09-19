@@ -55,4 +55,8 @@ class ActionQueueComponent: BaseEntityComponent {
         }
     }
     
+    func isBusy() -> Bool {
+        return self.queuedSteps.count > 0
+    }
+    
 }

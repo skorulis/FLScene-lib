@@ -58,4 +58,8 @@ class SustainedActionComponent: BaseEntityComponent {
         })
     }
     
+    func isBusy() -> Bool {
+        return self.currentAction != nil
+    }
+    
 }

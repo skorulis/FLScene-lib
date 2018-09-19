@@ -216,4 +216,18 @@ public class DungeonModel: Codable {
             return randomEmptySquare()
         }
     }
+    
+    func findNearby(type:TerrainType,position:vector_int2) -> MapHexModel? {
+        var best:MapHexModel?
+        var bestDistance:Int32 = 0
+        for n in nodes {
+            guard n.terrain.type == type else { continue }
+            let distance = abs(position.x - n.gridPosition.x) + abs(position.y - n.gridPosition.y)
+            if best == nil || distance < bestDistance {
+                best = n
+                bestDistance = distance
+            }
+        }
+        return best
+    }
 }
